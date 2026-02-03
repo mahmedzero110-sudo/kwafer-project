@@ -1,5 +1,5 @@
 const db = require('../database/db');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 class User {
     static async create({ name, email, password, phone, role = 'customer', google_id = null }) {
