@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html class="light" dir="<%= locale === 'ar' ? 'rtl' : 'ltr' %>" lang="<%= locale %>">
+
+<head>
+    <%- include('../../partials/head') %>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-[#181113] dark:text-white transition-colors duration-200 noise-bg">
+    <%- include('../../partials/alerts') %>
+
+        <div class="relative flex min-h-screen w-full flex-col">
+            <%- include('../../partials/header') %>
+
+                <main class="flex-1 w-full py-16 px-4">
+                    <div class="max-w-[1000px] mx-auto">
+
+                        <!-- Page Header -->
+                        <div class="text-center space-y-4 mb-16 animate-slide-up">
+                            <div
+                                class="inline-flex items-center gap-2 bg-primary/10 px-4 py-1.5 rounded-full border border-primary/20">
+                                <span class="material-symbols-outlined text-primary text-sm">support_agent</span>
+                                <span class="text-[10px] font-black text-primary uppercase tracking-widest">نحن هنا
+                                    للمساعدة</span>
+                            </div>
+                            <h1 class="text-4xl md:text-5xl font-black">تواصل معنا</h1>
+                            <p class="text-[#896170] dark:text-gray-400 max-w-xl mx-auto">
+                                لدينا فريق جاهز للرد على استفساراتك. سواء كنتِ عميلة أو صاحبة صالون، يسعدنا سماع صوتك.
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+
+                            <!-- Contact Cards -->
+                            <div class="space-y-6">
+                                <!-- Email -->
+                                <% if (siteSettings.contact_email) { %>
+                                    <div
+                                        class="p-6 rounded-3xl bg-white dark:bg-[#2d1a22] border border-[#e6dbdf] dark:border-[#3d252e] hover:border-primary/40 transition-all group cursor-pointer">
+                                        <div class="flex items-center gap-6">
+                                            <div
+                                                class="size-14 bg-gradient-to-br from-primary/10 to-[#ff4d8d]/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                                                <span
+                                                    class="material-symbols-outlined text-primary text-3xl">mail</span>
+                                            </div>
+                                            <div>
+                                                <h3 class="font-black text-lg mb-1">البريد الإلكتروني</h3>
+                                                <p
+                                                    class="text-[10px] uppercase font-bold text-[#896170] dark:text-gray-500 mb-2">
+                                                    للاستفسارات العامة</p>
+                                                <a href="mailto:<%= siteSettings.contact_email %>"
+                                                    class="text-lg font-bold hover:text-primary transition-colors block">
+                                                    <%= siteSettings.contact_email %>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <% } %>
+
+                                        <!-- WhatsApp -->
+                                        <% if (siteSettings.whatsapp_number) { %>
+                                            <div
+                                                class="p-6 rounded-3xl bg-white dark:bg-[#2d1a22] border border-[#e6dbdf] dark:border-[#3d252e] hover:border-green-500/40 transition-all group cursor-pointer">
+                                                <div class="flex items-center gap-6">
+                                                    <div
+                                                        class="size-14 bg-green-500/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                                                        <span
+                                                            class="material-symbols-outlined text-green-500 text-3xl">chat</span>
+                                                    </div>
+                                                    <div>
+                                                        <h3 class="font-black text-lg mb-1">واتساب</h3>
+                                                        <p
+                                                            class="text-[10px] uppercase font-bold text-[#896170] dark:text-gray-500 mb-2">
+                                                            للرد الفوري</p>
+                                                        <a href="https://wa.me/<%= siteSettings.whatsapp_number %>"
+                                                            target="_blank" dir="ltr"
+                                                            class="text-lg font-mono font-bold hover:text-green-500 transition-colors block">
+                                                            <%= siteSettings.whatsapp_number %>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <% } %>
+
+                                                <!-- Office -->
+                                                <div
+                                                    class="p-6 rounded-3xl bg-white dark:bg-[#2d1a22] border border-[#e6dbdf] dark:border-[#3d252e] transition-all group">
+                                                    <div class="flex items-center gap-6">
+                                                        <div
+                                                            class="size-14 bg-gold/10 rounded-2xl flex items-center justify-center">
+                                                            <span
+                                                                class="material-symbols-outlined text-gold text-3xl">location_on</span>
+                                                        </div>
+                                                        <div>
+                                                            <h3 class="font-black text-lg mb-1">مكتبنا</h3>
+                                                            <p
+                                                                class="text-[10px] uppercase font-bold text-[#896170] dark:text-gray-500 mb-2">
+                                                                تفضلي بزيارتنا</p>
+                                                            <p class="font-bold">الأقصر، شارع التليفزيون، بجوار فندق
+                                                                إيزيس</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                            </div>
+
+                            <!-- Contact Form -->
+                            <div
+                                class="bg-white dark:bg-[#2d1a22] p-8 rounded-[2.5rem] border border-[#e6dbdf] dark:border-[#3d252e] shadow-xl relative overflow-hidden">
+                                <div
+                                    class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary to-[#ff4d8d]">
+                                </div>
+
+                                <h3 class="text-2xl font-black mb-6">اتركي رسالة</h3>
+
+                                <form action="#" class="space-y-4">
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-xs font-bold text-[#896170] mb-2">الاسم</label>
+                                            <input type="text"
+                                                class="w-full bg-gray-50 dark:bg-white/5 border border-transparent focus:border-primary/50 focus:ring-0 rounded-xl px-4 py-3 font-bold transition-all"
+                                                placeholder="اسمك">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold text-[#896170] mb-2">رقم
+                                                الهاتف</label>
+                                            <input type="tel"
+                                                class="w-full bg-gray-50 dark:bg-white/5 border border-transparent focus:border-primary/50 focus:ring-0 rounded-xl px-4 py-3 font-bold transition-all"
+                                                placeholder="01xxxxxxxxx">
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-xs font-bold text-[#896170] mb-2">الموضوع</label>
+                                        <select
+                                            class="w-full bg-gray-50 dark:bg-white/5 border border-transparent focus:border-primary/50 focus:ring-0 rounded-xl px-4 py-3 font-bold transition-all">
+                                            <option>استفسار عام</option>
+                                            <option>مشكلة تقنية</option>
+                                            <option>شراكة أعمال</option>
+                                            <option>أخرى</option>
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-xs font-bold text-[#896170] mb-2">الرسالة</label>
+                                        <textarea rows="4"
+                                            class="w-full bg-gray-50 dark:bg-white/5 border border-transparent focus:border-primary/50 focus:ring-0 rounded-xl px-4 py-3 font-bold transition-all"
+                                            placeholder="اكتبي رسالتك هنا..."></textarea>
+                                    </div>
+
+                                    <button type="button"
+                                        class="w-full py-4 bg-primary text-white rounded-xl font-black hover:bg-primary/90 transition-colors shadow-lg hover:shadow-xl mt-4">
+                                        إرسال الرسالة
+                                    </button>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </main>
+
+                <%- include('../../partials/footer') %>
+        </div>
+</body>
+
+</html>

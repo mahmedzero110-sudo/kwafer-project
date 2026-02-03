@@ -1,0 +1,149 @@
+<!-- Enhanced Footer (Card Style) -->
+<footer class="relative mt-16 px-4 pb-8 w-full max-w-[1200px] mx-auto">
+    <div
+        class="relative bg-white dark:bg-[#2d1a22] rounded-[3rem] border border-[#e6dbdf] dark:border-[#3d252e] p-8 md:p-12 shadow-xl overflow-hidden">
+
+        <!-- Ambient Background -->
+        <div class="absolute inset-0 pointer-events-none opacity-40">
+            <div
+                class="absolute -top-[50%] -right-[10%] w-[80%] h-[80%] rounded-full bg-gradient-to-br from-primary/5 to-purple-500/5 blur-[100px]">
+            </div>
+            <div
+                class="absolute -bottom-[50%] -left-[10%] w-[80%] h-[80%] rounded-full bg-gradient-to-tr from-gold/5 to-orange-500/5 blur-[100px]">
+            </div>
+        </div>
+
+        <div class="relative z-10 grid grid-cols-1 lg:grid-cols-4 gap-12 lg:gap-8 mb-12">
+
+            <!-- 1. Brand & Info (2 Columns on large screens) -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Logo -->
+                <div class="inline-flex items-center gap-3">
+                    <div
+                        class="size-12 bg-gradient-to-br from-primary to-[#ff4d8d] rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20">
+                        <svg class="size-7 text-white" fill="none" viewbox="0 0 48 48"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path clip-rule="evenodd"
+                                d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z"
+                                fill="currentColor" fill-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="block text-2xl font-black gradient-text tracking-tight">كوافير</span>
+                        <span
+                            class="text-[10px] font-bold text-[#896170] dark:text-gray-400 tracking-wider uppercase">اكتشفي
+                            جمالك</span>
+                    </div>
+                </div>
+
+                <p class="text-base text-[#896170] dark:text-gray-400 leading-relaxed font-medium max-w-sm">
+                    المنصة الأولى في الأقصر. نجمع لكِ أرقى الصالونات في مكان واحد لتجربة حجز عصرية، سهلة، وموثوقة.
+                </p>
+
+                <!-- Social Links -->
+                <div class="flex items-center gap-3 pt-2">
+                    <% const socialLinks=[ { url: siteSettings.facebook_url, icon: 'fab fa-facebook-f' ,
+                        color: 'bg-[#1877F2]' , key: 'fb' }, { url: siteSettings.instagram_url, icon: 'fab fa-instagram'
+                        , color: 'bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#F77737]' , key: 'ig' }, { url:
+                        siteSettings.twitter_url, icon: 'fab fa-twitter' , color: 'bg-[#1DA1F2]' , key: 'tw' } ]; %>
+
+                        <% socialLinks.forEach(link=> { %>
+                            <a href="<%= link.url || '/' %>" target="<%= link.url ? '_blank' : '_self' %>"
+                                rel="<%= link.url ? 'noopener noreferrer' : '' %>"
+                                class="group relative size-10 flex items-center justify-center rounded-xl bg-gray-50 dark:bg-white/5 border border-[#e6dbdf] dark:border-[#3d252e] hover:border-transparent transition-all overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1">
+                                <span
+                                    class="absolute inset-0 <%= link.color %> opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                                <i
+                                    class="<%= link.icon %> text-lg text-[#896170] dark:text-gray-400 group-hover:text-white relative z-10 transition-colors duration-300"></i>
+                            </a>
+                            <% }); %>
+                </div>
+            </div>
+
+            <!-- 2. Quick Links -->
+            <div class="space-y-6">
+                <h4
+                    class="text-sm font-black text-[#181113] dark:text-white uppercase tracking-wider flex items-center gap-2">
+                    <span class="size-2 rounded-full bg-primary/40"></span>
+                    روابط سريعة
+                </h4>
+                <ul class="space-y-3">
+                    <% const links=[ { name: 'الصالونات' , url: '/salons' }, { name: 'العروض' , url: '/offers' }, {
+                        name: 'حجوزاتي' , url: '/bookings' }, { name: 'حسابي' , url: '/dashboard' } ]; %>
+                        <% links.forEach(link=> { %>
+                            <li>
+                                <a href="<%= link.url %>"
+                                    class="text-sm font-bold text-[#896170] dark:text-gray-400 hover:text-primary transition-colors flex items-center gap-2 group w-fit">
+                                    <span
+                                        class="material-symbols-outlined text-[10px] opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-300">arrow_back</span>
+                                    <span class="group-hover:translate-x-1 transition-transform duration-300">
+                                        <%= link.name %>
+                                    </span>
+                                </a>
+                            </li>
+                            <% }); %>
+                </ul>
+            </div>
+
+            <!-- 3. Contact & Legal -->
+            <div class="space-y-6">
+                <h4
+                    class="text-sm font-black text-[#181113] dark:text-white uppercase tracking-wider flex items-center gap-2">
+                    <span class="size-2 rounded-full bg-gold/40"></span>
+                    مساعدة
+                </h4>
+                <div class="space-y-3">
+                    <% if (siteSettings.contact_email) { %>
+                        <a href="mailto:<%= siteSettings.contact_email %>"
+                            class="flex items-center gap-3 text-sm font-bold text-[#896170] dark:text-gray-400 hover:text-primary transition-colors group">
+                            <span class="material-symbols-outlined text-lg">mail</span>
+                            <span class="group-hover:translate-x-1 transition-transform">
+                                <%= siteSettings.contact_email %>
+                            </span>
+                        </a>
+                        <% } %>
+
+                            <% if (siteSettings.whatsapp_number) { %>
+                                <a href="https://wa.me/<%= siteSettings.whatsapp_number %>" target="_blank"
+                                    class="flex items-center gap-3 text-sm font-bold text-[#896170] dark:text-gray-400 hover:text-green-500 transition-colors group">
+                                    <span class="material-symbols-outlined text-lg">chat</span>
+                                    <span dir="ltr" class="group-hover:translate-x-1 transition-transform">
+                                        <%= siteSettings.whatsapp_number %>
+                                    </span>
+                                </a>
+                                <% } %>
+
+                                    <a href="/about-us"
+                                        class="flex items-center gap-3 text-sm font-bold text-[#896170] dark:text-gray-400 hover:text-primary transition-colors group">
+                                        <span class="material-symbols-outlined text-lg">info</span>
+                                        <span class="group-hover:translate-x-1 transition-transform">عن كوافير</span>
+                                    </a>
+
+                                    <a href="/terms"
+                                        class="flex items-center gap-3 text-sm font-bold text-[#896170] dark:text-gray-400 hover:text-primary transition-colors group">
+                                        <span class="material-symbols-outlined text-lg">gavel</span>
+                                        <span class="group-hover:translate-x-1 transition-transform">الشروط
+                                            والأحكام</span>
+                                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div
+            class="pt-8 border-t border-[#e6dbdf] dark:border-[#3d252e] flex flex-col md:flex-row items-center justify-between gap-4">
+            <p class="text-xs font-bold text-[#896170] dark:text-gray-500 text-center">
+                &copy; <%= new Date().getFullYear() %> كوافير - جميع الحقوق محفوظة
+            </p>
+            <div
+                class="flex items-center gap-1 text-[10px] font-black text-[#896170]/40 dark:text-gray-600 uppercase tracking-widest">
+                <span>Made With</span>
+                <span class="text-red-500 text-xs">♥</span>
+                <span>In Luxor</span>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">

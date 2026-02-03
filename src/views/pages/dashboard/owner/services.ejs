@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html class="light" dir="rtl" lang="ar">
+
+<head>
+    <%- include('../../../partials/head') %>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark">
+    <div class="flex min-h-screen">
+        <%- include('../../../partials/sidebar', { role: 'owner' }) %>
+
+            <main class="flex-1 p-8 mr-64 animate-fade-in">
+                <div class="max-w-7xl mx-auto">
+                    <!-- Header -->
+                    <div class="mb-8">
+                        <h1 class="text-3xl font-bold text-[#181113] dark:text-white mb-2">إدارة الخدمات</h1>
+                        <p class="text-[#896170]">أضف وعدل خدمات صالونك</p>
+                    </div>
+
+                    <!-- Add Service Button -->
+                    <div class="mb-6">
+                        <button onclick="openAddServiceModal()"
+                            class="gradient-bg text-white px-6 py-3 rounded-xl font-bold hover:shadow-xl transition-all flex items-center gap-2">
+                            <span class="material-symbols-outlined">add</span>
+                            <span>إضافة خدمة جديدة</span>
+                        </button>
+                    </div>
+
+                    <!-- Services Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <% services.forEach(function(service) { %>
+                            <div
+                                class="group bg-white dark:bg-[#2d1a22] rounded-[2.5rem] overflow-hidden border-2 border-[#e6dbdf] dark:border-[#3d252e] hover:border-primary/50 transition-all duration-500 shadow-sm hover:shadow-2xl">
+                                <!-- Service Image Header -->
+                                <div class="relative h-56 w-full overflow-hidden">
+                                    <% if (service.image_url) { %>
+                                        <img src="<%= service.image_url %>" alt="<%= service.name %>"
+                                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                                        <% } else { %>
+                                            <div
+                                                class="w-full h-full gradient-bg opacity-10 flex items-center justify-center">
+                                                <span
+                                                    class="material-symbols-outlined text-primary text-6xl opacity-20">image</span>
+                                            </div>
+                                            <% } %>
+
+                                                <!-- Floating Icon Batch -->
+                                                <div
+                                                    class="absolute top-4 right-4 z-10 bg-white/90 dark:bg-black/80 backdrop-blur-xl p-3 border border-white/20 rounded-2xl shadow-xl flex items-center justify-center">
+                                                    <span class="material-symbols-outlined text-primary text-2xl">
+                                                        <%= service.icon %>
+                                                    </span>
+                                                </div>
+
+                                                <!-- Action Buttons Overlay -->
+                                                <div
+                                                    class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3 backdrop-blur-[2px]">
+                                                    <button onclick="openEditServiceModal({
+                                            id: '<%= service.id %>',
+                                            name: '<%= service.name %>',
+                                            description: '<%= service.description %>',
+                                            price: '<%= service.price %>',
+                                            duration: '<%= service.duration %>',
+                                            icon: '<%= service.icon %>'
+                                        })" class="bg-white text-primary p-4 rounded-2xl hover:bg-primary hover:text-white transition-all transform hover:scale-110 shadow-xl">
+                                                        <span class="material-symbols-outlined text-2xl">edit</span>
+                                                    </button>
+                                                    <button onclick="deleteService('<%= service.id %>')"
+                                                        class="bg-white text-red-500 p-4 rounded-2xl hover:bg-red-500 hover:text-white transition-all transform hover:scale-110 shadow-xl">
+                                                        <span class="material-symbols-outlined text-2xl">delete</span>
+                                                    </button>
+                                                </div>
+                                </div>
+
+                                <!-- Service Body -->
+                                <div class="p-8">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <h3
+                                            class="text-2xl font-black tracking-tight group-hover:text-primary transition-colors">
+                                            <%= service.name %>
+                                        </h3>
+                                        <span
+                                            class="bg-primary/10 text-primary text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">
+                                            <%= service.duration %> دقيقة
+                                        </span>
+                                    </div>
+                                    <p
+                                        class="text-[#896170] dark:text-gray-400 text-sm leading-relaxed mb-8 line-clamp-2 h-10">
+                                        <%= service.description || 'لا يوجد وصف متاح لهذه الخدمة حتى الآن.' %>
+                                    </p>
+
+                                    <div
+                                        class="flex items-center justify-between pt-6 border-t border-[#f4f0f2]/50 dark:border-[#3d252e]">
+                                        <div class="flex flex-col">
+                                            <span
+                                                class="text-[10px] font-black text-[#896170]/60 uppercase tracking-widest mb-1">سعر
+                                                الخدمة</span>
+                                            <span class="text-primary font-black text-2xl">
+                                                <%= service.price %> <small class="text-xs">ج.م</small>
+                                            </span>
+                                        </div>
+                                        <div class="flex -space-x-2 rtl:space-x-reverse opacity-40">
+                                            <div
+                                                class="size-8 rounded-full bg-primary/20 border-2 border-white dark:border-[#2d1a22]">
+                                            </div>
+                                            <div
+                                                class="size-8 rounded-full bg-primary/10 border-2 border-white dark:border-[#2d1a22]">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <% }); %>
+                    </div>
+                </div>
+            </main>
+    </div>
+
+    <!-- Add Service Modal -->
+    <div id="addServiceModal"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-white dark:bg-[#2d1a22] rounded-2xl max-w-2xl w-full p-8 relative animate-scale-in">
+            <button onclick="closeModal('addServiceModal')"
+                class="absolute top-4 left-4 p-2 hover:bg-gray-100 dark:hover:bg-[#3d252e] rounded-lg">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            <h2 class="text-2xl font-bold mb-6">إضافة خدمة جديدة</h2>
+            <form class="space-y-4" action="/dashboard/owner/services" method="POST" enctype="multipart/form-data">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="serviceName" class="block text-sm font-medium mb-2">اسم الخدمة</label>
+                        <input type="text" id="serviceName" name="name" required
+                            class="w-full p-3 border border-[#e6dbdf] dark:border-[#3d252e] rounded-lg bg-white dark:bg-[#1a0c10]"
+                            placeholder="مثال: مكياج سواريه">
+                    </div>
+                    <div>
+                        <label for="serviceIcon" class="block text-sm font-medium mb-2">الأيقونة</label>
+                        <select id="serviceIcon" name="icon"
+                            class="w-full p-3 border border-[#e6dbdf] dark:border-[#3d252e] rounded-lg bg-white dark:bg-[#1a0c10]">
+                            <option value="face_5">مكياج</option>
+                            <option value="content_cut">تصفيف شعر</option>
+                            <option value="spa">سبا</option>
+                            <option value="back_hand">مانيكير</option>
+                            <option value="brush">ماسكات</option>
+                            <option value="wash">غسيل</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">صورة الخدمة</label>
+                    <div
+                        class="relative h-40 w-full mb-3 rounded-xl overflow-hidden border-2 border-dashed border-[#e6dbdf] dark:border-[#3d252e] flex items-center justify-center bg-gray-50/50 dark:bg-[#1a0c10]/50 group">
+                        <img id="addServicePreview" src="" class="w-full h-full object-cover hidden">
+                        <div id="addServicePlaceholder" class="text-center">
+                            <span class="material-symbols-outlined text-4xl text-[#896170]/40">add_a_photo</span>
+                            <p class="text-[10px] text-[#896170] mt-1">اضغطي لرفع صورة الخدمة</p>
+                        </div>
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"
+                            onclick="document.getElementById('serviceImg').click()">
+                            <span class="material-symbols-outlined text-white">upload</span>
+                        </div>
+                    </div>
+                    <input type="file" id="serviceImg" name="service_image" accept="image/*" class="hidden"
+                        onchange="previewServiceImage(this, 'addServicePreview', 'addServicePlaceholder')">
+                    <button type="button" onclick="document.getElementById('serviceImg').click()"
+                        class="text-[10px] font-black text-primary hover:underline">اختيار صورة...</button>
+                </div>
+                <div>
+                    <label for="serviceDesc" class="block text-sm font-medium mb-2">الوصف</label>
+                    <textarea id="serviceDesc" name="description"
+                        class="w-full p-3 border border-[#e6dbdf] dark:border-[#3d252e] rounded-lg bg-white dark:bg-[#1a0c10]"
+                        rows="3" placeholder="وصف مختصر للخدمة"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="servicePrice" class="block text-sm font-medium mb-2">السعر (ج.م)</label>
+                        <input type="number" id="servicePrice" name="price" required
+                            class="w-full p-3 border border-[#e6dbdf] dark:border-[#3d252e] rounded-lg bg-white dark:bg-[#1a0c10]"
+                            placeholder="450">
+                    </div>
+                    <div>
+                        <label for="serviceDuration" class="block text-sm font-medium mb-2">المدة (دقيقة)</label>
+                        <input type="number" id="serviceDuration" name="duration" required
+                            class="w-full p-3 border border-[#e6dbdf] dark:border-[#3d252e] rounded-lg bg-white dark:bg-[#1a0c10]"
+                            placeholder="90">
+                    </div>
+                </div>
+                <button type="submit"
+                    class="w-full gradient-bg text-white py-4 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
+                    حفظ الخدمة
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Service Modal -->
+    <div id="editServiceModal"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-white dark:bg-[#2d1a22] rounded-2xl max-w-2xl w-full p-8 relative animate-scale-in">
+            <button onclick="closeModal('editServiceModal')"
+                class="absolute top-4 left-4 p-2 hover:bg-gray-100 dark:hover:bg-[#3d252e] rounded-lg">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            <h2 class="text-2xl font-bold mb-6">تعديل الخدمة</h2>
+            <form id="editServiceForm" class="space-y-4" method="POST" enctype="multipart/form-data">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="edit_serviceName" class="block text-sm font-medium mb-2">اسم الخدمة</label>
+                        <input type="text" id="edit_serviceName" name="name" required
+                            class="w-full p-3 border border-[#e6dbdf] dark:border-[#3d252e] rounded-lg bg-white dark:bg-[#1a0c10]">
+                    </div>
+                    <div>
+                        <label for="edit_serviceIcon" class="block text-sm font-medium mb-2">الأيقونة</label>
+                        <select id="edit_serviceIcon" name="icon"
+                            class="w-full p-3 border border-[#e6dbdf] dark:border-[#3d252e] rounded-lg bg-white dark:bg-[#1a0c10]">
+                            <option value="face_5">مكياج</option>
+                            <option value="content_cut">تصفيف شعر</option>
+                            <option value="spa">سبا</option>
+                            <option value="back_hand">مانيكير</option>
+                            <option value="brush">ماسكات</option>
+                            <option value="wash">غسيل</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">صورة الخدمة (اختياري)</label>
+                    <div
+                        class="relative h-40 w-full mb-3 rounded-xl overflow-hidden border-2 border-dashed border-[#e6dbdf] dark:border-[#3d252e] flex items-center justify-center bg-gray-50/50 dark:bg-[#1a0c10]/50 group">
+                        <img id="editServicePreview" src="" class="w-full h-full object-cover hidden">
+                        <div id="editServicePlaceholder" class="text-center">
+                            <span class="material-symbols-outlined text-4xl text-[#896170]/40">add_a_photo</span>
+                            <p class="text-[10px] text-[#896170] mt-1">اضغطي لتغيير صورة الخدمة</p>
+                        </div>
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"
+                            onclick="document.getElementById('edit_serviceImg').click()">
+                            <span class="material-symbols-outlined text-white">upload</span>
+                        </div>
+                    </div>
+                    <input type="file" id="edit_serviceImg" name="service_image" accept="image/*" class="hidden"
+                        onchange="previewServiceImage(this, 'editServicePreview', 'editServicePlaceholder')">
+                    <button type="button" onclick="document.getElementById('edit_serviceImg').click()"
+                        class="text-[10px] font-black text-primary hover:underline">اختيار صورة جديدة...</button>
+                </div>
+                <div>
+                    <label for="edit_serviceDesc" class="block text-sm font-medium mb-2">الوصف</label>
+                    <textarea id="edit_serviceDesc" name="description"
+                        class="w-full p-3 border border-[#e6dbdf] dark:border-[#3d252e] rounded-lg bg-white dark:bg-[#1a0c10]"
+                        rows="3"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="edit_servicePrice" class="block text-sm font-medium mb-2">السعر (ج.م)</label>
+                        <input type="number" id="edit_servicePrice" name="price" required
+                            class="w-full p-3 border border-[#e6dbdf] dark:border-[#3d252e] rounded-lg bg-white dark:bg-[#1a0c10]">
+                    </div>
+                    <div>
+                        <label for="edit_serviceDuration" class="block text-sm font-medium mb-2">المدة (دقيقة)</label>
+                        <input type="number" id="edit_serviceDuration" name="duration" required
+                            class="w-full p-3 border border-[#e6dbdf] dark:border-[#3d252e] rounded-lg bg-white dark:bg-[#1a0c10]">
+                    </div>
+                </div>
+                <button type="submit"
+                    class="w-full gradient-bg text-white py-4 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
+                    تحديث الخدمة
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function previewServiceImage(input, imgId, placeholderId) {
+            const preview = document.getElementById(imgId);
+            const placeholder = document.getElementById(placeholderId);
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function openAddServiceModal() {
+            // Reset form and previews
+            const img = document.getElementById('addServicePreview');
+            const placeholder = document.getElementById('addServicePlaceholder');
+            img.src = '';
+            img.classList.add('hidden');
+            placeholder.classList.remove('hidden');
+            document.getElementById('addServiceModal').classList.replace('hidden', 'flex');
+        }
+
+        function openEditServiceModal(service) {
+            const modal = document.getElementById('editServiceModal');
+            const form = document.getElementById('editServiceForm');
+            const img = document.getElementById('editServicePreview');
+            const placeholder = document.getElementById('editServicePlaceholder');
+
+            form.action = `/dashboard/owner/services/update/${service.id}`;
+            document.getElementById('edit_serviceName').value = service.name;
+            document.getElementById('edit_serviceDesc').value = service.description;
+            document.getElementById('edit_servicePrice').value = service.price;
+            document.getElementById('edit_serviceDuration').value = service.duration;
+            document.getElementById('edit_serviceIcon').value = service.icon;
+
+            // Handle preview if image exists
+            if (service.image_url) {
+                img.src = service.image_url;
+                img.classList.remove('hidden');
+                placeholder.classList.add('hidden');
+            } else {
+                img.src = '';
+                img.classList.add('hidden');
+                placeholder.classList.remove('hidden');
+            }
+
+            modal.classList.replace('hidden', 'flex');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.replace('flex', 'hidden');
+        }
+
+        function deleteService(id) {
+            if (confirm('هل أنت متأكد من حذف هذه الخدمة؟')) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/dashboard/owner/services/delete/${id}`;
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
+</body>
+
+</html>

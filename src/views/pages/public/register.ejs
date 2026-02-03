@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html class="light" dir="<%= locale === 'ar' ? 'rtl' : 'ltr' %>" lang="<%= locale %>">
+
+<head>
+    <%- include('../../partials/head') %>
+        <!-- International Telephone Input CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/css/intlTelInput.css">
+        <style>
+            .iti {
+                width: 100%;
+                display: block;
+            }
+
+            .iti__country-list {
+                background-color: white !important;
+                color: #181113 !important;
+            }
+
+            .dark .iti__country-list {
+                background-color: #1a0c10 !important;
+                color: white !important;
+                border-color: #3d252e !important;
+            }
+
+            .iti__flag-container {
+                border-radius: 1rem 0 0 1rem;
+            }
+
+            .iti--allow-dropdown input {
+                padding-right: 4rem !important;
+            }
+
+            /* Fix for RTL */
+            [dir="rtl"] .iti--allow-dropdown input {
+                padding-right: 6rem !important;
+                padding-left: 1.5rem !important;
+                text-align: left;
+            }
+
+            [dir="rtl"] .iti__flag-container {
+                right: 0 !important;
+                left: auto !important;
+            }
+
+            [dir="rtl"] .iti__selected-flag {
+                flex-direction: row-reverse;
+            }
+        </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-[#181113] dark:text-white transition-colors duration-200 noise-bg min-h-screen flex items-center justify-center p-4">
+    <div
+        class="w-full max-w-6xl h-[90vh] min-h-[850px] grid lg:grid-cols-10 rounded-[3rem] overflow-hidden shadow-premium glass border border-white/20 dark:border-white/5 animate-scale-in">
+
+        <!-- Left Side: Brand & Visuals -->
+        <div class="hidden lg:flex lg:col-span-4 gradient-bg p-16 flex-col justify-between relative text-white">
+            <div
+                class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/clean-gray-paper.png')]">
+            </div>
+            <div class="absolute -top-32 -right-32 size-64 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
+            <div class="absolute -bottom-32 -left-32 size-64 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
+
+            <div class="relative z-10">
+                <a href="/"
+                    class="inline-flex items-center gap-4 bg-white/20 p-5 rounded-[2rem] backdrop-blur-2xl border border-white/20 mb-16 hover:bg-white/30 transition-all btn-bounce">
+                    <span class="material-symbols-outlined filled text-4xl">diamond</span>
+                    <span class="font-black text-3xl tracking-tight">كوافير</span>
+                </a>
+                <h2 class="text-6xl font-black leading-tight mb-8">ابدئي رحلة <br> <span
+                        class="opacity-80">الجمال</span></h2>
+                <p class="text-white/80 text-xl font-bold max-w-xs leading-relaxed">أكبر منصة لحجز صالونات التجميل في
+                    الأقصر، تجربة فريدة تنتظركِ.</p>
+            </div>
+
+            <div class="relative z-10 space-y-6">
+                <div
+                    class="flex items-center gap-6 bg-white/10 p-6 rounded-[2rem] backdrop-blur-md border border-white/10">
+                    <div class="size-14 bg-white rounded-2xl flex items-center justify-center text-primary shadow-xl">
+                        <span class="material-symbols-outlined text-3xl">verified</span>
+                    </div>
+                    <div>
+                        <p class="font-black text-xl">صالونات موثوقة</p>
+                        <p class="text-xs text-white/60 uppercase tracking-widest mt-1">ضمان الجودة والاحترافية</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side: Interaction Form -->
+        <div class="col-span-10 lg:col-span-6 bg-white dark:bg-[#12080a] flex flex-col h-full overflow-hidden relative">
+            <div class="absolute top-8 left-8 z-20">
+                <%- include('../../partials/theme-toggle') %>
+            </div>
+
+            <!-- Header Content -->
+            <div class="p-12 pb-6 space-y-2 animate-slide-up">
+                <h1 class="text-4xl md:text-5xl font-black">إنشاء حساب</h1>
+                <p class="text-[#896170] dark:text-gray-400 font-bold">خطوات بسيطة وتبدأ المتعة!</p>
+            </div>
+
+            <!-- Responsive Forms -->
+            <div class="flex-1 overflow-y-auto no-scrollbar p-12 pt-6">
+                <%- include('../../partials/flash') %>
+
+                    <form action="/register" method="POST" class="space-y-8 animate-slide-up"
+                        style="animation-delay: 100ms">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="md:col-span-2 space-y-3">
+                                <label class="text-xs font-black uppercase text-[#896170] mr-2">الاسم بالكامل</label>
+                                <div class="relative group">
+                                    <span
+                                        class="material-symbols-outlined absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors text-2xl">person</span>
+                                    <input type="text" name="name" required minlength="3"
+                                        class="w-full h-16 pr-16 pl-6 rounded-2xl border-2 border-gray-50 dark:border-[#2d1a22] bg-gray-50/50 dark:bg-[#1a0c10] focus:border-primary/50 focus:bg-white dark:focus:bg-[#2d1a22] transition-all outline-none font-bold text-lg"
+                                        placeholder="سارة محمد">
+                                </div>
+                            </div>
+
+                            <div class="space-y-3">
+                                <label class="text-xs font-black uppercase text-[#896170] mr-2">البريد
+                                    الإلكتروني</label>
+                                <div class="relative group">
+                                    <span
+                                        class="material-symbols-outlined absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors text-2xl">mail</span>
+                                    <input type="email" name="email" required
+                                        class="w-full h-16 pr-16 pl-6 rounded-2xl border-2 border-gray-50 dark:border-[#2d1a22] bg-gray-50/50 dark:bg-[#1a0c10] focus:border-primary/50 focus:bg-white dark:focus:bg-[#2d1a22] transition-all outline-none font-bold text-lg text-left"
+                                        placeholder="email@example.com">
+                                </div>
+                            </div>
+
+                            <div class="space-y-3">
+                                <label class="text-xs font-black uppercase text-[#896170] mr-2">رقم الهاتف</label>
+                                <div class="relative group">
+                                    <input type="tel" id="family-phone" name="phone_input" required
+                                        class="w-full h-16 pr-16 pl-6 rounded-2xl border-2 border-gray-50 dark:border-[#2d1a22] bg-gray-50/50 dark:bg-[#1a0c10] focus:border-primary/50 focus:bg-white dark:focus:bg-[#2d1a22] transition-all outline-none font-bold text-lg text-left"
+                                        placeholder="01xxxxxxxxx">
+                                    <input type="hidden" name="phone" id="full-phone">
+                                </div>
+                            </div>
+
+                            <div class="md:col-span-2 space-y-3">
+                                <label class="text-xs font-black uppercase text-[#896170] mr-2">كلمة المرور</label>
+                                <div class="relative group">
+                                    <span
+                                        class="material-symbols-outlined absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors text-2xl">lock</span>
+                                    <input type="password" id="reg-password" name="password" required minlength="6"
+                                        class="w-full h-16 pr-16 pl-16 rounded-2xl border-2 border-gray-50 dark:border-[#2d1a22] bg-gray-50/50 dark:bg-[#1a0c10] focus:border-primary/50 focus:bg-white dark:focus:bg-[#2d1a22] transition-all outline-none font-bold text-lg"
+                                        placeholder="••••••••">
+                                    <button type="button" onclick="togglePassword()"
+                                        class="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary p-2 transition-colors">
+                                        <span class="material-symbols-outlined text-2xl" id="eyeIcon">visibility</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="md:col-span-2 space-y-4">
+                                <label class="text-xs font-black uppercase text-[#896170] mr-2">نوع الحساب</label>
+                                <div class="grid grid-cols-2 gap-6">
+                                    <label class="relative cursor-pointer group/role">
+                                        <input type="radio" name="role" value="customer" class="peer sr-only" checked>
+                                        <div
+                                            class="flex flex-col items-center gap-3 p-6 rounded-3xl border-2 border-gray-50 dark:border-[#2d1a22] peer-checked:border-primary peer-checked:bg-primary/5 peer-checked:shadow-xl transition-all hover:border-primary/30">
+                                            <span
+                                                class="material-symbols-outlined text-4xl text-[#896170] peer-checked:text-primary transition-colors">person</span>
+                                            <span class="font-black">عميلة</span>
+                                        </div>
+                                    </label>
+                                    <label class="relative cursor-pointer group/role">
+                                        <input type="radio" name="role" value="owner" class="peer sr-only">
+                                        <div
+                                            class="flex flex-col items-center gap-3 p-6 rounded-3xl border-2 border-gray-50 dark:border-[#2d1a22] peer-checked:border-primary peer-checked:bg-primary/5 peer-checked:shadow-xl transition-all hover:border-primary/30">
+                                            <span
+                                                class="material-symbols-outlined text-4xl text-[#896170] peer-checked:text-primary transition-colors">storefront</span>
+                                            <span class="font-black">صالون</span>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div id="owner-promo"
+                                    class="hidden mt-4 p-4 bg-primary/5 rounded-2xl border border-primary/10 text-center animate-slide-up">
+                                    <p class="text-sm font-bold text-[#896170]">سجلي صالونكِ وادرجي خدماتكِ أمام آلاف
+                                        العميلات.</p>
+                                    <p class="text-xs font-black text-primary mt-1">جربي النظام مجاناً لمدة 7 أيام!</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-4">
+                            <button type="submit"
+                                class="w-full h-18 gradient-bg text-white py-6 rounded-[2rem] font-black text-2xl shadow-2xl shadow-primary/30 btn-bounce shimmer">
+                                <span>إنشاء الحساب مجاناً</span>
+                            </button>
+                        </div>
+
+                        <div class="relative py-4">
+                            <div class="absolute inset-0 flex items-center">
+                                <div class="w-full border-t border-[#e6dbdf] dark:border-[#3d252e]"></div>
+                            </div>
+                            <div class="relative flex justify-center text-[10px] font-black uppercase tracking-widest">
+                                <span class="bg-white dark:bg-[#12080a] px-6 text-[#896170]">أو عبر منصات التواصل</span>
+                            </div>
+                        </div>
+
+                        <a href="/auth/google"
+                            class="w-full h-16 flex items-center justify-center gap-4 border-2 border-gray-50 dark:border-[#2d1a22] rounded-2xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all group btn-bounce">
+                            <img src="https://www.svgrepo.com/show/355037/google.svg"
+                                class="size-6 group-hover:rotate-[360deg] transition-transform duration-700"
+                                alt="Google">
+                            <span class="font-black text-lg">المتابعة باستخدام جوجل</span>
+                        </a>
+                    </form>
+
+                    <div class="mt-16 text-center animate-slide-up" style="animation-delay: 200ms">
+                        <p class="text-[#896170] font-bold text-lg">لديكِ حساب بالفعل؟ <a href="/login"
+                                class="text-primary font-black hover:underline underline-offset-8 mr-2 transition-all">تسجيل
+                                الدخول</a></p>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/js/intlTelInput.min.js"></script>
+    <script>
+        const phoneInputField = document.querySelector("#family-phone");
+        const fullPhoneInput = document.querySelector("#full-phone");
+
+        const phoneInput = window.intlTelInput(phoneInputField, {
+            utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/js/utils.js",
+            initialCountry: "eg",
+            preferredCountries: ["eg", "sa", "ae", "kw", "qa"],
+            autoPlaceholder: "aggressive",
+            separateDialCode: true,
+        });
+
+        // Update hidden field on change
+        const form = document.querySelector("form");
+        form.addEventListener("submit", (e) => {
+            const fullNumber = phoneInput.getNumber();
+            fullPhoneInput.value = fullNumber;
+
+            // Basic validation
+            if (!phoneInput.isValidNumber()) {
+                e.preventDefault();
+                alert("يرجى إدخال رقم هاتف صحيح");
+            }
+        });
+
+        function togglePassword() {
+            const input = document.getElementById('reg-password');
+            const icon = document.getElementById('eyeIcon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.textContent = 'visibility_off';
+            } else {
+                input.type = 'password';
+                icon.textContent = 'visibility';
+            }
+        }
+
+        // Handle Role Selection Promo
+        const roleInputs = document.querySelectorAll('input[name="role"]');
+        const ownerPromo = document.getElementById('owner-promo');
+
+        roleInputs.forEach(input => {
+            input.addEventListener('change', () => {
+                if (input.value === 'owner') {
+                    ownerPromo.classList.remove('hidden');
+                } else {
+                    ownerPromo.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

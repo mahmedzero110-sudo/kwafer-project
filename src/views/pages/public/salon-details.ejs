@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html class="light" dir="<%= locale === 'ar' ? 'rtl' : 'ltr' %>" lang="<%= locale %>">
+
+<head>
+    <%- include('../../partials/head') %>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-[#181113] dark:text-white transition-colors duration-200 noise-bg">
+    <div class="relative flex min-h-screen w-full flex-col">
+        <%- include('../../partials/header') %>
+            <main class="flex-1 flex flex-col items-center w-full">
+                <!-- Immersive Salon Header -->
+                <div class="w-full bg-[#1a0c10] overflow-hidden relative">
+                    <!-- Blurred Background for context -->
+                    <div class="absolute inset-0 opacity-40 blur-3xl scale-110">
+                        <img src="<%= salon.image_url %>" class="w-full h-full object-cover">
+                    </div>
+
+                    <div
+                        class="max-w-[1400px] mx-auto relative h-[50vh] min-h-[400px] overflow-hidden md:rounded-b-[4rem] shadow-2xl">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-background-light dark:from-background-dark via-transparent to-black/30 z-10">
+                        </div>
+                        <img src="<%= salon.image_url %>" alt="<%= salon.name %>"
+                            class="w-full h-full object-cover animate-slow-zoom">
+
+                        <div class="absolute bottom-0 left-0 right-0 z-20 p-6 md:p-12 mb-4">
+                            <div class="max-w-[1200px] mx-auto space-y-4">
+                                <nav class="flex items-center gap-2 text-xs md:text-sm text-white/80 font-bold mb-4">
+                                    <a href="/" class="hover:text-primary transition-colors">الرئيسية</a>
+                                    <span class="material-symbols-outlined text-[14px]">chevron_left</span>
+                                    <a href="/salons" class="hover:text-primary transition-colors">الصالونات</a>
+                                    <span class="material-symbols-outlined text-[14px]">chevron_left</span>
+                                    <span class="text-white">
+                                        <%= salon.name %>
+                                    </span>
+                                </nav>
+
+                                <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                                    <div class="space-y-4">
+                                        <div class="flex items-center gap-3">
+                                            <h1 class="text-4xl md:text-6xl font-black text-white drop-shadow-2xl">
+                                                <%= salon.name %>
+                                            </h1>
+                                            <button onclick="toggleFavorite(this)"
+                                                class="p-3 bg-white/20 backdrop-blur-xl border border-white/20 rounded-2xl hover:bg-white/40 transition-all btn-bounce">
+                                                <span
+                                                    class="material-symbols-outlined text-white">favorite_border</span>
+                                            </button>
+                                        </div>
+                                        <div class="flex flex-wrap items-center gap-4 text-white font-bold text-sm">
+                                            <div
+                                                class="flex items-center gap-1.5 bg-gold/20 backdrop-blur-xl px-4 py-1.5 rounded-full border border-gold/30 shadow-lg">
+                                                <span class="material-symbols-outlined text-gold fill-1">star</span>
+                                                <span>
+                                                    <%= Number(salon.rating || 0).toFixed(1) %>
+                                                </span>
+                                                <span class="opacity-60 text-xs font-normal">(<%= reviews.length %>
+                                                        تقييم)</span>
+                                            </div>
+                                            <div
+                                                class="flex items-center gap-1.5 bg-black/40 backdrop-blur-xl px-4 py-1.5 rounded-full border border-white/10 shadow-lg">
+                                                <span class="material-symbols-outlined text-base">location_on</span>
+                                                <span>
+                                                    <%= salon.location %>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div
+                                        class="hidden md:flex flex-col items-end gap-2 bg-black/30 backdrop-blur-md p-6 rounded-[2rem] border border-white/10">
+                                        <p class="text-white/60 text-[10px] font-black uppercase tracking-widest">يبدأ
+                                            الحجز من
+                                        </p>
+                                        <p class="text-white text-4xl font-black">
+                                            <%= salon.price_start_manual || salon.price_start %> <small
+                                                    class="text-sm">ج.م</small>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-full max-w-[1200px] grid grid-cols-1 lg:grid-cols-3 gap-8 p-4 md:py-12 mx-auto">
+                    <!-- Main Content -->
+                    <div class="lg:col-span-2 space-y-12">
+                        <!-- About -->
+                        <section
+                            class="bg-white dark:bg-[#2d1a22] rounded-[2rem] p-8 border border-[#e6dbdf] dark:border-[#3d252e] shadow-sm animate-slide-up">
+                            <h2 class="text-2xl font-black mb-6">عن الصالون</h2>
+                            <p class="text-[#896170] dark:text-gray-400 leading-relaxed text-lg whitespace-pre-line">
+                                <%= salon.description
+                                    || 'نقدم أفضل خدمات التجميل مع فريق من الخبيرات المحترفات. نستخدم أحدث التقنيات والمنتجات العالمية لضمان رضاكِ التام.'
+                                    %>
+                            </p>
+                        </section>
+
+                        <!-- Gallery Section -->
+                        <% if (locals.gallery && gallery.length> 0) { %>
+                            <section class="space-y-6 animate-slide-up">
+                                <div class="flex items-center justify-between px-2">
+                                    <h2 class="text-2xl font-black">معرض الصور</h2>
+                                    <span
+                                        class="text-xs font-bold text-[#896170] bg-gray-100 dark:bg-[#3d252e] px-3 py-1 rounded-full">
+                                        <%= gallery.length %> صورة
+                                    </span>
+                                </div>
+                                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                    <% gallery.forEach(function(image, index) { %>
+                                        <div class="group relative aspect-square rounded-[2rem] overflow-hidden cursor-pointer"
+                                            onclick="openPhotoSwipe('<%= image.image_url %>')">
+                                            <img src="<%= image.image_url %>" alt="<%= image.caption || salon.name %>"
+                                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                                            <div
+                                                class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-end">
+                                                <% if (image.caption) { %>
+                                                    <p
+                                                        class="text-white text-sm font-bold text-center mb-2 line-clamp-2">
+                                                        <%= image.caption %>
+                                                    </p>
+                                                    <% } %>
+                                                        <span
+                                                            class="material-symbols-outlined text-white/80 text-2xl hover:text-primary transition-colors hover:scale-110">fullscreen</span>
+                                            </div>
+                                        </div>
+                                        <% }); %>
+                                </div>
+                            </section>
+
+                            <!-- Lightbox for Gallery -->
+                            <div id="galleryLightbox"
+                                class="fixed inset-0 bg-black/95 z-[200] hidden items-center justify-center p-4 backdrop-blur-sm"
+                                onclick="closePhotoSwipe()">
+                                <button class="absolute top-8 left-8 text-white hover:text-primary transition-colors">
+                                    <span class="material-symbols-outlined text-4xl">close</span>
+                                </button>
+                                <img id="lightboxImg" src=""
+                                    class="max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl animate-scale-in">
+                            </div>
+
+                            <script>
+                                function openPhotoSwipe(url) {
+                                    const lightbox = document.getElementById('galleryLightbox');
+                                    const img = document.getElementById('lightboxImg');
+                                    img.src = url;
+                                    lightbox.classList.replace('hidden', 'flex');
+                                    document.body.style.overflow = 'hidden';
+                                }
+                                function closePhotoSwipe() {
+                                    const lightbox = document.getElementById('galleryLightbox');
+                                    lightbox.classList.replace('flex', 'hidden');
+                                    document.body.style.overflow = '';
+                                }
+                            </script>
+                            <% } %>
+
+                                <!-- Bridal Package -->
+                                <% if (salon.bridal_title) { %>
+                                    <section
+                                        class="relative overflow-hidden rounded-[2.5rem] gradient-bg p-8 md:p-12 text-white shadow-2xl animate-scale-in">
+                                        <div
+                                            class="absolute -top-24 -right-24 size-64 bg-white/10 rounded-full blur-[80px]">
+                                        </div>
+                                        <div class="relative z-10 space-y-6">
+                                            <div
+                                                class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-lg px-6 py-2 rounded-full text-xs font-black tracking-widest uppercase">
+                                                <span class="material-symbols-outlined text-sm">auto_awesome</span>
+                                                خدمة كبار الشخصيات
+                                            </div>
+                                            <h2 class="text-3xl md:text-5xl font-black">
+                                                <%= salon.bridal_title %>
+                                            </h2>
+                                            <p class="text-white/80 text-lg max-w-xl">
+                                                <%= salon.bridal_desc %>
+                                            </p>
+
+                                            <div class="flex flex-wrap gap-3">
+                                                <% if (salon.bridal_services) { %>
+                                                    <% salon.bridal_services.split('،').forEach(function(service) { %>
+                                                        <div
+                                                            class="flex items-center gap-2 bg-white/10 border border-white/20 px-4 py-2 rounded-2xl text-sm font-bold">
+                                                            <span
+                                                                class="material-symbols-outlined text-sm">done_all</span>
+                                                            <%= service.trim() %>
+                                                        </div>
+                                                        <% }); %>
+                                                            <% } %>
+                                            </div>
+
+                                            <div
+                                                class="flex flex-wrap items-center gap-6 pt-6 border-t border-white/10">
+                                                <div
+                                                    class="bg-white text-primary p-6 rounded-[2rem] flex flex-col items-center">
+                                                    <span class="text-[10px] font-black opacity-60 uppercase mb-1">السعر
+                                                        الحصري</span>
+                                                    <span class="text-3xl font-black">
+                                                        <%= Math.round(salon.bridal_price * (1 -
+                                                            salon.bridal_discount/100)) %>
+                                                            <small class="text-xs">ج.م</small>
+                                                    </span>
+                                                </div>
+                                                <div class="flex flex-col">
+                                                    <span class="text-sm line-through opacity-60 font-bold">
+                                                        <%= salon.bridal_price %> ج.م
+                                                    </span>
+                                                    <span class="text-gold font-black">وفري <%=
+                                                            Math.round(salon.bridal_price * (salon.bridal_discount/100))
+                                                            %> ج.م</span>
+                                                </div>
+                                                <button
+                                                    class="booking-btn mr-auto bg-white text-primary h-16 px-12 rounded-[2rem] font-black shadow-xl hover:bg-background-light transition-all btn-bounce shimmer"
+                                                    data-service-name="<%= salon.bridal_title %>"
+                                                    data-service-price="<%= Math.round(salon.bridal_price * (1 - salon.bridal_discount/100)) %>"
+                                                    data-service-id="bridal-<%= salon.id %>"
+                                                    data-salon-id="<%= salon.id %>">
+                                                    احجزي الباقة الآن
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </section>
+                                    <% } %>
+
+                                        <!-- Services -->
+                                        <section class="space-y-8">
+                                            <h2 class="text-3xl font-black px-2">الخدمات القائمة</h2>
+                                            <div class="grid gap-6">
+                                                <% services.forEach(function(service) { %>
+                                                    <div
+                                                        class="group bg-white dark:bg-[#2d1a22] rounded-[2.5rem] overflow-hidden border border-[#e6dbdf] dark:border-[#3d252e] hover:border-primary/50 transition-all duration-500 flex flex-col md:flex-row items-stretch gap-0 shadow-sm hover:shadow-xl">
+                                                        <!-- Service Image -->
+                                                        <div class="md:w-48 lg:w-64 shrink-0 relative overflow-hidden">
+                                                            <% if (service.image_url) { %>
+                                                                <img src="<%= service.image_url %>"
+                                                                    alt="<%= service.name %>"
+                                                                    class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                                                                <% } else { %>
+                                                                    <div
+                                                                        class="w-full h-full gradient-bg opacity-10 flex items-center justify-center min-h-[160px]">
+                                                                        <span
+                                                                            class="material-symbols-outlined text-primary text-5xl opacity-20">
+                                                                            <%= service.icon || 'spa' %>
+                                                                        </span>
+                                                                    </div>
+                                                                    <% } %>
+                                                                        <div
+                                                                            class="absolute inset-0 bg-gradient-to-l from-white dark:from-[#2d1a22] to-transparent opacity-0 md:opacity-100">
+                                                                        </div>
+                                                        </div>
+
+                                                        <!-- Service Content -->
+                                                        <div class="flex-1 p-8 flex flex-col justify-between">
+                                                            <div
+                                                                class="flex flex-col md:flex-row md:items-start justify-between gap-4">
+                                                                <div>
+                                                                    <div class="flex items-center gap-3 mb-2">
+                                                                        <span
+                                                                            class="material-symbols-outlined text-primary text-xl">
+                                                                            <%= service.icon || 'spa' %>
+                                                                        </span>
+                                                                        <h3 class="text-2xl font-black tracking-tight">
+                                                                            <%= service.name %>
+                                                                        </h3>
+                                                                    </div>
+                                                                    <p
+                                                                        class="text-[#896170] dark:text-gray-400 text-sm leading-relaxed line-clamp-2 md:max-w-md">
+                                                                        <%= service.description
+                                                                            || 'وصف الخدمة سيكون متاحاً قريباً.' %>
+                                                                    </p>
+                                                                </div>
+                                                                <div class="flex flex-col items-end">
+                                                                    <span class="text-primary font-black text-3xl">
+                                                                        <%= service.price %> <small
+                                                                                class="text-xs">ج.م</small>
+                                                                    </span>
+                                                                    <span
+                                                                        class="text-[10px] font-black text-[#896170]/60 uppercase tracking-widest mt-1">
+                                                                        <span
+                                                                            class="material-symbols-outlined text-[12px] align-middle">schedule</span>
+                                                                        <%= service.duration %> دقيقة
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div
+                                                                class="flex items-center justify-between mt-8 pt-6 border-t border-[#f4f0f2]/50 dark:border-[#3d252e]">
+                                                                <div class="flex items-center gap-2">
+                                                                    <span
+                                                                        class="size-2 rounded-full bg-green-500 animate-pulse"></span>
+                                                                    <span
+                                                                        class="text-[10px] font-black text-green-600 dark:text-green-400 uppercase tracking-widest">متاح
+                                                                        للحجز الآن</span>
+                                                                </div>
+                                                                <button
+                                                                    class="booking-btn h-14 px-10 rounded-2xl bg-primary text-white font-black hover:shadow-2xl hover:scale-105 transition-all btn-bounce shimmer"
+                                                                    data-service-name="<%= service.name %>"
+                                                                    data-service-price="<%= service.price %>"
+                                                                    data-service-id="<%= service.id %>"
+                                                                    data-salon-id="<%= salon.id %>">
+                                                                    احجزي الآن
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <% }); %>
+                                            </div>
+                                        </section>
+
+                                        <!-- Policies -->
+                                        <% if (salon.booking_policy) { %>
+                                            <section
+                                                class="bg-red-50 dark:bg-red-900/10 border-2 border-red-100 dark:border-red-900/20 rounded-[2rem] p-8">
+                                                <div class="flex items-start gap-5">
+                                                    <div
+                                                        class="bg-red-500 text-white size-12 rounded-2xl flex items-center justify-center shrink-0">
+                                                        <span class="material-symbols-outlined">gavel</span>
+                                                    </div>
+                                                    <div class="space-y-2">
+                                                        <h3 class="text-lg font-black text-red-900 dark:text-red-200">
+                                                            سياسات
+                                                            الصالون</h3>
+                                                        <p
+                                                            class="text-red-800/80 dark:text-red-300/80 text-sm leading-relaxed">
+                                                            <%= salon.booking_policy %>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                            <% } %>
+
+                                                <!-- Reviews -->
+                                                <section id="reviews"
+                                                    class="bg-white dark:bg-[#2d1a22] rounded-[2.5rem] p-8 md:p-12 border border-[#e6dbdf] dark:border-[#3d252e] shadow-sm">
+                                                    <div
+                                                        class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+                                                        <h2 class="text-3xl font-black">كلمات عميلاتنا</h2>
+                                                        <div
+                                                            class="flex items-center gap-4 bg-gold/5 px-6 py-3 rounded-2xl border border-gold/10">
+                                                            <div class="flex items-center gap-1">
+                                                                <span
+                                                                    class="material-symbols-outlined text-gold fill-1 text-2xl">star</span>
+                                                                <span class="text-2xl font-black text-gold">
+                                                                    <%= (reviews.length> 0 ? (reviews.reduce((acc, r)=>
+                                                                        acc +
+                                                                        r.rating, 0) / reviews.length) : 0).toFixed(1)
+                                                                        %>
+                                                                </span>
+                                                            </div>
+                                                            <span class="h-6 w-px bg-gold/20"></span>
+                                                            <span
+                                                                class="text-xs font-black text-gold/80 uppercase tracking-widest">
+                                                                <%= reviews.length %> تقييم
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                    <% if (user) { %>
+                                                        <div
+                                                            class="mb-12 bg-gray-50 dark:bg-[#1a0c10] p-8 rounded-[2rem] border-2 border-dashed border-[#e6dbdf] dark:border-[#3d252e]">
+                                                            <h3 class="font-black text-lg mb-6">ما هو رأيكِ في تجربتكِ؟
+                                                            </h3>
+                                                            <form action="/reviews" method="POST" class="space-y-6">
+                                                                <input type="hidden" name="salon_id"
+                                                                    value="<%= salon.id %>">
+                                                                <div class="flex items-center gap-4">
+                                                                    <div class="flex flex-row-reverse gap-2">
+                                                                        <% for(let i=5; i>=1; i--) { %>
+                                                                            <input type="radio" id="star<%= i %>"
+                                                                                name="rating" value="<%= i %>"
+                                                                                class="peer hidden" required>
+                                                                            <label for="star<%= i %>"
+                                                                                class="material-symbols-outlined text-4xl text-[#e6dbdf] peer-checked:text-gold hover:text-gold cursor-pointer transition-all duration-300">star</label>
+                                                                            <% } %>
+                                                                    </div>
+                                                                </div>
+                                                                <textarea name="comment" rows="4" required
+                                                                    class="w-full p-6 rounded-2xl border-none ring-1 ring-[#e6dbdf] dark:ring-[#3d252e] bg-white dark:bg-[#2d1a22] focus:ring-2 focus:ring-primary text-lg"
+                                                                    placeholder="اكتبي تجربتكِ هنا بكل صراحة..."></textarea>
+                                                                <button type="submit"
+                                                                    class="gradient-bg text-white h-14 px-12 rounded-2xl font-black shadow-xl btn-bounce shimmer">نشر
+                                                                    التقييم</button>
+                                                            </form>
+                                                        </div>
+                                                        <% } %>
+
+                                                            <div class="space-y-10">
+                                                                <% if (reviews.length> 0) { %>
+                                                                    <% reviews.forEach(function(review) { %>
+                                                                        <div class="flex gap-6 animate-fade-in">
+                                                                            <div
+                                                                                class="size-14 rounded-2xl gradient-bg flex items-center justify-center font-black text-white shadow-xl shrink-0 text-xl uppercase">
+                                                                                <%= review.customer_name.charAt(0) %>
+                                                                            </div>
+                                                                            <div class="flex-1 space-y-3">
+                                                                                <div
+                                                                                    class="flex items-center justify-between">
+                                                                                    <h4 class="font-black text-lg">
+                                                                                        <%= review.customer_name %>
+                                                                                    </h4>
+                                                                                    <div class="flex gap-0.5">
+                                                                                        <% for(let i=0; i<5; i++) { %>
+                                                                                            <span
+                                                                                                class="material-symbols-outlined text-sm <%= i < review.rating ? 'text-gold fill-1' : 'text-[#e6dbdf]' %>">star</span>
+                                                                                            <% } %>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <p
+                                                                                    class="text-[#896170] dark:text-gray-400 leading-relaxed">
+                                                                                    <%= review.comment %>
+                                                                                </p>
+                                                                                <div
+                                                                                    class="flex items-center gap-4 text-[10px] font-black text-[#896170]/60 uppercase tracking-widest">
+                                                                                    <span>
+                                                                                        <%= timeAgo(review.created_at)
+                                                                                            %>
+                                                                                    </span>
+                                                                                    <span
+                                                                                        class="size-1 bg-[#896170]/20 rounded-full"></span>
+                                                                                    <span
+                                                                                        class="flex items-center gap-1"><span
+                                                                                            class="material-symbols-outlined text-[12px]">verified</span>
+                                                                                        تم التحقق</span>
+                                                                                </div>
+
+                                                                                <% if (review.owner_reply) { %>
+                                                                                    <div
+                                                                                        class="mt-6 bg-primary/5 p-6 rounded-3xl border-r-4 border-primary shadow-sm space-y-2">
+                                                                                        <div
+                                                                                            class="flex items-center gap-2 text-xs font-black text-primary uppercase tracking-widest">
+                                                                                            <span
+                                                                                                class="material-symbols-outlined text-sm">reply</span>
+                                                                                            رد الإدارة
+                                                                                        </div>
+                                                                                        <p
+                                                                                            class="text-[#896170] italic">
+                                                                                            <%= review.owner_reply %>
+                                                                                        </p>
+                                                                                    </div>
+                                                                                    <% } %>
+                                                                            </div>
+                                                                        </div>
+                                                                        <% }); %>
+                                                                            <% } else { %>
+                                                                                <div class="text-center py-12">
+                                                                                    <div
+                                                                                        class="size-20 bg-gray-50 dark:bg-[#1a0c10] rounded-full flex items-center justify-center mx-auto mb-4 border border-[#e6dbdf] dark:border-[#3d252e]">
+                                                                                        <span
+                                                                                            class="material-symbols-outlined text-4xl opacity-20">forum</span>
+                                                                                    </div>
+                                                                                    <p
+                                                                                        class="text-[#896170] font-black">
+                                                                                        لا توجد
+                                                                                        تقييمات بعد، شاركينا رأيكِ!</p>
+                                                                                </div>
+                                                                                <% } %>
+                                                            </div>
+                                                </section>
+                    </div>
+
+                    <!-- Sidebar -->
+                    <div class="space-y-8">
+                        <div class="sticky top-24 space-y-6">
+                            <!-- Quick Contact -->
+                            <div
+                                class="bg-white dark:bg-[#2d1a22] rounded-[2.5rem] p-8 border border-[#e6dbdf] dark:border-[#3d252e] shadow-xl">
+                                <h3 class="text-xl font-black mb-6">معلومات التواصل</h3>
+                                <div class="space-y-4">
+                                    <div
+                                        class="flex items-center gap-4 p-4 bg-gray-50 dark:bg-[#1a0c10] rounded-[1.5rem] group hover:bg-primary/5 transition-colors">
+                                        <div
+                                            class="size-12 bg-white dark:bg-black rounded-xl flex items-center justify-center shadow-sm group-hover:text-primary">
+                                            <span class="material-symbols-outlined">schedule</span>
+                                        </div>
+                                        <div class="flex flex-col">
+                                            <span class="text-[10px] font-black opacity-60 uppercase">ساعات العمل</span>
+                                            <span class="text-sm font-bold">
+                                                <%= salon.working_hours || 'غير محدد' %>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="flex items-center gap-4 p-4 bg-gray-50 dark:bg-[#1a0c10] rounded-[1.5rem] group hover:bg-primary/5 transition-colors">
+                                        <div
+                                            class="size-12 bg-white dark:bg-black rounded-xl flex items-center justify-center shadow-sm group-hover:text-primary">
+                                            <span class="material-symbols-outlined">call</span>
+                                        </div>
+                                        <div class="flex flex-col">
+                                            <span class="text-[10px] font-black opacity-60 uppercase">رقم الهاتف</span>
+                                            <span class="text-sm font-bold dir-ltr text-left">
+                                                <%= salon.phone || '+20 123 456 7890' %>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="flex items-center gap-4 p-4 bg-gray-50 dark:bg-[#1a0c10] rounded-[1.5rem] group hover:bg-primary/5 transition-colors">
+                                        <div
+                                            class="size-12 bg-white dark:bg-black rounded-xl flex items-center justify-center shadow-sm group-hover:text-primary">
+                                            <span class="material-symbols-outlined">location_on</span>
+                                        </div>
+                                        <div class="flex flex-col">
+                                            <span class="text-[10px] font-black opacity-60 uppercase">العنوان</span>
+                                            <span class="text-sm font-bold">
+                                                <%= salon.location %>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <a href="<%= salon.google_maps_url || 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(salon.name + ' ' + salon.location) %>"
+                                    target="_blank"
+                                    class="w-full mt-10 h-16 bg-primary text-white rounded-2xl font-black flex items-center justify-center gap-3 shadow-lg shadow-primary/20 btn-bounce">
+                                    <span class="material-symbols-outlined">map</span>
+                                    🗺️ عرض الموقع
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sticky Booking Bar (Mobile Only) -->
+                <div
+                    class="fixed bottom-0 left-0 right-0 z-40 lg:hidden p-4 bg-white/80 dark:bg-[#2d1a22]/80 backdrop-blur-2xl border-t border-[#e6dbdf] dark:border-[#3d252e] animate-slide-up">
+                    <div class="flex items-center justify-between gap-4">
+                        <div class="flex flex-col">
+                            <span class="text-[10px] font-black opacity-60 uppercase tracking-widest">يبدأ من</span>
+                            <span class="text-2xl font-black text-primary">
+                                <%= salon.price_start_manual || salon.price_start %> <small class="text-xs">ج.م</small>
+                            </span>
+                        </div>
+                        <button
+                            onclick="window.scrollTo({top: document.querySelector('.grid.gap-4').offsetTop - 100, behavior: 'smooth'})"
+                            class="flex-1 h-14 gradient-bg text-white rounded-2xl font-black shadow-xl btn-bounce shimmer">
+                            احجزي باحة أو خدمة
+                        </button>
+                    </div>
+                </div>
+
+                <%- include('../../partials/footer') %>
+            </main>
+    </div>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal"
+        class="fixed inset-0 bg-black/60 backdrop-blur-md z-[110] hidden items-center justify-center p-4">
+        <div class="bg-white dark:bg-[#2d1a22] rounded-[2.5rem] max-w-md w-full p-10 relative animate-scale-in">
+            <!-- Close Button moved to left to avoid title overlap -->
+            <button onclick="closeBookingModal()"
+                class="absolute top-6 left-6 size-10 bg-gray-50 dark:bg-[#1a0c10] rounded-xl flex items-center justify-center text-[#896170] hover:text-red-500 transition-colors z-20">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            <div class="mb-8">
+                <h2 class="text-2xl font-black mb-2">حجز موعد جديد</h2>
+                <p class="text-[#896170]">سيتم الاتصال بكِ لتحديد الموعد المناسب</p>
+            </div>
+
+            <form class="space-y-5" action="/bookings" method="POST">
+                <input type="hidden" id="modal_salon_id" name="salon_id">
+                <input type="hidden" id="modal_service_id" name="service_id">
+                <input type="hidden" id="modal_amount" name="amount">
+
+                <div class="space-y-2">
+                    <label class="text-xs font-black uppercase text-[#896170] mr-2">الخدمة المختارة</label>
+                    <input id="serviceName" type="text" readonly
+                        class="w-full h-14 px-5 rounded-2xl bg-gray-50 dark:bg-[#1a0c10] border-none font-bold text-primary">
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-xs font-black uppercase text-[#896170] mr-2">الاسم بالكامل</label>
+                    <input type="text" id="modal_customer_name" name="customer_name" required
+                        placeholder="ادخلي اسمك بالكامل"
+                        class="w-full h-14 px-5 rounded-2xl bg-gray-50 dark:bg-[#1a0c10] border-none font-bold">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <label class="text-xs font-black uppercase text-[#896170] mr-2">التاريخ المفضل</label>
+                        <input type="date" name="booking_date" required
+                            class="w-full h-14 px-5 rounded-2xl bg-gray-50 dark:bg-[#1a0c10] border-none font-bold">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-black uppercase text-[#896170] mr-2">رقم الهاتف للتواصل</label>
+                        <input type="tel" id="modal_phone" name="phone" required placeholder="01xxxxxxxxx"
+                            class="w-full h-14 px-5 rounded-2xl bg-gray-50 dark:bg-[#1a0c10] border-none font-bold">
+                    </div>
+                </div>
+
+                <div class="pt-6 mt-6 border-t border-[#f4f0f2]/50 dark:border-[#3d252e]">
+                    <div class="flex items-center justify-between mb-8">
+                        <span class="font-black text-lg">إجمالي المبلغ</span>
+                        <span id="servicePrice" class="text-3xl font-black text-primary">0 ج.م</span>
+                    </div>
+                    <button type="submit"
+                        class="w-full h-16 gradient-bg text-white rounded-2xl font-black text-lg shadow-2xl shadow-primary/20 btn-bounce shimmer">
+                        تأكيد طلب الحجز
+                    </button>
+                    <p class="text-[10px] text-center text-[#896170] mt-4">بضغطكِ على تأكيد، سيقوم فريق العمل بالتواصل
+                        معكِ لتنسيق الموعد النهائي.</p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const bookingButtons = document.querySelectorAll('.booking-btn');
+            bookingButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    // Check if user is logged in
+                    const isLoggedIn = '<%= user ? "true" : "false" %>' === 'true';
+
+                    if (!isLoggedIn) {
+                        // Redirect to login with return URL
+                        window.location.href = '/login?returnTo=' + encodeURIComponent(window.location.pathname);
+                        return;
+                    }
+
+                    const serviceName = this.getAttribute('data-service-name');
+                    const servicePrice = this.getAttribute('data-service-price');
+                    const serviceId = this.getAttribute('data-service-id');
+                    const salonId = this.getAttribute('data-salon-id');
+
+                    const userName = '<%= user ? user.name : "" %>';
+                    const userPhone = '<%= user ? user.phone : "" %>';
+
+                    openBookingModal(salonId, serviceId, serviceName, servicePrice, userName, userPhone);
+                });
+            });
+        });
+
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementsByName('booking_date').forEach(el => el.setAttribute('min', today));
+
+        function openBookingModal(salonId, serviceId, serviceName, price, defaultName = '', defaultPhone = '') {
+            document.getElementById('modal_salon_id').value = salonId;
+            document.getElementById('modal_service_id').value = serviceId;
+            document.getElementById('serviceName').value = serviceName;
+            document.getElementById('servicePrice').innerText = price + ' ج.م';
+            document.getElementById('modal_amount').value = price;
+
+            // Set default values if available
+            document.getElementById('modal_customer_name').value = defaultName;
+            document.getElementById('modal_phone').value = defaultPhone;
+
+            document.getElementById('bookingModal').classList.replace('hidden', 'flex');
+        }
+
+        function closeBookingModal() {
+            document.getElementById('bookingModal').classList.replace('flex', 'hidden');
+        }
+
+        function toggleFavorite(btn) {
+            const icon = btn.querySelector('span');
+            if (icon.textContent === 'favorite_border') {
+                icon.textContent = 'favorite';
+                icon.classList.add('text-red-500', 'fill-1');
+                btn.classList.add('bg-red-50', 'border-red-100');
+            } else {
+                icon.textContent = 'favorite_border';
+                icon.classList.remove('text-red-500', 'fill-1');
+                btn.classList.remove('bg-red-50', 'border-red-100');
+            }
+        }
+    </script>
+</body>
+
+</html>

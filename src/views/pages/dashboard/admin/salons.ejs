@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html class="light" dir="<%= locale === 'ar' ? 'rtl' : 'ltr' %>" lang="<%= locale %>">
+
+<head>
+    <%- include('../../../partials/head') %>
+</head>
+
+<body class="bg-[#f8f9fa] dark:bg-[#1a0c10] text-[#181113] dark:text-white transition-colors duration-200">
+    <div class="flex min-h-screen">
+        <%- include('../../../partials/sidebar', { role: 'admin' }) %>
+
+            <main class="flex-1 <%= locale === 'ar' ? 'md:mr-64' : 'md:ml-64' %> transition-all p-8">
+                <header class="flex items-center justify-between mb-8 animate-fade-in">
+                    <div>
+                        <h1 class="text-3xl font-bold">إدارة الصالونات 🏪</h1>
+                        <p class="text-[#896170]">إدارة جميع الصالونات المسجلة في المنصة</p>
+                    </div>
+                </header>
+
+                <div
+                    class="bg-white dark:bg-[#2d1a22] rounded-2xl border-2 border-[#e6dbdf] dark:border-[#3d252e] overflow-hidden shadow-sm animate-slide-up">
+                    <div class="p-6 border-b border-[#e6dbdf] dark:border-[#3d252e] flex items-center justify-between">
+                        <h2 class="text-xl font-bold">قائمة الصالونات</h2>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right">
+                            <thead class="bg-gray-50 dark:bg-[#3d252e] text-[#896170]">
+                                <tr>
+                                    <th class="px-6 py-4">الصالون</th>
+                                    <th class="px-6 py-4">المالك</th>
+                                    <th class="px-6 py-4">الموقع</th>
+                                    <th class="px-6 py-4">الحالة</th>
+                                    <th class="px-6 py-4">التميز</th>
+                                    <th class="px-6 py-4">الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-[#e6dbdf] dark:divide-[#3d252e]">
+                                <% salons.forEach(function(salon) { %>
+                                    <tr class="hover:bg-gray-50 dark:hover:bg-[#1a0c10] transition-colors">
+                                        <td class="px-6 py-4 font-bold">
+                                            <%= salon.name %>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <%= salon.owner_name %>
+                                        </td>
+                                        <td class="px-6 py-4 text-sm">
+                                            <%= salon.location %>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <% if (salon.is_active) { %>
+                                                <span
+                                                    class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold">نشط</span>
+                                                <% } else { %>
+                                                    <span
+                                                        class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-bold">متوقف</span>
+                                                    <% } %>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <form action="/dashboard/admin/salons/featured/<%= salon.id %>"
+                                                method="POST">
+                                                <button type="submit" class="p-2 transition-transform hover:scale-125">
+                                                    <span
+                                                        class="material-symbols-outlined <%= salon.is_featured ? 'text-gold fill-1' : 'text-gray-300' %>">
+                                                        grade
+                                                    </span>
+                                                </button>
+                                            </form>
+                                        </td>
+                                        <td class="px-6 py-4 text-left">
+                                            <div class="flex gap-2">
+                                                <form action="/dashboard/admin/salons/status/<%= salon.id %>"
+                                                    method="POST">
+                                                    <button type="submit"
+                                                        class="<%= salon.is_active ? 'text-red-500' : 'text-green-500' %> hover:underline font-bold">
+                                                        <%= salon.is_active ? 'حظر' : 'تفعيل' %>
+                                                    </button>
+                                                </form>
+                                                <form action="/dashboard/admin/impersonate/<%= salon.owner_id %>"
+                                                    method="POST"
+                                                    onsubmit="return confirm('تنبيه: سيتم تحويلك إلى حساب المالك. هل أنت متأكد؟')">
+                                                    <button type="submit"
+                                                        class="text-blue-500 hover:text-blue-700 font-bold"
+                                                        title="الدخول كمالك للصالون">
+                                                        دخول
+                                                    </button>
+                                                </form>
+                                                <form action="/dashboard/admin/salons/delete/<%= salon.id %>"
+                                                    method="POST"
+                                                    onsubmit="return confirm('تحذير: هل أنتِ متأكدة من حذف هذا الصالون نهائياً؟ سيتم حذف جميع الخدمات، العروض، والتقييمات المرتبطة به.')">
+                                                    <button type="submit"
+                                                        class="text-red-600 hover:text-red-800 font-bold transition-colors">
+                                                        حذف
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+    </div>
+</body>
+
+</html>

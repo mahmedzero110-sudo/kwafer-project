@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html class="light" dir="<%= locale === 'ar' ? 'rtl' : 'ltr' %>" lang="<%= locale %>">
+
+<head>
+    <%- include('../../../partials/head') %>
+</head>
+
+<body class="bg-[#f8f9fa] dark:bg-[#1a0c10] text-[#181113] dark:text-white transition-colors duration-200">
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <%- include('../../../partials/sidebar', { role: 'admin' }) %>
+
+            <!-- Main Content -->
+            <main class="flex-1 <%= locale === 'ar' ? 'md:mr-64' : 'md:ml-64' %> transition-all p-8">
+                <header class="flex items-center justify-between mb-8">
+                    <div>
+                        <h1 class="text-2xl font-bold">طلبات الاشتراك المعلقة</h1>
+                        <p class="text-[#896170]">مراجعة وقبول طلبات الاشتراك الجديدة</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <%- include('../../../partials/theme-toggle') %>
+                            <a href="/dashboard/admin/subscriptions"
+                                class="px-4 py-2 bg-gray-100 dark:bg-[#2d1a22] rounded-xl text-sm font-bold hover:bg-gray-200 transition-colors">
+                                العودة للاشتراكات
+                            </a>
+                    </div>
+                </header>
+
+                <%- include('../../../partials/alerts') %>
+
+                    <div
+                        class="bg-white dark:bg-[#2d1a22] rounded-3xl border border-[#e6dbdf] dark:border-[#3d252e] overflow-hidden shadow-sm">
+                        <% if (requests && requests.length> 0) { %>
+                            <div class="overflow-x-auto">
+                                <table class="w-full">
+                                    <thead
+                                        class="bg-gray-50 dark:bg-[#1a0c10] border-b border-[#e6dbdf] dark:border-[#3d252e]">
+                                        <tr>
+                                            <th class="px-6 py-4 text-start font-bold text-sm text-[#896170]">الصالون
+                                            </th>
+                                            <th class="px-6 py-4 text-start font-bold text-sm text-[#896170]">المالك
+                                            </th>
+                                            <th class="px-6 py-4 text-start font-bold text-sm text-[#896170]">الخطة
+                                                المطلوبة</th>
+                                            <th class="px-6 py-4 text-start font-bold text-sm text-[#896170]">تاريخ
+                                                الطلب</th>
+                                            <th class="px-6 py-4 text-start font-bold text-sm text-[#896170]">إجراءات
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-[#e6dbdf] dark:divide-[#3d252e]">
+                                        <% requests.forEach(request=> { %>
+                                            <tr class="hover:bg-gray-50 dark:hover:bg-[#1a0c10] transition-colors">
+                                                <td class="px-6 py-4">
+                                                    <div class="font-bold">
+                                                        <%= request.salon_name || 'غير محدد' %>
+                                                    </div>
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    <div class="font-bold text-sm">
+                                                        <%= request.owner_name %>
+                                                    </div>
+                                                    <div class="text-xs text-[#896170]">
+                                                        <%= request.owner_email %>
+                                                    </div>
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    <span
+                                                        class="px-3 py-1 rounded-lg text-xs font-black bg-primary/10 text-primary">
+                                                        <%= request.plan_type==='monthly' ? 'شهري' :
+                                                            (request.plan_type==='3months' ? '3 شهور' :
+                                                            (request.plan_type==='6months' ? '6 شهور' : 'سنوي' )) %>
+                                                    </span>
+                                                </td>
+                                                <td class="px-6 py-4 text-sm font-medium dir-ltr text-right">
+                                                    <%= new Date(request.created_at).toLocaleDateString('en-GB') %>
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    <div class="flex items-center gap-2">
+                                                        <form
+                                                            action="/dashboard/admin/subscription/approve/<%= request.id %>"
+                                                            method="POST" class="inline">
+                                                            <button type="submit"
+                                                                class="px-3 py-2 bg-green-100 text-green-700 rounded-xl text-xs font-bold hover:bg-green-200 transition-colors flex items-center gap-1"
+                                                                onclick="return confirm('هل أنت متأكد من قبول هذا الطلب وتفعيل الاشتراك؟')">
+                                                                <span
+                                                                    class="material-symbols-outlined text-sm">check</span>
+                                                                قبول
+                                                            </button>
+                                                        </form>
+                                                        <form
+                                                            action="/dashboard/admin/subscription/reject/<%= request.id %>"
+                                                            method="POST" class="inline">
+                                                            <button type="submit"
+                                                                class="px-3 py-2 bg-red-100 text-red-700 rounded-xl text-xs font-bold hover:bg-red-200 transition-colors flex items-center gap-1"
+                                                                onclick="return confirm('هل أنت متأكد من رفض هذا الطلب؟')">
+                                                                <span
+                                                                    class="material-symbols-outlined text-sm">close</span>
+                                                                رفض
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <% }); %>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <% } else { %>
+                                <div class="p-12 text-center">
+                                    <div
+                                        class="size-20 bg-gray-100 dark:bg-[#1a0c10] rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <span class="material-symbols-outlined text-4xl text-gray-400">inbox</span>
+                                    </div>
+                                    <h3 class="text-lg font-bold text-gray-500">لا توجد طلبات اشتراك جديدة</h3>
+                                    <p class="text-sm text-gray-400 mt-2">جميع الطلبات تمت مراجعتها</p>
+                                </div>
+                                <% } %>
+                    </div>
+            </main>
+    </div>
+</body>
+
+</html>

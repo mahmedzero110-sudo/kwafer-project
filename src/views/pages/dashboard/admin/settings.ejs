@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html class="light" dir="<%= locale === 'ar' ? 'rtl' : 'ltr' %>" lang="<%= locale %>">
+
+<head>
+    <%- include('../../../partials/head') %>
+</head>
+
+<body class="bg-[#f8f9fa] dark:bg-[#1a0c10] text-[#181113] dark:text-white transition-colors duration-200">
+    <div class="flex min-h-screen">
+        <%- include('../../../partials/sidebar', { role: 'admin' }) %>
+
+            <main class="flex-1 <%= locale === 'ar' ? 'md:mr-64' : 'md:ml-64' %> transition-all p-8">
+                <header class="flex items-center justify-between mb-8 animate-fade-in">
+                    <div>
+                        <h1 class="text-3xl font-bold">إعدادات المنصة والـ CMS ⚙️</h1>
+                        <p class="text-[#896170]">تحكم في المحتوى العام وروابط التواصل</p>
+                    </div>
+                    <%- include('../../../partials/theme-toggle') %>
+                </header>
+
+                <% if (success && success.length> 0) { %>
+                    <div
+                        class="mb-6 bg-green-50 border-r-4 border-green-500 p-4 text-green-700 font-bold rounded-lg animate-fade-in">
+                        <%= success %>
+                    </div>
+                    <% } %>
+
+                        <div class="grid grid-cols-1 gap-8">
+                            <!-- Social Links & Global Settings -->
+                            <div class="max-w-2xl mx-auto w-full">
+                                <div
+                                    class="bg-white dark:bg-[#2d1a22] p-6 rounded-2xl border-2 border-[#e6dbdf] dark:border-[#3d252e] shadow-sm">
+                                    <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-primary">share</span>
+                                        <span>روابط التواصل</span>
+                                    </h2>
+                                    <form action="/dashboard/admin/settings" method="POST" class="space-y-4">
+                                        <div>
+                                            <label class="block text-xs font-bold mb-2 opacity-60">رابط فيسبوك</label>
+                                            <input type="text" name="facebook_url" value="<%= settings.facebook_url %>"
+                                                class="w-full p-3 border border-[#e6dbdf] dark:border-[#3d252e] rounded-xl bg-gray-50 dark:bg-[#1a0c10]">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold mb-2 opacity-60">رابط إنستجرام</label>
+                                            <input type="text" name="instagram_url"
+                                                value="<%= settings.instagram_url %>"
+                                                class="w-full p-3 border border-[#e6dbdf] dark:border-[#3d252e] rounded-xl bg-gray-50 dark:bg-[#1a0c10]">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold mb-2 opacity-60">رقم واتساب</label>
+                                            <input type="text" name="whatsapp_number"
+                                                value="<%= settings.whatsapp_number %>"
+                                                class="w-full p-3 border border-[#e6dbdf] dark:border-[#3d252e] rounded-xl bg-gray-50 dark:bg-[#1a0c10]">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold mb-2 opacity-60">البريد الإلكتروني
+                                                للتواصل</label>
+                                            <input type="email" name="contact_email"
+                                                value="<%= settings.contact_email %>"
+                                                class="w-full p-3 border border-[#e6dbdf] dark:border-[#3d252e] rounded-xl bg-gray-50 dark:bg-[#1a0c10]">
+                                        </div>
+                                        <button type="submit"
+                                            class="w-full gradient-bg text-white py-3 rounded-xl font-bold shadow-lg hover:shadow-2xl transition-all transform active:scale-95 shimmer">
+                                            حفظ الروابط
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Hero Image Setting -->
+                            <div class="max-w-2xl mx-auto w-full mb-8">
+                                <div
+                                    class="bg-white dark:bg-[#2d1a22] p-6 rounded-2xl border-2 border-[#e6dbdf] dark:border-[#3d252e] shadow-sm">
+                                    <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-primary">image</span>
+                                        <span>إعدادات الصورة الرئيسية (Hero Section)</span>
+                                    </h2>
+                                    <form action="/dashboard/admin/settings" method="POST" class="space-y-4">
+                                        <div>
+                                            <label class="block text-xs font-bold mb-2 opacity-60">رابط الصورة
+                                                (URL)</label>
+                                            <input type="text" name="hero_image_url"
+                                                value="<%= settings.hero_image_url || '/images/hero-display.png' %>"
+                                                class="w-full p-3 border border-[#e6dbdf] dark:border-[#3d252e] rounded-xl bg-gray-50 dark:bg-[#1a0c10]">
+                                        </div>
+                                        <button type="submit"
+                                            class="w-full gradient-bg text-white py-3 rounded-xl font-bold shadow-lg hover:shadow-2xl transition-all transform active:scale-95 shimmer">
+                                            حفظ صورة الـ Hero
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Subscription Settings -->
+                            <div class="max-w-2xl mx-auto w-full">
+                                <div
+                                    class="bg-white dark:bg-[#2d1a22] p-6 rounded-2xl border-2 border-[#e6dbdf] dark:border-[#3d252e] shadow-sm">
+                                    <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-primary">payments</span>
+                                        <span>إعدادات قسم الاشتراكات (الصفحة الرئيسية)</span>
+                                    </h2>
+                                    <form action="/dashboard/admin/settings" method="POST" class="space-y-4">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div class="md:col-span-2">
+                                                <label class="block text-xs font-bold mb-2 opacity-60">عنوان
+                                                    القسم</label>
+                                                <input type="text" name="subs_title"
+                                                    value="<%= settings.subs_title || 'طوري عملكِ مع كوافير' %>"
+                                                    class="w-full p-3 border border-[#e6dbdf] dark:border-[#3d252e] rounded-xl bg-gray-50 dark:bg-[#1a0c10]">
+                                            </div>
+                                            <div class="md:col-span-2">
+                                                <label class="block text-xs font-bold mb-2 opacity-60">وصف القسم</label>
+                                                <textarea name="subs_desc" rows="2"
+                                                    class="w-full p-3 border border-[#e6dbdf] dark:border-[#3d252e] rounded-xl bg-gray-50 dark:bg-[#1a0c10]"><%= settings.subs_desc || 'سجلي صالونكِ وادرجي خدماتكِ أمام آلاف العميلات.' %></textarea>
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs font-bold mb-2 opacity-60">سعر الشهر
+                                                    (ج.م)</label>
+                                                <input type="text" name="subs_month_price"
+                                                    value="<%= settings.subs_month_price || '150' %>"
+                                                    class="w-full p-3 border border-[#e6dbdf] dark:border-[#3d252e] rounded-xl bg-gray-50 dark:bg-[#1a0c10]">
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs font-bold mb-2 opacity-60">سعر 3 شهور
+                                                    (ج.م)</label>
+                                                <input type="text" name="subs_3months_price"
+                                                    value="<%= settings.subs_3months_price || '400' %>"
+                                                    class="w-full p-3 border border-[#e6dbdf] dark:border-[#3d252e] rounded-xl bg-gray-50 dark:bg-[#1a0c10]">
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs font-bold mb-2 opacity-60">سعر 6 شهور
+                                                    (ج.م)</label>
+                                                <input type="text" name="subs_6months_price"
+                                                    value="<%= settings.subs_6months_price || '750' %>"
+                                                    class="w-full p-3 border border-[#e6dbdf] dark:border-[#3d252e] rounded-xl bg-gray-50 dark:bg-[#1a0c10]">
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs font-bold mb-2 opacity-60">سعر السنة
+                                                    (ج.م)</label>
+                                                <input type="text" name="subs_year_price"
+                                                    value="<%= settings.subs_year_price || '1400' %>"
+                                                    class="w-full p-3 border border-[#e6dbdf] dark:border-[#3d252e] rounded-xl bg-gray-50 dark:bg-[#1a0c10]">
+                                            </div>
+                                        </div>
+                                        <button type="submit"
+                                            class="w-full gradient-bg text-white py-3 rounded-xl font-bold shadow-lg hover:shadow-2xl transition-all transform active:scale-95 shimmer">
+                                            حفظ إعدادات الاشتراكات
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+
+                        </div>
+            </main>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html class="light" dir="rtl" lang="ar">
+
+<head>
+    <%- include('../../partials/head') %>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark transition-colors duration-300">
+    <%- include('../../partials/header') %>
+
+        <main class="pt-32 pb-20">
+            <div class="container mx-auto px-4 max-w-4xl">
+                <!-- Header -->
+                <div class="text-center mb-16 animate-fade-in-up">
+                    <div
+                        class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 text-primary mb-6">
+                        <span class="material-symbols-outlined text-3xl">gavel</span>
+                    </div>
+                    <h1 class="text-4xl md:text-5xl font-black mb-4">الشروط والأحكام</h1>
+                    <p class="text-xl text-[#896170] max-w-2xl mx-auto">
+                        يرجى قراءة هذه الشروط بعناية قبل استخدام منصة كوافير. استخدامك للمنصة يعني موافقتك على هذه
+                        البنود.
+                    </p>
+                    <div class="text-sm text-[#896170]/80 mt-4">
+                        تاريخ السريان: <%= new Date().toLocaleDateString('ar-EG') %>
+                    </div>
+                </div>
+
+                <!-- Content Cards -->
+                <div class="space-y-8 animate-fade-in-up delay-100">
+
+                    <!-- Definition -->
+                    <div
+                        class="bg-white dark:bg-[#1a0c10] p-8 md:p-10 rounded-3xl border border-[#e6dbdf] dark:border-[#3d252e] shadow-sm">
+                        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                            <span class="text-primary font-black">1.</span>
+                            التعريفات
+                        </h2>
+                        <p class="leading-loose text-[#896170] dark:text-gray-300">
+                            تشير كلمة "المنصة" أو "نحن" إلى كوافير. وتشير كلمة "أنت" أو "المستخدم" إلى أي شخص يقوم
+                            بزيارة أو استخدام الموقع. "الصالون" يشير إلى مقدمي الخدمة المسجلين لدينا.
+                        </p>
+                    </div>
+
+                    <!-- Account Terms -->
+                    <div
+                        class="bg-white dark:bg-[#1a0c10] p-8 md:p-10 rounded-3xl border border-[#e6dbdf] dark:border-[#3d252e] shadow-sm">
+                        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                            <span class="text-primary font-black">2.</span>
+                            الحساب والتسجيل
+                        </h2>
+                        <ul class="space-y-4">
+                            <li class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-green-500 text-sm mt-1">check</span>
+                                <span class="text-[#896170] dark:text-gray-300">يجب أن تكون المعلومات المقدمة أثناء
+                                    التسجيل دقيقة ومحدثة.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-green-500 text-sm mt-1">check</span>
+                                <span class="text-[#896170] dark:text-gray-300">أنت مسؤول عن الحفاظ على سرية كلمة المرور
+                                    الخاصة بحسابك.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-red-500 text-sm mt-1">block</span>
+                                <span class="text-[#896170] dark:text-gray-300">يحظر استخدام حسابات الآخرين أو انتحال
+                                    شخصياتهم.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Booking Rules -->
+                    <div
+                        class="bg-white dark:bg-[#1a0c10] p-8 md:p-10 rounded-3xl border border-[#e6dbdf] dark:border-[#3d252e] shadow-sm">
+                        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                            <span class="text-primary font-black">3.</span>
+                            سياسة الحجز والإلغاء
+                        </h2>
+                        <div class="space-y-4 text-[#896170] dark:text-gray-300 leading-relaxed">
+                            <p>
+                                تخضع جميع الحجوزات لتوفر الصالون وموافقته. عند تأكيد الحجز، أنت تلتزم بالحضور في الموعد
+                                المحدد.
+                            </p>
+                            <div class="bg-red-50 dark:bg-red-900/10 p-4 rounded-xl border-r-4 border-red-500 text-sm">
+                                <strong>تنبيه هام:</strong> يرجى مراجعة "سياسة الحجز والتأخير" الخاصة بكل صالون قبل
+                                تأكيد الحجز، حيث قد تفرض بعض الصالونات رسوماً على الإلغاء المتأخر أو عدم الحضور.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- User Conduct -->
+                    <div
+                        class="bg-white dark:bg-[#1a0c10] p-8 md:p-10 rounded-3xl border border-[#e6dbdf] dark:border-[#3d252e] shadow-sm">
+                        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                            <span class="text-primary font-black">4.</span>
+                            سلوك المستخدم
+                        </h2>
+                        <p class="leading-loose text-[#896170] dark:text-gray-300 mb-4">
+                            يتعهد المستخدم بعدم استخدام المنصة لأي غرض غير قانوني أو محظور. ويشمل ذلك على سبيل المثال لا
+                            الحصر:
+                        </p>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="flex items-center gap-2 text-sm text-[#896170]">
+                                <span class="w-1.5 h-1.5 rounded-full bg-red-400"></span>
+                                نشر أي محتوى مسيء أو عنصري.
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-[#896170]">
+                                <span class="w-1.5 h-1.5 rounded-full bg-red-400"></span>
+                                محاولة اختراق أو تخريب المنصة.
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-[#896170]">
+                                <span class="w-1.5 h-1.5 rounded-full bg-red-400"></span>
+                                كتابة تقييمات كاذبة أو مضللة.
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-[#896170]">
+                                <span class="w-1.5 h-1.5 rounded-full bg-red-400"></span>
+                                جمع بيانات المستخدمين الآخرين.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Limitation of Liability -->
+                    <div
+                        class="bg-white dark:bg-[#1a0c10] p-8 md:p-10 rounded-3xl border border-[#e6dbdf] dark:border-[#3d252e] shadow-sm">
+                        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                            <span class="text-primary font-black">5.</span>
+                            حدود المسؤولية
+                        </h2>
+                        <p class="leading-loose text-[#896170] dark:text-gray-300">
+                            كوافير هي منصة وسيطة تربط العملاء بالصالونات. نحن لا نتحمل المسؤولية عن جودة الخدمات المقدمة
+                            داخل الصالونات، ولكننا نسعى جاهدين لضمان وجود صالونات ذات جودة عالية وحل أي نزاعات قد تنشأ.
+                        </p>
+                    </div>
+
+                    <!-- Footer Note -->
+                    <p class="text-center text-sm text-[#896170] pt-8">
+                        يحتفظ كوافير بالحق في تعديل هذه الشروط في أي وقت. سيتم إشعار المستخدمين بالتغييرات الجوهرية عبر
+                        البريد الإلكتروني أو إشعار داخل التطبيق.
+                    </p>
+
+                </div>
+            </div>
+        </main>
+
+        <%- include('../../partials/footer') %>
+</body>
+
+</html>

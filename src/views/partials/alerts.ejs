@@ -1,0 +1,61 @@
+<% if (success && success.length> 0) { %>
+    <% success.forEach(function(msg) { %>
+        <div class="fixed top-6 left-1/2 -translate-x-1/2 z-[9999] w-full max-w-md px-4 animate-slide-down"
+            role="alert">
+            <div
+                class="bg-white/80 dark:bg-[#1a0c10]/90 backdrop-blur-xl border border-green-500/20 shadow-2xl rounded-2xl p-4 flex items-center gap-4 hover:scale-[1.02] transition-transform duration-300">
+                <div class="size-12 rounded-xl bg-green-500/10 flex items-center justify-center shrink-0">
+                    <span class="material-symbols-outlined text-green-500 text-2xl">check_circle</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h4 class="text-green-600 dark:text-green-400 font-black text-sm uppercase tracking-widest mb-0.5">
+                        تم بنجاح</h4>
+                    <p class="text-[#181113] dark:text-white font-bold text-sm leading-tight">
+                        <%= msg %>
+                    </p>
+                </div>
+                <button onclick="this.parentElement.parentElement.remove()"
+                    class="p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-colors shrink-0">
+                    <span class="material-symbols-outlined text-[#896170] text-sm">close</span>
+                </button>
+            </div>
+        </div>
+        <script>
+            setTimeout(() => {
+                const alerts = document.querySelectorAll('[role="alert"]');
+                if (alerts.length > 0) alerts[0].remove();
+            }, 6000);
+        </script>
+        <% }); %>
+            <% } %>
+
+                <% if (error && error.length> 0) { %>
+                    <% error.forEach(function(msg) { %>
+                        <div class="fixed top-6 left-1/2 -translate-x-1/2 z-[9999] w-full max-w-md px-4 animate-shake"
+                            role="alert">
+                            <div
+                                class="bg-white/80 dark:bg-[#1a0c10]/90 backdrop-blur-xl border-l-[6px] border-red-500 shadow-2xl rounded-r-2xl rounded-l-md p-4 flex items-center gap-4">
+                                <div class="size-12 rounded-xl bg-red-500/10 flex items-center justify-center shrink-0">
+                                    <span class="material-symbols-outlined text-red-500 text-2xl">warning</span>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <h4 class="text-red-500 font-black text-sm uppercase tracking-widest mb-0.5">تنبيه
+                                    </h4>
+                                    <p class="text-[#181113] dark:text-white font-bold text-sm leading-tight">
+                                        <%= msg %>
+                                    </p>
+                                </div>
+                                <button onclick="this.parentElement.parentElement.remove()"
+                                    class="p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-colors shrink-0">
+                                    <span class="material-symbols-outlined text-[#896170] text-sm">close</span>
+                                </button>
+                            </div>
+                        </div>
+                        <script>
+                            setTimeout(() => {
+                                const alerts = document.querySelectorAll('[role="alert"]');
+                                if (alerts.length > 0) alerts[0].remove();
+                            }, 8000);
+                        </script>
+                        <% }); %>
+                            <% } %>

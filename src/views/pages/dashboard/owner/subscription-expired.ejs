@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html class="light" dir="rtl" lang="ar">
+
+<head>
+    <%- include('../../../partials/head') %>
+</head>
+
+<body
+    class="bg-[#f8f9fa] dark:bg-[#1a0c10] text-[#181113] dark:text-white transition-colors duration-200 min-h-screen flex items-center justify-center p-4">
+    <div
+        class="max-w-2xl w-full bg-white dark:bg-[#2d1a22] rounded-[3rem] p-12 text-center shadow-premium border border-white/20 relative overflow-hidden">
+        <!-- Visuals -->
+        <div class="absolute -top-24 -right-24 size-48 bg-primary/10 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-24 -left-24 size-48 bg-primary/5 rounded-full blur-3xl"></div>
+
+        <div class="relative z-10">
+            <div
+                class="size-24 bg-red-50 dark:bg-red-500/10 rounded-[2rem] flex items-center justify-center text-red-500 mx-auto mb-8 shadow-xl">
+                <span class="material-symbols-outlined text-5xl font-black">lock_clock</span>
+            </div>
+
+            <h1 class="text-4xl font-black mb-4">انتهت فترة الاشتراك</h1>
+            <p class="text-[#896170] text-lg font-bold mb-8 leading-relaxed">
+                عذراً، لقد انتهت فترة الصلاحية الخاصة بصالونكِ. <br>
+                يرجى التواصل مع الإدارة لتفعيل الاشتراك والاستمرار في استقبال الحجوزات.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                <div class="bg-gray-50 dark:bg-[#1a0c10] p-6 rounded-3xl border border-[#e6dbdf] dark:border-[#3d252e]">
+                    <span class="material-symbols-outlined text-primary mb-2">support_agent</span>
+                    <p class="text-xs font-black text-[#896170] uppercase tracking-widest mb-1">تواصل معنا</p>
+                    <p class="font-black text-xl">0108962272</p>
+                </div>
+                <div class="bg-gray-50 dark:bg-[#1a0c10] p-6 rounded-3xl border border-[#e6dbdf] dark:border-[#3d252e]">
+                    <span class="material-symbols-outlined text-primary mb-2">payments</span>
+                    <p class="text-xs font-black text-[#896170] uppercase tracking-widest mb-1">البريد الإلكتروني</p>
+                    <p class="font-black">contact@kwafer.com</p>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-4">
+                <a href="/dashboard/owner/subscription"
+                    class="w-full h-18 gradient-bg text-white py-4 rounded-2xl font-black text-xl shadow-xl flex items-center justify-center gap-3 hover:scale-[1.02] transition-all">
+                    <span class="material-symbols-outlined text-2xl">autorenew</span>
+                    <span>تجديد الاشتراك الآن</span>
+                </a>
+                <a href="/logout" class="text-[#896170] font-black hover:text-primary transition-colors text-sm">تسجيل
+                    الخروج</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

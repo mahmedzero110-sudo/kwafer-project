@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html class="light" dir="rtl" lang="ar">
+
+<head>
+    <%- include('../../partials/head') %>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-[#181113] dark:text-white transition-colors duration-200 noise-bg">
+    <div class="relative flex min-h-screen w-full flex-col">
+        <%- include('../../partials/header') %>
+            <main class="flex-1 flex flex-col w-full max-w-[1240px] mx-auto py-12 px-4">
+                <!-- Page Header -->
+                <div class="mb-16 text-center max-w-3xl mx-auto space-y-6 animate-slide-up">
+                    <div
+                        class="inline-flex items-center gap-2 bg-primary/5 dark:bg-primary/10 px-4 py-1.5 rounded-full border border-primary/10">
+                        <span class="material-symbols-outlined text-sm text-primary">local_offer</span>
+                        <span class="text-[10px] font-black text-primary uppercase tracking-widest">عروض كوافير
+                            الحصرية</span>
+                    </div>
+                    <h1 class="text-5xl md:text-7xl font-black text-balance leading-tight">باقات بأسعار <span
+                            class="gradient-text">لـن تـتـكـرر</span></h1>
+                    <p class="text-[#896170] dark:text-gray-400 text-lg md:text-xl leading-relaxed">
+                        استمتعي بأرقى خدمات التجميل في الأقصر مع خصومات حصرية لمستخدمات تطبيق كوافير فقط. عروضنا متجددة
+                        لتناسب احتياجاتكِ دائماً.
+                    </p>
+                </div>
+
+                <!-- Offers Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <% if (typeof offers !=='undefined' && offers.length> 0) { %>
+                        <% offers.forEach(function(offer, index) { %>
+                            <div class="group relative flex flex-col h-full bg-white dark:bg-[#2d1a22] rounded-[2.5rem] overflow-hidden border border-[#e6dbdf] dark:border-[#3d252e] card-hover animate-slide-up"
+                                style="--delay: <%= index * 100 %>ms; animation-delay: var(--delay);">
+                                <!-- Discount Ribbon -->
+                                <div class="absolute -top-1 -right-1 z-30 size-24 overflow-hidden">
+                                    <div
+                                        class="absolute top-[22px] -right-[24px] w-[140%] rotate-45 gradient-bg text-center py-2 text-white font-black text-xs shadow-xl tracking-widest">
+                                        <%= offer.discount %>- خصم
+                                    </div>
+                                </div>
+
+                                <div class="relative h-72 overflow-hidden shrink-0">
+                                    <div
+                                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10 transition-opacity group-hover:opacity-60">
+                                    </div>
+                                    <div class="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-1000"
+                                        style="background-image: url('<%= offer.image %>')"></div>
+                                    <div class="absolute bottom-6 left-6 right-6 z-20">
+                                        <div
+                                            class="flex items-center gap-2 text-white/80 text-xs font-black uppercase tracking-widest mb-2">
+                                            <span class="material-symbols-outlined text-sm">storefront</span>
+                                            <%= offer.salon_name %>
+                                        </div>
+                                        <h3 class="text-3xl font-black text-white leading-tight">
+                                            <%= offer.title %>
+                                        </h3>
+                                    </div>
+                                </div>
+
+                                <div class="p-8 flex flex-col flex-1">
+                                    <p
+                                        class="text-[#896170] dark:text-gray-400 text-sm mb-8 line-clamp-2 leading-relaxed flex-1">
+                                        <%= offer.description %>
+                                    </p>
+
+                                    <div
+                                        class="flex items-center justify-between pt-6 border-t border-[#f4f0f2]/50 dark:border-[#3d252e]">
+                                        <div class="flex flex-col">
+                                            <span
+                                                class="text-[10px] font-black text-[#896170] uppercase tracking-widest mb-1">السعر
+                                                الحصري</span>
+                                            <div class="flex items-baseline gap-2">
+                                                <span class="text-primary font-black text-3xl">
+                                                    <%= offer.price %> <small class="text-xs">ج.م</small>
+                                                </span>
+                                                <% if (offer.discount> 0) { %>
+                                                    <span
+                                                        class="text-[#896170] text-sm line-through opacity-50 font-bold">
+                                                        <%= Math.round(offer.price / (1 - (offer.discount / 100))) %>
+                                                            ج.م
+                                                    </span>
+                                                    <% } %>
+                                            </div>
+                                        </div>
+                                        <button
+                                            onclick="openBookingModal('<%= offer.title %>', '<%= offer.price %>', '<%= offer.id %>', '<%= offer.salon_id %>')"
+                                            class="h-14 px-10 rounded-2xl bg-white dark:bg-black border-2 border-primary text-primary font-black hover:bg-primary hover:text-white transition-all btn-bounce shimmer">
+                                            احجزي الآن
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <% }); %>
+                                <% } else { %>
+                                    <div class="col-span-full py-24 text-center">
+                                        <div
+                                            class="size-24 bg-gray-50 dark:bg-[#1a0c10] rounded-[2.5rem] flex items-center justify-center mx-auto mb-6 border border-[#e6dbdf] dark:border-[#3d252e]">
+                                            <span
+                                                class="material-symbols-outlined text-6xl opacity-20">local_offer</span>
+                                        </div>
+                                        <h3 class="text-2xl font-black text-[#896170]">لا توجد عروض نشطة حالياً</h3>
+                                        <p class="text-sm text-[#896170]/60 mt-2">ترقبي عروضنا القوية قريباً، اشتركي في
+                                            الإشعارات للبقاء على اطلاع.</p>
+                                        <a href="/"
+                                            class="mt-10 inline-flex items-center justify-center h-14 px-12 rounded-2xl bg-primary text-white font-black shadow-lg shadow-primary/20 btn-bounce">
+                                            العودة للرئيسية
+                                        </a>
+                                    </div>
+                                    <% } %>
+                </div>
+
+                <%- include('../../partials/footer') %>
+            </main>
+    </div>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal"
+        class="fixed inset-0 bg-black/60 backdrop-blur-md z-[110] hidden items-center justify-center p-4">
+        <div class="bg-white dark:bg-[#2d1a22] rounded-[2.5rem] max-w-md w-full p-10 relative animate-scale-in">
+            <!-- Close Button moved to left to avoid title overlap -->
+            <button onclick="closeBookingModal()"
+                class="absolute top-6 left-6 size-10 bg-gray-50 dark:bg-[#1a0c10] rounded-xl flex items-center justify-center text-[#896170] hover:text-red-500 transition-colors z-20">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            <div class="mb-8">
+                <h2 class="text-2xl font-black mb-2">حجز عرض حصري</h2>
+                <p class="text-[#896170]">سيتم الاتصال بكِ لتحديد أفضل موعد</p>
+            </div>
+
+            <form class="space-y-5" action="/bookings" method="POST">
+                <input type="hidden" id="modal_salon_id" name="salon_id">
+                <input type="hidden" id="modal_service_id" name="service_id">
+                <input type="hidden" id="modal_amount" name="amount">
+
+                <div class="space-y-2">
+                    <label class="text-xs font-black uppercase text-[#896170] mr-2">العرض المختار</label>
+                    <input id="serviceName" type="text" readonly
+                        class="w-full h-14 px-5 rounded-2xl bg-gray-50 dark:bg-[#1a0c10] border-none font-bold text-primary">
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-xs font-black uppercase text-[#896170] mr-2">الاسم بالكامل</label>
+                    <input type="text" id="modal_customer_name" name="customer_name" required
+                        placeholder="ادخلي اسمك بالكامل"
+                        class="w-full h-14 px-5 rounded-2xl bg-gray-50 dark:bg-[#1a0c10] border-none font-bold">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <label class="text-xs font-black uppercase text-[#896170] mr-2">التاريخ المفضل</label>
+                        <input type="date" name="booking_date" required
+                            class="w-full h-14 px-5 rounded-2xl bg-gray-50 dark:bg-[#1a0c10] border-none font-bold">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-black uppercase text-[#896170] mr-2">رقم الهاتف للتواصل</label>
+                        <input type="tel" id="modal_phone" name="phone" required placeholder="01xxxxxxxxx"
+                            class="w-full h-14 px-5 rounded-2xl bg-gray-50 dark:bg-[#1a0c10] border-none font-bold">
+                    </div>
+                </div>
+
+                <div class="pt-6 mt-6 border-t border-[#f4f0f2]/50 dark:border-[#3d252e]">
+                    <div class="flex items-center justify-between mb-8">
+                        <span class="font-black text-lg">إجمالي العرض</span>
+                        <span id="servicePrice" class="text-3xl font-black text-primary">0 ج.م</span>
+                    </div>
+                    <button type="submit"
+                        class="w-full h-16 gradient-bg text-white rounded-2xl font-black text-lg shadow-2xl shadow-primary/20 btn-bounce shimmer">
+                        تأكيد طلب العرض
+                    </button>
+                    <p class="text-[10px] text-center text-[#896170] mt-4 leading-relaxed">بضغطكِ على تأكيد، يتم تسجيل
+                        طلبكِ. <br> سيقوم فريق العمل بالتواصل معكِ لتنسيق الموعد النهائي.</p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementsByName('booking_date').forEach(el => el.setAttribute('min', today));
+
+        function openBookingModal(name, price, offerId, salonId) {
+            // Check if user is logged in
+            const isLoggedIn = '<%= user ? "true" : "false" %>' === 'true';
+            if (!isLoggedIn) {
+                window.location.href = '/login?returnTo=' + encodeURIComponent(window.location.pathname);
+                return;
+            }
+
+            document.getElementById('serviceName').value = name;
+            document.getElementById('servicePrice').innerText = price + ' ج.م';
+            document.getElementById('modal_salon_id').value = salonId;
+            document.getElementById('modal_service_id').value = offerId;
+            document.getElementById('modal_amount').value = price;
+
+            // Pre-fill user data
+            document.getElementById('modal_customer_name').value = '<%= user ? user.name : "" %>';
+            document.getElementById('modal_phone').value = '<%= user ? user.phone : "" %>';
+
+            document.getElementById('bookingModal').classList.replace('hidden', 'flex');
+        }
+
+        function closeBookingModal() {
+            document.getElementById('bookingModal').classList.replace('flex', 'hidden');
+        }
+    </script>
+</body>
+
+</html>

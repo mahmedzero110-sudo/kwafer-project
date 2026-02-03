@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html class="light" dir="<%= locale === 'ar' ? 'rtl' : 'ltr' %>" lang="<%= locale %>">
+
+<head>
+    <%- include('../../partials/head') %>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-[#181113] dark:text-white transition-colors duration-200 noise-bg">
+    <div class="relative flex min-h-screen w-full flex-col">
+        <%- include('../../partials/header') %>
+
+            <main class="flex-1 w-full max-w-[1100px] mx-auto py-20 px-6">
+                <div class="animate-slide-up space-y-12">
+                    <nav class="flex items-center gap-2 text-xs font-black text-primary/60 uppercase tracking-widest">
+                        <a href="/" class="hover:text-primary transition-colors">الرئيسية</a>
+                        <span class="material-symbols-outlined text-[12px]">chevron_left</span>
+                        <span class="text-primary">
+                            <%= title %>
+                        </span>
+                    </nav>
+
+                    <div class="space-y-4">
+                        <h1 class="text-5xl md:text-7xl font-black tracking-tight">
+                            <span class="gradient-text">
+                                <%= title %>
+                            </span>
+                        </h1>
+                        <div class="h-1.5 w-24 gradient-bg rounded-full"></div>
+                    </div>
+
+                    <div
+                        class="bg-white dark:bg-[#2d1a22] p-10 md:p-16 rounded-[3rem] border border-[#e6dbdf] dark:border-[#3d252e] shadow-2xl relative overflow-hidden">
+                        <div class="absolute -top-24 -right-24 size-64 bg-primary/5 rounded-full blur-3xl"></div>
+                        <div class="absolute -bottom-24 -left-24 size-64 bg-primary/5 rounded-full blur-3xl"></div>
+
+                        <div
+                            class="relative prose prose-lg dark:prose-invert max-w-none leading-relaxed text-lg text-[#896170] dark:text-gray-300">
+                            <%- content.replace(/\n/g, '<br>' ) %>
+                        </div>
+                    </div>
+
+                    <% if (page.slug==='contact' ) { %>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 animate-slide-up delay-200">
+                            <a href="mailto:<%= siteSettings.contact_email %>"
+                                class="group bg-white dark:bg-[#2d1a22] p-8 rounded-[2rem] border border-[#e6dbdf] dark:border-[#3d252e] flex items-center gap-6 card-hover">
+                                <div
+                                    class="size-16 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                                    <span class="material-symbols-outlined text-3xl">mail</span>
+                                </div>
+                                <div>
+                                    <h3 class="font-black text-xl mb-1">البريد الإلكتروني</h3>
+                                    <p class="text-[#896170] dark:text-gray-400 font-bold">
+                                        <%= siteSettings.contact_email %>
+                                    </p>
+                                </div>
+                            </a>
+                            <a href="https://wa.me/<%= siteSettings.whatsapp_number %>" target="_blank"
+                                class="group bg-white dark:bg-[#2d1a22] p-8 rounded-[2rem] border border-[#e6dbdf] dark:border-[#3d252e] flex items-center gap-6 card-hover">
+                                <div
+                                    class="size-16 rounded-2xl bg-green-500/5 flex items-center justify-center text-green-500 group-hover:scale-110 transition-transform">
+                                    <span class="material-symbols-outlined text-3xl">chat</span>
+                                </div>
+                                <div>
+                                    <h3 class="font-black text-xl mb-1">واتساب مـبـاشـر</h3>
+                                    <p class="text-[#896170] dark:text-gray-400 font-bold" dir="ltr">
+                                        <%= siteSettings.whatsapp_number %>
+                                    </p>
+                                </div>
+                            </a>
+                        </div>
+                        <% } %>
+                </div>
+            </main>
+
+            <%- include('../../partials/footer') %>
+    </div>
+</body>
+
+</html>

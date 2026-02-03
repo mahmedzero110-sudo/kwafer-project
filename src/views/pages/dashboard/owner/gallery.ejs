@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html class="light" dir="<%= locale === 'ar' ? 'rtl' : 'ltr' %>" lang="<%= locale %>">
+
+<head>
+    <%- include('../../../partials/head') %>
+</head>
+
+<body class="bg-[#f8f9fa] dark:bg-[#1a0c10] text-[#181113] dark:text-white transition-colors duration-200">
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <%- include('../../../partials/sidebar', { role: 'owner' }) %>
+
+            <!-- Main Content -->
+            <main class="flex-1 <%= locale === 'ar' ? 'md:mr-64' : 'md:ml-64' %> transition-all p-8">
+                <header class="flex items-center justify-between mb-8">
+                    <div>
+                        <h1 class="text-2xl font-bold">معرض صور الصالون 📸</h1>
+                        <p class="text-[#896170]">أضيفي لمساتك الإبداعية وصوراً لصالونكِ لجذب المزيد من العميلات</p>
+                    </div>
+                    <div class="flex flex-col items-end gap-2">
+                        <div
+                            class="text-xs font-bold text-[#896170] bg-gray-100 dark:bg-white/5 px-3 py-1.5 rounded-full border border-[#e6dbdf] dark:border-[#3d252e]">
+                            <span>الصور المستخدمة: </span>
+                            <span class="<%= (gallery && gallery.length >= 4) ? 'text-red-500' : 'text-primary' %>">
+                                <%= (gallery ? gallery.length : 0) %>
+                            </span>
+                            <span class="opacity-50">/ 4</span>
+                        </div>
+                        <% if (!gallery || gallery.length < 4) { %>
+                            <button
+                                onclick="document.getElementById('addPhotoModal').classList.replace('hidden', 'flex')"
+                                class="gradient-bg text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:shadow-2xl transition-all flex items-center gap-2">
+                                <span class="material-symbols-outlined">add_a_photo</span>
+                                <span>إضافة صورة جديدة</span>
+                            </button>
+                            <% } else { %>
+                                <button
+                                    class="bg-gray-200 dark:bg-white/5 text-gray-400 px-6 py-3 rounded-xl font-bold border border-gray-300 dark:border-white/10 flex items-center gap-2 cursor-not-allowed"
+                                    title="تم الوصول للحد الأقصى (4 صور)">
+                                    <span class="material-symbols-outlined">block</span>
+                                    <span>وصلتِ للحد الأقصى</span>
+                                </button>
+                                <% } %>
+                    </div>
+                </header>
+
+                <%- include('../../../partials/flash') %>
+
+                    <!-- Gallery Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <% if (gallery && gallery.length> 0) { %>
+                            <% gallery.forEach(function(item) { %>
+                                <div
+                                    class="group relative bg-white dark:bg-[#2d1a22] rounded-2xl overflow-hidden border-2 border-[#e6dbdf] dark:border-[#3d252e] shadow-sm hover:shadow-xl transition-all aspect-video">
+                                    <img src="<%= item.image_url %>" alt="<%= item.caption %>"
+                                        class="w-full h-full object-cover">
+
+                                    <!-- Caption Bar (Always Visible) -->
+                                    <% if (item.caption) { %>
+                                        <div
+                                            class="absolute bottom-0 left-0 right-0 bg-black/60 backdrop-blur-sm p-2 transform translate-y-0 transition-transform group-hover:translate-y-full">
+                                            <p class="text-white text-center text-xs font-bold truncate">
+                                                <%= item.caption %>
+                                            </p>
+                                        </div>
+                                        <% } %>
+
+                                            <!-- Overlay Actions (Hover) -->
+                                            <div
+                                                class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-4">
+                                                <% if (item.caption) { %>
+                                                    <p
+                                                        class="text-white text-center font-bold mb-4 line-clamp-3 text-sm">
+                                                        <%= item.caption %>
+                                                    </p>
+                                                    <% } %>
+                                                        <div class="flex gap-4">
+                                                            <form
+                                                                action="/dashboard/owner/gallery/delete/<%= item.id %>"
+                                                                method="POST"
+                                                                onsubmit="return confirm('هل أنتِ متأكدة من حذف هذه الصورة؟')">
+                                                                <button type="submit"
+                                                                    class="bg-red-500 text-white p-3 rounded-xl hover:bg-red-600 transition-colors shadow-lg">
+                                                                    <span
+                                                                        class="material-symbols-outlined">delete</span>
+                                                                </button>
+                                                            </form>
+                                                            <button onclick="viewImage('<%= item.image_url %>')"
+                                                                class="bg-white text-primary p-3 rounded-xl hover:bg-gray-100 transition-colors shadow-lg">
+                                                                <span
+                                                                    class="material-symbols-outlined">visibility</span>
+                                                            </button>
+                                                        </div>
+                                            </div>
+                                </div>
+                                <% }); %>
+                                    <% } else { %>
+                                        <div
+                                            class="col-span-full py-24 text-center bg-white dark:bg-[#2d1a22] rounded-2xl border-2 border-dashed border-[#e6dbdf] dark:border-[#3d252e]">
+                                            <div
+                                                class="w-20 h-20 bg-gray-50 dark:bg-[#1a0c10] rounded-full flex items-center justify-center mx-auto mb-4 border border-[#e6dbdf] dark:border-[#3d252e]">
+                                                <span
+                                                    class="material-symbols-outlined text-4xl opacity-20 text-primary">add_photo_alternate</span>
+                                            </div>
+                                            <h3 class="text-xl font-bold text-[#896170]">لا توجد صور في المعرض بعد</h3>
+                                            <p class="text-[#896170]/60 mt-2">ابدئي بإضافة أول صورة لتعريف العميلات
+                                                بجمال صالونكِ!</p>
+                                        </div>
+                                        <% } %>
+                    </div>
+            </main>
+    </div>
+
+    <!-- Add Photo Modal -->
+    <div id="addPhotoModal"
+        class="fixed inset-0 bg-black/60 backdrop-blur-md z-[100] hidden items-center justify-center p-4">
+        <div class="bg-white dark:bg-[#2d1a22] rounded-[2rem] max-w-lg w-full p-8 relative animate-scale-in">
+            <button onclick="document.getElementById('addPhotoModal').classList.replace('flex', 'hidden')"
+                class="absolute top-6 left-6 text-[#896170] hover:text-red-500 transition-colors">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            <div class="mb-8">
+                <h2 class="text-2xl font-black mb-2">إضافة صورة للمعرض</h2>
+                <p class="text-[#896170]">يمكنك إضافة حتى 4 صور فقط في المعرض (لديك <%= (gallery ? gallery.length : 0)
+                        %>/4)</p>
+            </div>
+
+            <form action="/dashboard/owner/gallery" method="POST" enctype="multipart/form-data" class="space-y-6">
+                <!-- Image Upload Area -->
+                <div class="space-y-4">
+                    <label class="block text-sm font-bold opacity-70">الصورة</label>
+                    <div class="relative group">
+                        <div id="dropZone" onclick="document.getElementById('galleryImage').click()"
+                            class="w-full h-48 rounded-2xl border-2 border-dashed border-[#e6dbdf] dark:border-[#3d252e] bg-gray-50 dark:bg-[#1a0c10] flex flex-col items-center justify-center cursor-pointer hover:border-primary transition-all overflow-hidden relative">
+                            <img id="modalPreview" class="hidden w-full h-full object-cover">
+                            <div id="modalPlaceholder" class="flex flex-col items-center text-[#896170]">
+                                <span class="material-symbols-outlined text-5xl mb-3">cloud_upload</span>
+                                <span class="text-sm font-bold">اضغطي لاختيار صورة</span>
+                                <span class="text-[10px] opacity-60 mt-1">PNG, JPG حتى 5 ميجابايت</span>
+                            </div>
+                        </div>
+                        <input type="file" id="galleryImage" name="gallery_image" class="hidden" accept="image/*"
+                            required onchange="previewGalleryImage(this)">
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-bold opacity-70">وصف قصير (اختياري)</label>
+                    <input type="text" name="caption"
+                        class="w-full h-14 px-5 rounded-xl border border-[#e6dbdf] dark:border-[#3d252e] bg-gray-50 dark:bg-[#1a0c10] focus:ring-2 focus:ring-primary outline-none font-bold"
+                        placeholder="مثال: ركن العناية بالبشرة، صالة الاستقبال...">
+                </div>
+
+                <div class="pt-6">
+                    <button type="submit"
+                        class="w-full h-16 gradient-bg text-white rounded-xl font-bold text-lg shadow-xl btn-bounce shimmer">
+                        رفع الصورة
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Image Review Modal -->
+    <div id="imageViewModal"
+        class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[110] hidden items-center justify-center p-4">
+        <button onclick="document.getElementById('imageViewModal').classList.replace('flex', 'hidden')"
+            class="absolute top-8 left-8 text-white hover:text-primary transition-colors z-20">
+            <span class="material-symbols-outlined text-4xl">close</span>
+        </button>
+        <img id="fullImage" src="" class="max-w-full max-h-[90vh] rounded-xl shadow-2xl animate-fade-in">
+    </div>
+
+    <script>
+        function previewGalleryImage(input) {
+            const preview = document.getElementById('modalPreview');
+            const placeholder = document.getElementById('modalPlaceholder');
+            const dropZone = document.getElementById('dropZone');
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
+                    dropZone.classList.remove('border-dashed');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function viewImage(url) {
+            const modal = document.getElementById('imageViewModal');
+            const img = document.getElementById('fullImage');
+            img.src = url;
+            modal.classList.replace('hidden', 'flex');
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html class="light" dir="rtl" lang="ar">
+
+<head>
+    <%- include('../../partials/head') %>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-[#181113] dark:text-white transition-colors duration-200 noise-bg">
+    <div class="relative flex min-h-screen w-full flex-col">
+        <%- include('../../partials/header') %>
+            <main class="flex-1 flex flex-col w-full max-w-[1240px] mx-auto py-12 px-4">
+                <!-- Page Header with Search -->
+                <div class="mb-12 space-y-8 animate-slide-up">
+                    <div class="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                        <div class="space-y-4">
+                            <nav
+                                class="flex items-center gap-2 text-xs font-black text-primary/60 uppercase tracking-widest">
+                                <a href="/" class="hover:text-primary transition-colors">الرئيسية</a>
+                                <span class="material-symbols-outlined text-[12px]">chevron_left</span>
+                                <span class="text-primary">الصالونات</span>
+                            </nav>
+                            <h1 class="text-4xl md:text-6xl font-black">صالونات <span
+                                    class="gradient-text">الأقصر</span>
+                            </h1>
+                            <p class="text-[#896170] dark:text-gray-400 text-lg md:text-xl max-w-xl">
+                                اكتشفي واحجزي أفضل خدمات التجميل بالقرب منك، قارني بين الصالونات واختاري الأنسب لكِ.
+                            </p>
+                        </div>
+
+                        <!-- Sorting -->
+                        <div class="relative group min-w-[200px]">
+                            <select id="sortSelect" onchange="applyFilters()"
+                                class="w-full appearance-none bg-white dark:bg-[#2d1a22] border-2 border-[#e6dbdf] dark:border-[#3d252e] px-12 py-4 rounded-2xl font-black text-sm hover:border-primary/40 transition-all cursor-pointer outline-none shadow-sm">
+                                <option value="default" <%=currentSort==='default' ? 'selected' : '' %>>الأفضل (تلقائي)
+                                </option>
+                                <option value="rating" <%=currentSort==='rating' ? 'selected' : '' %>>الأعلى تقييماً
+                                </option>
+                                <option value="newest" <%=currentSort==='newest' ? 'selected' : '' %>>الأحدث انضماماً
+                                </option>
+                                <option value="price_low" <%=currentSort==='price_low' ? 'selected' : '' %>>الأقل سعراً
+                                </option>
+                            </select>
+                            <span
+                                class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-primary pointer-events-none">sort</span>
+                        </div>
+                    </div>
+
+                    <!-- Search Bar & Filters Combined -->
+                    <div
+                        class="bg-white dark:bg-[#2d1a22] p-4 md:p-6 rounded-[2.5rem] shadow-xl border border-[#e6dbdf] dark:border-[#3d252e] flex flex-col lg:flex-row gap-4 items-center">
+                        <div class="relative flex-1 w-full">
+                            <span
+                                class="material-symbols-outlined absolute right-5 top-1/2 -translate-y-1/2 text-[#896170] group-focus-within:text-primary transition-colors">search</span>
+                            <input type="text" id="searchInput" value="<%= searchQuery %>"
+                                placeholder="ابحثي باسم الصالون، الوصف أو المنطقة..."
+                                class="w-full h-14 pr-14 pl-6 bg-gray-50 dark:bg-[#1a0c10] border-none rounded-2xl font-bold focus:ring-2 focus:ring-primary transition-all"
+                                onkeyup="if(event.key === 'Enter') applyFilters()">
+                        </div>
+
+                        <!-- Desktop Category Tabs -->
+                        <div class="hidden lg:flex items-center gap-2 bg-gray-50 dark:bg-[#1a0c10] p-1.5 rounded-2xl">
+                            <button onclick="setCategory('all')"
+                                class="px-6 py-2.5 rounded-xl font-black text-xs transition-all <%= currentCategory === 'all' ? 'bg-primary text-white shadow-lg' : 'text-[#896170] hover:bg-white dark:hover:bg-[#2d1a22]' %>">
+                                الكل
+                            </button>
+                            <% if (typeof categories !=='undefined' ) { %>
+                                <% categories.forEach(function(cat) { %>
+                                    <button onclick="setCategory('<%= cat.id %>')"
+                                        class="px-6 py-2.5 rounded-xl font-black text-xs transition-all <%= currentCategory == cat.id ? 'bg-primary text-white shadow-lg' : 'text-[#896170] hover:bg-white dark:hover:bg-[#2d1a22]' %>">
+                                        <%= cat.name %>
+                                    </button>
+                                    <% }); %>
+                                        <% } %>
+                        </div>
+
+                        <!-- Mobile Category Select -->
+                        <div class="lg:hidden w-full relative">
+                            <select id="categorySelect" onchange="applyFilters()"
+                                class="w-full appearance-none h-14 px-6 bg-gray-50 dark:bg-[#1a0c10] border-none rounded-2xl font-bold focus:ring-2 focus:ring-primary">
+                                <option value="all" <%=currentCategory==='all' ? 'selected' : '' %>>جميع التصنيفات
+                                </option>
+                                <% if (typeof categories !=='undefined' ) { %>
+                                    <% categories.forEach(function(cat) { %>
+                                        <option value="<%= cat.id %>" <%=currentCategory==cat.id ? 'selected' : '' %>>
+                                            <%= cat.name %>
+                                        </option>
+                                        <% }); %>
+                                            <% } %>
+                            </select>
+                            <span
+                                class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary pointer-events-none">category</span>
+                        </div>
+
+                        <button onclick="applyFilters()"
+                            class="w-full lg:w-auto h-14 px-10 gradient-bg text-white rounded-2xl font-black shadow-lg shadow-primary/20 btn-bounce flex items-center justify-center gap-2">
+                            <span>تطبيق البحث</span>
+                            <span class="material-symbols-outlined text-sm">filter_alt</span>
+                        </button>
+                    </div>
+
+                    <!-- Active Filters Badge -->
+                    <% if (currentBridal) { %>
+                        <div class="flex items-center gap-3 animate-fade-in">
+                            <div
+                                class="bg-primary/10 border border-primary/20 px-4 py-2 rounded-xl flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary text-sm fill-1">diamond</span>
+                                <span class="text-xs font-black text-primary">عرض باقات العرائس فقط</span>
+                                <a href="/salons" class="hover:text-red-500 transition-colors">
+                                    <span class="material-symbols-outlined text-sm">close</span>
+                                </a>
+                            </div>
+                        </div>
+                        <% } %>
+                </div>
+
+                <!-- Salons Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <% if (typeof salons !=='undefined' && salons.length> 0) { %>
+                        <% salons.forEach(function(salon, index) { %>
+                            <a href="/salon/<%= salon.id %>" class="group h-full animate-slide-up"
+                                style="--delay: <%= index * 50 %>ms; animation-delay: var(--delay);">
+                                <div
+                                    class="bg-white dark:bg-[#2d1a22] rounded-[2.5rem] overflow-hidden border border-[#e6dbdf] dark:border-[#3d252e] card-hover flex flex-col h-full">
+                                    <div class="relative h-64 overflow-hidden shrink-0">
+                                        <div
+                                            class="absolute top-6 right-6 z-10 glass px-4 py-2 rounded-2xl flex items-center gap-1.5 text-sm font-black shadow-xl border border-white/20">
+                                            <span class="material-symbols-outlined text-gold text-lg fill-1">star</span>
+                                            <span class="dark:text-white">
+                                                <%= Number(salon.rating || 0).toFixed(1) %>
+                                            </span>
+                                        </div>
+                                        <% if (salon.is_featured) { %>
+                                            <div
+                                                class="absolute top-6 left-6 z-10 bg-primary text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-xl">
+                                                النخبة
+                                            </div>
+                                            <% } %>
+                                                <div
+                                                    class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 z-[1]">
+                                                </div>
+                                                <img src="<%= salon.image_url %>" alt="<%= salon.name %>"
+                                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000">
+
+                                                <div
+                                                    class="absolute bottom-6 left-6 right-6 z-10 flex items-center justify-between">
+                                                    <div
+                                                        class="flex items-center gap-2 text-white/90 text-xs font-bold">
+                                                        <span
+                                                            class="material-symbols-outlined text-base">location_on</span>
+                                                        <span>
+                                                            <%= salon.location %>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                    </div>
+                                    <div class="p-8 flex flex-col flex-1">
+                                        <h3
+                                            class="text-2xl font-black mb-3 line-clamp-1 group-hover:text-primary transition-colors">
+                                            <%= salon.name %>
+                                        </h3>
+                                        <p
+                                            class="text-[#896170] dark:text-gray-400 text-sm mb-8 line-clamp-2 leading-relaxed flex-1">
+                                            <%= salon.description %>
+                                        </p>
+                                        <div
+                                            class="flex items-center justify-between pt-6 border-t border-[#f4f0f2]/50 dark:border-[#3d252e]">
+                                            <div class="flex flex-col">
+                                                <span
+                                                    class="text-[10px] font-black text-primary/60 uppercase tracking-widest mb-1">يبدأ
+                                                    من</span>
+                                                <span class="text-primary font-black text-2xl">
+                                                    <%= salon.price_start_manual || salon.price_start %> <small
+                                                            class="text-xs">ج.م</small>
+                                                </span>
+                                            </div>
+                                            <span
+                                                class="gradient-bg text-white h-12 flex items-center px-8 rounded-2xl font-black transition-all shadow-lg hover:shadow-2xl btn-bounce">
+                                                التفاصيل
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            <% }); %>
+                                <% } else { %>
+                                    <div class="col-span-full py-24 text-center">
+                                        <div
+                                            class="size-24 bg-gray-50 dark:bg-[#1a0c10] rounded-[2rem] flex items-center justify-center mx-auto mb-6 border border-[#e6dbdf] dark:border-[#3d252e]">
+                                            <span class="material-symbols-outlined text-6xl opacity-20">store_off</span>
+                                        </div>
+                                        <h3 class="text-2xl font-black text-[#896170]">لا توجد نتائج تطابق بحثكِ</h3>
+                                        <p class="text-sm text-[#896170]/60 mt-2">حاولي تغيير الكلمات المفتاحية أو
+                                            التصنيفات المختارة</p>
+                                        <a href="/salons"
+                                            class="inline-block mt-8 bg-primary text-white px-10 py-4 rounded-2xl font-black shadow-lg shadow-primary/20 btn-bounce">
+                                            إعادة ضبط الكل
+                                        </a>
+                                    </div>
+                                    <% } %>
+                </div>
+
+                <%- include('../../partials/footer') %>
+            </main>
+    </div>
+
+    <script>
+        let selectedCategory = '<%= currentCategory %>';
+
+        function setCategory(catId) {
+            selectedCategory = catId;
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const q = document.getElementById('searchInput').value;
+            const sort = document.getElementById('sortSelect').value;
+            const categorySelect = document.getElementById('categorySelect');
+            const bridal = '<%= typeof currentBridal !== "undefined" ? currentBridal : false %>';
+
+            // In mobile, use the select value, in tablet/desktop use the selectedCategory variable
+            const isMobile = window.innerWidth < 1024;
+            const cat = isMobile ? categorySelect.value : selectedCategory;
+
+            let url = `/salons?`;
+            if (q) url += `q=${encodeURIComponent(q)}&`;
+            if (cat && cat !== 'all') url += `category=${cat}&`;
+            if (sort && sort !== 'default') url += `sort=${sort}&`;
+            if (bridal === 'true') url += `bridal=true`;
+
+            window.location.href = url;
+        }
+    </script>
+</body>
+
+</html>

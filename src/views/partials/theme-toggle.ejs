@@ -1,0 +1,27 @@
+<button onclick="toggleTheme()"
+    class="p-2.5 rounded-xl bg-white/10 dark:bg-[#2d1a22] border border-[#e6dbdf] dark:border-[#3d252e] hover:bg-gray-50 dark:hover:bg-[#3d252e] transition-all group shadow-sm"
+    title="تبديل الوضع">
+    <span
+        class="material-symbols-outlined text-[#896170] dark:text-gray-400 group-hover:text-primary transition-colors block dark:hidden">dark_mode</span>
+    <span
+        class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors hidden dark:block">light_mode</span>
+</button>
+
+<script>
+    function toggleTheme() {
+        if (document.documentElement.classList.contains('dark')) {
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+        } else {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+        }
+    }
+
+    // Initialize theme on load (pre-render check)
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+    } else {
+        document.documentElement.classList.remove('dark');
+    }
+</script>

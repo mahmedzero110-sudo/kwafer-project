@@ -1,0 +1,29 @@
+<% if (success && success.length> 0) { %>
+    <% success.forEach(function(msg) { %>
+        <div
+            class="animate-slide-up mb-6 p-4 rounded-2xl bg-green-500/10 border border-green-500/20 flex items-center gap-4 group hover:bg-green-500/15 transition-colors">
+            <div
+                class="size-10 rounded-xl bg-green-500 text-white flex items-center justify-center shrink-0 shadow-lg shadow-green-500/30 group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-xl">check</span>
+            </div>
+            <p class="text-green-700 dark:text-green-400 font-bold text-sm leading-relaxed">
+                <%= msg %>
+            </p>
+        </div>
+        <% }); %>
+            <% } %>
+
+                <% if (error && error.length> 0) { %>
+                    <% error.forEach(function(msg) { %>
+                        <div
+                            class="animate-shake mb-6 p-4 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center gap-4 group hover:bg-red-500/15 transition-colors">
+                            <div
+                                class="size-10 rounded-xl bg-red-500 text-white flex items-center justify-center shrink-0 shadow-lg shadow-red-500/30 group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-xl">priority_high</span>
+                            </div>
+                            <p class="text-red-700 dark:text-red-400 font-bold text-sm leading-relaxed">
+                                <%= msg %>
+                            </p>
+                        </div>
+                        <% }); %>
+                            <% } %>

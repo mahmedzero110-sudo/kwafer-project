@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html class="light" dir="<%= locale === 'ar' ? 'rtl' : 'ltr' %>" lang="<%= locale %>">
+
+<head>
+    <%- include('../../../partials/head') %>
+</head>
+
+<body class="bg-[#f8f9fa] dark:bg-[#1a0c10] text-[#181113] dark:text-white transition-colors duration-200">
+    <div class="flex min-h-screen">
+        <%- include('../../../partials/sidebar', { role: 'admin' }) %>
+
+            <main class="flex-1 <%= locale === 'ar' ? 'md:mr-64' : 'md:ml-64' %> transition-all p-8">
+                <header class="flex items-center justify-between mb-8 animate-fade-in">
+                    <div class="flex items-center gap-4">
+                        <div class="text-left">
+                            <h1 class="text-3xl font-bold">سجل العمليات 📜</h1>
+                            <p class="text-[#896170]">تتبع جميع الحجوزات والعمليات على المنصة</p>
+                        </div>
+                        <button onclick="clearHistory()"
+                            class="bg-red-500/10 text-red-600 px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-red-500 hover:text-white transition-all">
+                            <span class="material-symbols-outlined">delete_sweep</span>
+                            <span>مسح السجل بالكامل</span>
+                        </button>
+                    </div>
+                </header>
+
+                <div
+                    class="bg-white dark:bg-[#2d1a22] rounded-2xl border-2 border-[#e6dbdf] dark:border-[#3d252e] overflow-hidden shadow-sm animate-slide-up">
+                    <div
+                        class="p-6 border-b border-[#e6dbdf] dark:border-[#3d252e] flex flex-col md:flex-row justify-between gap-4">
+                        <div class="relative flex-1">
+                            <span class="material-symbols-outlined absolute right-3 top-3 text-gray-400">search</span>
+                            <input type="text" id="searchInput" onkeyup="filterHistory()"
+                                placeholder="بحث باسم العميل، الصالون، أو الحالة..."
+                                class="w-full pr-10 pl-4 py-2.5 bg-gray-50 dark:bg-[#1a0c10] border border-[#e6dbdf] dark:border-[#3d252e] rounded-xl outline-none focus:border-primary transition-colors">
+                        </div>
+                        <div class="flex gap-2">
+                            <select id="statusFilter" onchange="filterHistory()"
+                                class="px-4 py-2.5 bg-gray-50 dark:bg-[#1a0c10] border border-[#e6dbdf] dark:border-[#3d252e] rounded-xl outline-none focus:border-primary cursor-pointer">
+                                <option value="all">الكل</option>
+                                <option value="completed">مكتمل</option>
+                                <option value="cancelled">ملغي</option>
+                                <option value="confirmed">مؤكد</option>
+                                <option value="pending">قيد الانتظار</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right" id="historyTable">
+                            <thead class="bg-gray-50 dark:bg-[#1a0c10] text-[#896170]">
+                                <tr>
+                                    <th class="px-6 py-4">المعرف</th>
+                                    <th class="px-6 py-4">العميل</th>
+                                    <th class="px-6 py-4">الصالون</th>
+                                    <th class="px-6 py-4">المبلغ</th>
+                                    <th class="px-6 py-4">التاريخ</th>
+                                    <th class="px-6 py-4">الحالة</th>
+                                    <th class="px-6 py-4 text-center">الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-[#e6dbdf] dark:divide-[#3d252e]">
+                                <% if (history && history.length> 0) { %>
+                                    <% history.forEach(function(item) { %>
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-[#1a0c10] transition-colors history-row"
+                                            data-search="<%= item.customer_name %> <%= item.salon_name %> <%= item.status %>"
+                                            data-status="<%= item.status %>">
+                                            <td class="px-6 py-4 font-mono text-sm opacity-50">#<%= item.id %>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <div class="flex items-center gap-2">
+                                                    <div
+                                                        class="size-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
+                                                        <%= item.customer_name.charAt(0) %>
+                                                    </div>
+                                                    <div>
+                                                        <p class="font-bold text-sm">
+                                                            <%= item.customer_name %>
+                                                        </p>
+                                                        <p class="text-[10px] text-[#896170]">
+                                                            <%= item.customer_email %>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 font-bold text-sm">
+                                                <%= item.salon_name %>
+                                            </td>
+                                            <td class="px-6 py-4 font-bold text-primary">
+                                                <%= item.amount %> ج.م
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <div class="flex flex-col">
+                                                    <span class="text-sm font-bold">
+                                                        <%= new Date(item.created_at).toLocaleDateString('ar-EG') %>
+                                                    </span>
+                                                    <span class="text-xs text-[#896170]">
+                                                        <%= new Date(item.created_at).toLocaleTimeString('ar-EG',
+                                                            {hour:'2-digit', minute:'2-digit'}) %>
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <% if (item.status==='completed' ) { %>
+                                                    <span
+                                                        class="inline-flex px-2 py-1 bg-green-500/10 text-green-600 rounded-lg text-xs font-bold border border-green-500/20">مكتمل</span>
+                                                    <% } else if (item.status==='cancelled' ) { %>
+                                                        <span
+                                                            class="inline-flex px-2 py-1 bg-red-500/10 text-red-600 rounded-lg text-xs font-bold border border-red-500/20">ملغي</span>
+                                                        <% } else if (item.status==='confirmed' ) { %>
+                                                            <span
+                                                                class="inline-flex px-2 py-1 bg-blue-500/10 text-blue-600 rounded-lg text-xs font-bold border border-blue-500/20">مؤكد</span>
+                                                            <% } else { %>
+                                                                <span
+                                                                    class="inline-flex px-2 py-1 bg-yellow-500/10 text-yellow-600 rounded-lg text-xs font-bold border border-yellow-500/20">انتظار</span>
+                                                                <% } %>
+                                            </td>
+                                            <td class="px-6 py-4 text-center">
+                                                <button onclick="deleteItem('<%= item.id %>')"
+                                                    class="p-2 text-[#896170] hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors">
+                                                    <span class="material-symbols-outlined">delete</span>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <% }); %>
+                                            <% } else { %>
+                                                <tr>
+                                                    <td colspan="6" class="p-8 text-center text-[#896170]">لا توجد سجلات
+                                                        حالياً</td>
+                                                </tr>
+                                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination (Visual Only for now unless backend supports it) -->
+                    <div
+                        class="p-4 border-t border-[#e6dbdf] dark:border-[#3d252e] flex items-center justify-between text-sm text-[#896170]">
+                        <span>عرض <%= history.length %> سجل</span>
+                        <div class="flex gap-2">
+                            <button
+                                class="px-3 py-1 rounded-lg border border-[#e6dbdf] dark:border-[#3d252e] hover:bg-gray-50 dark:hover:bg-[#1a0c10]"
+                                disabled>السابق</button>
+                            <button
+                                class="px-3 py-1 rounded-lg border border-[#e6dbdf] dark:border-[#3d252e] hover:bg-gray-50 dark:hover:bg-[#1a0c10]"
+                                disabled>التالي</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+    </div>
+
+    <script>
+        function filterHistory() {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+            const rows = document.querySelectorAll('.history-row');
+
+            rows.forEach(row => {
+                const searchData = row.dataset.search.toLowerCase();
+                const statusData = row.dataset.status;
+
+                const matchesSearch = searchData.includes(searchInput);
+                const matchesStatus = statusFilter === 'all' || statusData === statusFilter;
+
+                if (matchesSearch && matchesStatus) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+        function deleteItem(id) {
+            if (confirm('هل أنتِ متأكدة من حذف هذا السجل نهائياً؟')) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/dashboard/admin/history/delete/${id}`;
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        function clearHistory() {
+            if (confirm('⚠️ تحذير: هل أنتِ متأكدة من مسح "سجل العمليات" بالكامل؟ لا يمكن التراجع عن هذا الإجراء.')) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/dashboard/admin/history/clear';
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
+</body>
+
+</html>

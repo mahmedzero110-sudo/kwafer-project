@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html class="light" dir="rtl" lang="ar">
+
+<head>
+    <%- include('../../partials/head') %>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark transition-colors duration-300">
+    <%- include('../../partials/header') %>
+
+        <main class="pt-32 pb-20">
+            <div class="container mx-auto px-4 max-w-4xl">
+                <!-- Header -->
+                <div class="text-center mb-16 animate-fade-in-up">
+                    <div
+                        class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 text-primary mb-6">
+                        <span class="material-symbols-outlined text-3xl">lock</span>
+                    </div>
+                    <h1 class="text-4xl md:text-5xl font-black mb-4">سياسة الخصوصية</h1>
+                    <p class="text-xl text-[#896170] max-w-2xl mx-auto">
+                        نحن نولي أهمية قصوى لخصوصية بياناتك. تعرفي على كيفية جمعنا واستخدامنا وحمايتنا لمعلوماتك
+                        الشخصية.
+                    </p>
+                    <div class="text-sm text-[#896170]/80 mt-4">
+                        آخر تحديث: <%= new Date().toLocaleDateString('ar-EG') %>
+                    </div>
+                </div>
+
+                <!-- Content Cards -->
+                <div class="space-y-8 animate-fade-in-up delay-100">
+
+                    <!-- Introduction -->
+                    <div
+                        class="bg-white dark:bg-[#1a0c10] p-8 md:p-10 rounded-3xl border border-[#e6dbdf] dark:border-[#3d252e] shadow-sm">
+                        <div class="flex items-start gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined">info</span>
+                            </div>
+                            <div>
+                                <h2 class="text-2xl font-bold mb-4">مقدمة</h2>
+                                <p class="leading-loose text-[#896170] dark:text-gray-300">
+                                    تلتزم منصة كوافير بحماية خصوصيتك وضمان حماية معلوماتك الشخصية. توضح سياسة الخصوصية
+                                    هذه أنواع المعلومات التي نجمعها وكيفية استخدامها والإفصاح عنها وحمايتها عند استخدامك
+                                    لموقعنا وتطبيقنا.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Data Collection -->
+                    <div
+                        class="bg-white dark:bg-[#1a0c10] p-8 md:p-10 rounded-3xl border border-[#e6dbdf] dark:border-[#3d252e] shadow-sm">
+                        <div class="flex items-start gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-purple-50 text-purple-500 flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined">database</span>
+                            </div>
+                            <div>
+                                <h2 class="text-2xl font-bold mb-4">المعلومات التي نجمعها</h2>
+                                <ul class="space-y-4">
+                                    <li class="flex items-start gap-3">
+                                        <span
+                                            class="material-symbols-outlined text-primary text-sm mt-1">check_circle</span>
+                                        <span class="text-[#896170] dark:text-gray-300"><strong
+                                                class="text-text-light dark:text-white">معلومات الحساب:</strong> الاسم،
+                                            البريد الإلكتروني، رقم الهاتف، وكلمة المرور المشفرة.</span>
+                                    </li>
+                                    <li class="flex items-start gap-3">
+                                        <span
+                                            class="material-symbols-outlined text-primary text-sm mt-1">check_circle</span>
+                                        <span class="text-[#896170] dark:text-gray-300"><strong
+                                                class="text-text-light dark:text-white">معلومات الحجز:</strong> تفاصيل
+                                            الخدمات المحجوزة، التواريخ، والمبالغ المدفوعة.</span>
+                                    </li>
+                                    <li class="flex items-start gap-3">
+                                        <span
+                                            class="material-symbols-outlined text-primary text-sm mt-1">check_circle</span>
+                                        <span class="text-[#896170] dark:text-gray-300"><strong
+                                                class="text-text-light dark:text-white">معلومات الجهاز:</strong> عنوان
+                                            IP، نوع المتصفح، ونظام التشغيل لتحسين تجربة المستخدم.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Data Usage -->
+                    <div
+                        class="bg-white dark:bg-[#1a0c10] p-8 md:p-10 rounded-3xl border border-[#e6dbdf] dark:border-[#3d252e] shadow-sm">
+                        <div class="flex items-start gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-green-50 text-green-500 flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined">settings_suggest</span>
+                            </div>
+                            <div>
+                                <h2 class="text-2xl font-bold mb-4">كيف نستخدم معلوماتك</h2>
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <div class="p-4 bg-gray-50 dark:bg-[#2d1a22] rounded-xl text-center">
+                                        <span
+                                            class="material-symbols-outlined text-3xl text-[#896170] mb-2">calendar_today</span>
+                                        <h3 class="font-bold mb-2">إدارة الحجوزات</h3>
+                                        <p class="text-sm text-[#896170]">لتأكيد مواعيدك وتذكيرك بها.</p>
+                                    </div>
+                                    <div class="p-4 bg-gray-50 dark:bg-[#2d1a22] rounded-xl text-center">
+                                        <span
+                                            class="material-symbols-outlined text-3xl text-[#896170] mb-2">support_agent</span>
+                                        <h3 class="font-bold mb-2">الدعم الفني</h3>
+                                        <p class="text-sm text-[#896170]">للرد على استفساراتك وحل المشاكل.</p>
+                                    </div>
+                                    <div class="p-4 bg-gray-50 dark:bg-[#2d1a22] rounded-xl text-center">
+                                        <span
+                                            class="material-symbols-outlined text-3xl text-[#896170] mb-2">verified_user</span>
+                                        <h3 class="font-bold mb-2">الأمان والحماية</h3>
+                                        <p class="text-sm text-[#896170]">لمنع الاحتيال وحماية حسابك.</p>
+                                    </div>
+                                    <div class="p-4 bg-gray-50 dark:bg-[#2d1a22] rounded-xl text-center">
+                                        <span
+                                            class="material-symbols-outlined text-3xl text-[#896170] mb-2">campaign</span>
+                                        <h3 class="font-bold mb-2">التواصل</h3>
+                                        <p class="text-sm text-[#896170]">لإرسال تحديثات هامة وعروض خاصة.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Data Sharing -->
+                    <div
+                        class="bg-white dark:bg-[#1a0c10] p-8 md:p-10 rounded-3xl border border-[#e6dbdf] dark:border-[#3d252e] shadow-sm">
+                        <div class="flex items-start gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-orange-50 text-orange-500 flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined">share</span>
+                            </div>
+                            <div>
+                                <h2 class="text-2xl font-bold mb-4">مشاركة البيانات</h2>
+                                <p class="leading-loose text-[#896170] dark:text-gray-300 mb-4">
+                                    نحن لا نبيع بياناتك الشخصية لأي طرف ثالث. قد نشارك معلوماتك فقط في الحالات التالية:
+                                </p>
+                                <ul class="space-y-3">
+                                    <li class="flex items-center gap-3">
+                                        <span class="w-2 h-2 rounded-full bg-primary"></span>
+                                        <span class="text-[#896170] dark:text-gray-300">مع <strong>الصالونات</strong>
+                                            التي قمت بالحجز لديها (الاسم ورقم الهاتف فقط) لإتمام الخدمة.</span>
+                                    </li>
+                                    <li class="flex items-center gap-3">
+                                        <span class="w-2 h-2 rounded-full bg-primary"></span>
+                                        <span class="text-[#896170] dark:text-gray-300">طبيعة الامتثال للقوانين واللوائح
+                                            الحكومية المعمول بها.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Section -->
+                    <div class="bg-gradient-to-r from-primary/10 to-purple-500/10 p-8 md:p-10 rounded-3xl text-center">
+                        <h2 class="text-2xl font-bold mb-4">لديك استفسارات حول الخصوصية؟</h2>
+                        <p class="text-[#896170] mb-6">فريقنا القانوني والتقني متاح للإجابة على جميع تساؤلاتك.</p>
+                        <a href="mailto:<%= siteSettings.contact_email %>"
+                            class="inline-flex items-center gap-2 bg-primary text-white px-8 py-3 rounded-xl font-bold hover:bg-primary-dark transition-all">
+                            <span class="material-symbols-outlined">mail</span>
+                            تواصلي معنا
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+
+        <%- include('../../partials/footer') %>
+</body>
+
+</html>

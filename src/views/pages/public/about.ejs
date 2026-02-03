@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html class="light" dir="<%= locale === 'ar' ? 'rtl' : 'ltr' %>" lang="<%= locale %>">
+
+<head>
+    <%- include('../../partials/head') %>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-[#181113] dark:text-white transition-colors duration-200 noise-bg">
+    <%- include('../../partials/alerts') %>
+
+        <div class="relative flex min-h-screen w-full flex-col">
+            <%- include('../../partials/header') %>
+
+                <main class="flex-1 w-full">
+                    <!-- Hero Section -->
+                    <section class="relative py-20 md:py-32 overflow-hidden">
+                        <div class="absolute inset-0 z-0">
+                            <div
+                                class="absolute top-0 right-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px]">
+                            </div>
+                            <div
+                                class="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-gold/5 rounded-full blur-[120px]">
+                            </div>
+                        </div>
+
+                        <div class="container relative z-10 mx-auto px-4">
+                            <div class="max-w-4xl mx-auto text-center space-y-8 animate-slide-up">
+                                <div
+                                    class="inline-flex items-center gap-2 bg-primary/10 px-4 py-1.5 rounded-full border border-primary/20">
+                                    <span class="material-symbols-outlined text-primary text-sm">history_edu</span>
+                                    <span
+                                        class="text-[10px] font-black text-primary uppercase tracking-widest">قصتنا</span>
+                                </div>
+
+                                <h1 class="text-4xl md:text-6xl font-black leading-tight">
+                                    نحن نعيد تعريف <br>
+                                    <span class="gradient-text">تجربة الجمال</span> في الأقصر
+                                </h1>
+
+                                <p class="text-lg text-[#896170] dark:text-gray-400 leading-relaxed max-w-2xl mx-auto">
+                                    كوافير هي المنصة الرائدة التي تجمع بين الأناقة والتكنولوجيا. نسهل عليكِ الوصول إلى
+                                    أفضل خبراء التجميل وحجز مواعيدكِ بكل سهولة ورفاهية.
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Mission & Vision -->
+                    <section
+                        class="py-16 md:py-24 bg-white/50 dark:bg-[#2d1a22]/50 backdrop-blur-sm border-y border-[#e6dbdf] dark:border-[#3d252e]">
+                        <div class="container mx-auto px-4">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                <!-- Mission -->
+                                <div
+                                    class="p-8 rounded-[2.5rem] bg-white dark:bg-[#2d1a22] border border-[#e6dbdf] dark:border-[#3d252e] shadow-lg hover:-translate-y-2 transition-transform duration-500 group">
+                                    <div
+                                        class="size-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                                        <span class="material-symbols-outlined text-primary text-4xl">flag</span>
+                                    </div>
+                                    <h3 class="text-2xl font-black mb-4">رسالتنا</h3>
+                                    <p class="text-[#896170] dark:text-gray-400 leading-relaxed">
+                                        تمكين المرأة في الأقصر من خلال توفير منصة موثوقة تجمع أرقى الخدمات التجميلية في
+                                        مكان واحد، مع ضمان الجودة والراحة.
+                                    </p>
+                                </div>
+
+                                <!-- Vision -->
+                                <div
+                                    class="p-8 rounded-[2.5rem] bg-white dark:bg-[#2d1a22] border border-[#e6dbdf] dark:border-[#3d252e] shadow-lg hover:-translate-y-2 transition-transform duration-500 group md:-mt-8">
+                                    <div
+                                        class="size-16 bg-gold/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                                        <span class="material-symbols-outlined text-gold text-4xl">visibility</span>
+                                    </div>
+                                    <h3 class="text-2xl font-black mb-4">رؤيتنا</h3>
+                                    <p class="text-[#896170] dark:text-gray-400 leading-relaxed">
+                                        أن نكون الوجهة الأولى للجمال والعناية الشخصية في مصر، من خلال تقديم تجربة رقمية
+                                        استثنائية تربط بين العملاء والمحترفين.
+                                    </p>
+                                </div>
+
+                                <!-- Values -->
+                                <div
+                                    class="p-8 rounded-[2.5rem] bg-white dark:bg-[#2d1a22] border border-[#e6dbdf] dark:border-[#3d252e] shadow-lg hover:-translate-y-2 transition-transform duration-500 group">
+                                    <div
+                                        class="size-16 bg-green-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                                        <span class="material-symbols-outlined text-green-500 text-4xl">diamond</span>
+                                    </div>
+                                    <h3 class="text-2xl font-black mb-4">قيمنا</h3>
+                                    <p class="text-[#896170] dark:text-gray-400 leading-relaxed">
+                                        الجودة، الثقة، والابتكار. نحن نلتزم بأعلى معايير الخدمة ونحرص على تقديم حلول
+                                        ذكية تناسب احتياجات المرأة العصرية.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Stats -->
+                    <section class="py-20 relative overflow-hidden">
+                        <div class="container mx-auto px-4 relative z-10">
+                            <div
+                                class="bg-gradient-to-br from-[#2d1a22] to-[#1a0c10] rounded-[3rem] p-12 md:p-20 text-white shadow-2xl overflow-hidden relative">
+                                <!-- BG Decorations -->
+                                <div class="absolute top-0 right-0 w-96 h-96 bg-primary/20 rounded-full blur-[100px]">
+                                </div>
+                                <div class="absolute bottom-0 left-0 w-96 h-96 bg-gold/10 rounded-full blur-[100px]">
+                                </div>
+
+                                <div class="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                                    <div class="space-y-2">
+                                        <div class="text-4xl md:text-5xl font-black text-primary">+50</div>
+                                        <div class="text-sm font-bold opacity-60">صالون شريك</div>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <div class="text-4xl md:text-5xl font-black text-gold">+1000</div>
+                                        <div class="text-sm font-bold opacity-60">عميلة سعيدة</div>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <div class="text-4xl md:text-5xl font-black text-green-400">+5000</div>
+                                        <div class="text-sm font-bold opacity-60">حجز مؤكد</div>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <div class="text-4xl md:text-5xl font-black text-blue-400">24/7</div>
+                                        <div class="text-sm font-bold opacity-60">دعم فني</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+
+                <%- include('../../partials/footer') %>
+        </div>
+</body>
+
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html class="light" dir="rtl" lang="ar">
+
+<head>
+    <%- include('../../../partials/head') %>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark">
+    <div class="flex min-h-screen">
+        <%- include('../../../partials/sidebar', { role: 'owner' }) %>
+
+            <main class="flex-1 p-8 mr-64 animate-fade-in">
+                <div class="max-w-7xl mx-auto">
+                    <!-- Header -->
+                    <div class="mb-8">
+                        <h1 class="text-3xl font-bold text-[#181113] dark:text-white mb-2">إدارة العروض والخصومات</h1>
+                        <p class="text-[#896170]">أضف عروض خاصة لجذب المزيد من العملاء</p>
+                    </div>
+
+                    <!-- Add Offer Button -->
+                    <div class="mb-6">
+                        <button onclick="openAddOfferModal()"
+                            class="gradient-bg text-white px-6 py-3 rounded-xl font-bold hover:shadow-xl transition-all flex items-center gap-2">
+                            <span class="material-symbols-outlined">add</span>
+                            <span>إضافة عرض جديد</span>
+                        </button>
+                    </div>
+
+                    <!-- Active Offers -->
+                    <div class="mb-8">
+                        <h2 class="text-2xl font-bold mb-4">العروض النشطة</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <% if (activeOffers && activeOffers.length> 0) { %>
+                                <% activeOffers.forEach(function(offer) { %>
+                                    <div
+                                        class="bg-white dark:bg-[#2d1a22] rounded-2xl overflow-hidden border-2 border-[#e6dbdf] dark:border-[#3d252e] card-hover">
+                                        <div class="relative h-48 bg-gradient-to-br from-primary to-[#ff4d8d]">
+                                            <div
+                                                class="absolute top-4 right-4 bg-white/20 backdrop-blur-md px-4 py-2 rounded-full">
+                                                <span class="text-white font-bold text-2xl">-<%= offer.discount %>
+                                                        %</span>
+                                            </div>
+                                            <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+                                                <h3 class="text-2xl font-bold mb-1">
+                                                    <%= offer.title %>
+                                                </h3>
+                                                <p class="text-white/90 text-sm">
+                                                    <%= offer.description %>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="p-6">
+                                            <div class="flex items-center justify-between mb-4">
+                                                <div>
+                                                    <p class="text-xs text-[#896170]">السعر</p>
+                                                    <p class="font-bold text-primary">
+                                                        <%= offer.price %> ج.م
+                                                    </p>
+                                                </div>
+                                                <div>
+                                                    <p class="text-xs text-[#896170]">صالح حتى</p>
+                                                    <p class="font-bold">
+                                                        <%= new Date(offer.valid_until).toLocaleDateString('ar-EG') %>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="flex gap-2">
+                                                <button onclick="deleteOffer('<%= offer.id %>')"
+                                                    class="w-full bg-red-50 text-red-600 py-2 rounded-lg font-bold hover:bg-red-100 transition-colors">
+                                                    حذف العرض
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <% }); %>
+                                        <% } else { %>
+                                            <div
+                                                class="col-span-3 text-center py-12 bg-gray-50 dark:bg-[#1a0c10] rounded-2xl border-2 border-dashed border-[#e6dbdf] dark:border-[#3d252e]">
+                                                <p class="text-[#896170]">لا توجد عروض نشطة حالياً</p>
+                                            </div>
+                                            <% } %>
+                        </div>
+                    </div>
+
+                    <!-- Expired Offers -->
+                    <div>
+                        <h2 class="text-2xl font-bold mb-4">العروض المنتهية</h2>
+                        <div
+                            class="bg-white dark:bg-[#2d1a22] rounded-2xl border-2 border-[#e6dbdf] dark:border-[#3d252e] overflow-hidden">
+                            <% if (expiredOffers && expiredOffers.length> 0) { %>
+                                <table class="w-full">
+                                    <thead class="bg-[#f8f6f7] dark:bg-[#1a0c10]">
+                                        <tr>
+                                            <th class="px-6 py-4 text-right text-sm font-bold">العرض</th>
+                                            <th class="px-6 py-4 text-right text-sm font-bold">الخصم</th>
+                                            <th class="px-6 py-4 text-right text-sm font-bold">انتهى في</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% expiredOffers.forEach(function(offer) { %>
+                                            <tr class="border-b border-[#e6dbdf] dark:border-[#3d252e]">
+                                                <td class="px-6 py-4 font-medium">
+                                                    <%= offer.title %>
+                                                </td>
+                                                <td class="px-6 py-4 text-primary font-bold">
+                                                    <%= offer.discount %>%
+                                                </td>
+                                                <td class="px-6 py-4 text-[#896170]">
+                                                    <%= new Date(offer.valid_until).toLocaleDateString('ar-EG') %>
+                                                </td>
+                                            </tr>
+                                            <% }); %>
+                                    </tbody>
+                                </table>
+                                <% } else { %>
+                                    <div class="p-8 text-center text-[#896170]">لا توجد عروض منتهية</div>
+                                    <% } %>
+                        </div>
+                    </div>
+                </div>
+            </main>
+    </div>
+
+    <!-- Add Offer Modal -->
+    <div id="addOfferModal"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-white dark:bg-[#2d1a22] rounded-2xl max-w-2xl w-full p-8 relative animate-scale-in">
+            <button onclick="closeAddOfferModal()"
+                class="absolute top-4 left-4 p-2 hover:bg-gray-100 dark:hover:bg-[#3d252e] rounded-lg">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            <h2 class="text-2xl font-bold mb-6">إضافة عرض جديد</h2>
+            <form action="/dashboard/owner/offers" method="POST" class="space-y-4">
+                <div>
+                    <label for="offerTitle" class="block text-sm font-medium mb-2">عنوان العرض</label>
+                    <input type="text" id="offerTitle" name="title" required autocomplete="off"
+                        class="w-full p-3 border border-[#e6dbdf] dark:border-[#3d252e] rounded-lg bg-white dark:bg-[#1a0c10]"
+                        placeholder="مثال: عرض العروس الخاص">
+                </div>
+                <div>
+                    <label for="offerDesc" class="block text-sm font-medium mb-2">الوصف</label>
+                    <textarea id="offerDesc" name="description" autocomplete="off"
+                        class="w-full p-3 border border-[#e6dbdf] dark:border-[#3d252e] rounded-lg bg-white dark:bg-[#1a0c10]"
+                        rows="3" placeholder="وصف العرض"></textarea>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="col-span-1">
+                        <label for="basePrice" class="block text-sm font-medium mb-2 text-[#896170]">السعر الأصلي
+                            (ج.م)</label>
+                        <input type="number" id="basePrice" required autocomplete="off" oninput="calculatePrice()"
+                            class="w-full p-3 border border-[#e6dbdf] dark:border-[#3d252e] rounded-xl bg-gray-50 dark:bg-[#1a0c10] focus:ring-2 focus:ring-primary outline-none transition-all"
+                            placeholder="1000">
+                    </div>
+                    <div class="col-span-1">
+                        <label for="offerDiscount" class="block text-sm font-medium mb-2 text-[#896170]">نسبة الخصم
+                            (%)</label>
+                        <input type="number" id="offerDiscount" name="discount" required oninput="calculatePrice()"
+                            class="w-full p-3 border border-[#e6dbdf] dark:border-[#3d252e] rounded-xl bg-gray-50 dark:bg-[#1a0c10] focus:ring-2 focus:ring-primary outline-none transition-all"
+                            placeholder="20">
+                    </div>
+                    <div class="col-span-1">
+                        <label for="offerPrice" class="block text-sm font-medium mb-2 text-primary">السعر
+                            النهائي</label>
+                        <input type="number" id="offerPrice" name="price" required readonly
+                            class="w-full p-3 border border-primary/30 dark:border-primary/20 rounded-xl bg-primary/5 dark:bg-primary/10 text-primary font-black outline-none cursor-default"
+                            placeholder="800">
+                    </div>
+                    <div class="col-span-1">
+                        <label for="offerExpiry" class="block text-sm font-medium mb-2 text-[#896170]">صالح حتى</label>
+                        <input type="date" id="offerExpiry" name="valid_until" required
+                            class="w-full p-3 border border-[#e6dbdf] dark:border-[#3d252e] rounded-xl bg-gray-50 dark:bg-[#1a0c10] focus:ring-2 focus:ring-primary outline-none transition-all">
+                    </div>
+                </div>
+
+                <button type="submit"
+                    class="w-full gradient-bg text-white py-3 rounded-lg font-bold hover:shadow-xl transition-all">
+                    حفظ العرض
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function calculatePrice() {
+            const base = parseFloat(document.getElementById('basePrice').value) || 0;
+            const discount = parseFloat(document.getElementById('offerDiscount').value) || 0;
+            const final = Math.round(base * (1 - (discount / 100)));
+            document.getElementById('offerPrice').value = final > 0 ? final : 0;
+        }
+
+        function openAddOfferModal() {
+            document.getElementById('addOfferModal').classList.remove('hidden');
+            document.getElementById('addOfferModal').classList.add('flex');
+        }
+        function closeAddOfferModal() {
+            document.getElementById('addOfferModal').classList.add('hidden');
+            document.getElementById('addOfferModal').classList.remove('flex');
+        }
+        function deleteOffer(id) {
+            if (confirm('هل أنت متأكد من حذف هذا العرض؟')) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/dashboard/owner/offers/delete/${id}`;
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
+</body>
+
+</html>

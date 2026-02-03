@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html class="light" dir="rtl" lang="ar">
+
+<head>
+    <%- include('../../../partials/head') %>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark">
+    <div class="flex min-h-screen">
+        <%- include('../../../partials/sidebar', { role: 'owner' }) %>
+
+            <main class="flex-1 p-8 mr-64 animate-fade-in">
+                <div class="max-w-7xl mx-auto">
+                    <!-- Header -->
+                    <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                            <h1 class="text-3xl font-bold text-[#181113] dark:text-white mb-2">إدارة التقييمات والآراء
+                            </h1>
+                            <p class="text-[#896170]">تابعي آراء عميلاتك ورُدي على استفساراتهن</p>
+                        </div>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div
+                            class="bg-white dark:bg-[#2d1a22] rounded-2xl p-6 border-2 border-[#e6dbdf] dark:border-[#3d252e] shadow-sm">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="bg-gold/10 p-3 rounded-xl">
+                                    <span class="material-symbols-outlined text-gold text-3xl fill-1">star</span>
+                                </div>
+                                <span class="text-xs font-bold text-[#896170]">متوسط التقييم</span>
+                            </div>
+                            <p class="text-4xl font-black mb-1">
+                                <%= stats.avg_rating ? parseFloat(stats.avg_rating).toFixed(1) : '0.0' %>
+                            </p>
+                            <div class="flex items-center gap-1">
+                                <% for(let i=0; i<5; i++) { %>
+                                    <span
+                                        class="material-symbols-outlined text-gold text-xs <%= i < Math.round(stats.avg_rating) ? 'fill-1' : '' %>">star</span>
+                                    <% } %>
+                            </div>
+                        </div>
+                        <div
+                            class="bg-white dark:bg-[#2d1a22] rounded-2xl p-6 border-2 border-[#e6dbdf] dark:border-[#3d252e] shadow-sm">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="bg-primary/10 p-3 rounded-xl">
+                                    <span class="material-symbols-outlined text-primary text-3xl">reviews</span>
+                                </div>
+                                <span class="text-xs font-bold text-[#896170]">إجمالي الآراء</span>
+                            </div>
+                            <p class="text-4xl font-black mb-1">
+                                <%= stats.total_reviews %>
+                            </p>
+                            <p class="text-xs text-[#896170]">تعليق من عميلاتك</p>
+                        </div>
+                        <div
+                            class="bg-white dark:bg-[#2d1a22] rounded-2xl p-6 border-2 border-[#e6dbdf] dark:border-[#3d252e] shadow-sm">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="bg-green-500/10 p-3 rounded-xl">
+                                    <span
+                                        class="material-symbols-outlined text-green-500 text-3xl">sentiment_satisfied</span>
+                                </div>
+                                <span class="text-xs font-bold text-[#896170]">تقييمات ممتازة</span>
+                            </div>
+                            <p class="text-4xl font-black mb-1">
+                                <%= stats.positive_reviews %>
+                            </p>
+                            <p class="text-xs text-[#896170]">تقييم 4 نجوم فأكثر</p>
+                        </div>
+                    </div>
+
+                    <!-- Filters -->
+                    <div
+                        class="bg-white dark:bg-[#2d1a22] rounded-2xl p-6 border-2 border-[#e6dbdf] dark:border-[#3d252e] mb-8">
+                        <form action="/dashboard/owner/reviews" method="GET"
+                            class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-bold mb-2">تصفية بالتقييم</label>
+                                <select name="rating" onchange="this.form.submit()"
+                                    class="w-full p-3 bg-gray-50 dark:bg-[#1a0c10] border border-[#e6dbdf] dark:border-[#3d252e] rounded-xl outline-none">
+                                    <option value="">كل التقييمات</option>
+                                    <option value="5" <%=filters.rating=='5' ? 'selected' : '' %>>5 نجوم</option>
+                                    <option value="4" <%=filters.rating=='4' ? 'selected' : '' %>>4 نجوم</option>
+                                    <option value="3" <%=filters.rating=='3' ? 'selected' : '' %>>3 نجوم</option>
+                                    <option value="2" <%=filters.rating=='2' ? 'selected' : '' %>>نجمتين</option>
+                                    <option value="1" <%=filters.rating=='1' ? 'selected' : '' %>>نجمة واحدة</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold mb-2">الحالة</label>
+                                <select name="status" onchange="this.form.submit()"
+                                    class="w-full p-3 bg-gray-50 dark:bg-[#1a0c10] border border-[#e6dbdf] dark:border-[#3d252e] rounded-xl outline-none">
+                                    <option value="">الكل</option>
+                                    <option value="approved" <%=filters.status==='approved' ? 'selected' : '' %>>منشور
+                                    </option>
+                                    <option value="hidden" <%=filters.status==='hidden' ? 'selected' : '' %>>مخفي
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="flex items-end">
+                                <a href="/dashboard/owner/reviews"
+                                    class="text-primary text-sm font-bold hover:underline mb-3">إعادة ضبط المرشحات</a>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Reviews List -->
+                    <div class="space-y-4">
+                        <% if (reviews && reviews.length> 0) { %>
+                            <% reviews.forEach(function(review) { %>
+                                <div
+                                    class="bg-white dark:bg-[#2d1a22] rounded-2xl border-2 border-[#e6dbdf] dark:border-[#3d252e] overflow-hidden transition-all hover:shadow-md <%= review.status === 'hidden' ? 'opacity-70 grayscale-[0.5]' : '' %>">
+                                    <div class="p-6">
+                                        <div class="flex items-start justify-between gap-4 mb-4">
+                                            <div class="flex items-center gap-4">
+                                                <div
+                                                    class="h-12 w-12 rounded-full gradient-bg flex items-center justify-center text-white font-bold text-xl">
+                                                    <%= review.customer_name.charAt(0) %>
+                                                </div>
+                                                <div>
+                                                    <h3 class="font-bold text-[#181113] dark:text-white">
+                                                        <%= review.customer_name %>
+                                                    </h3>
+                                                    <div class="flex items-center gap-2">
+                                                        <div class="flex items-center">
+                                                            <% for(let i=0; i<5; i++) { %>
+                                                                <span
+                                                                    class="material-symbols-outlined text-[14px] text-gold <%= i < review.rating ? 'fill-1' : '' %>">star</span>
+                                                                <% } %>
+                                                        </div>
+                                                        <span class="text-[10px] text-[#896170]">• <%= new
+                                                                Date(review.created_at).toLocaleDateString('ar-EG', {
+                                                                year: 'numeric' , month: 'long' , day: 'numeric' }) %>
+                                                        </span>
+                                                        <% if (review.service_name) { %>
+                                                            <span
+                                                                class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">
+                                                                <%= review.service_name %>
+                                                            </span>
+                                                            <% } else { %>
+                                                                <span
+                                                                    class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">
+                                                                    باقة العروس
+                                                                </span>
+                                                                <% } %>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <form action="/dashboard/owner/reviews/status/<%= review.id %>"
+                                                    method="POST">
+                                                    <input type="hidden" name="status"
+                                                        value="<%= review.status === 'approved' ? 'hidden' : 'approved' %>">
+                                                    <button type="submit"
+                                                        class="p-2 rounded-lg transition-colors <%= review.status === 'approved' ? 'hover:bg-gray-100 text-[#896170]' : 'bg-primary/10 text-primary hover:bg-primary/20' %>"
+                                                        title="<%= review.status === 'approved' ? 'إخفاء التعليق' : 'إظهار التعليق' %>">
+                                                        <span class="material-symbols-outlined">
+                                                            <%= review.status==='approved' ? 'visibility_off'
+                                                                : 'visibility' %>
+                                                        </span>
+                                                    </button>
+                                                </form>
+                                                <button onclick="deleteReview('<%= review.id %>')"
+                                                    class="flex items-center gap-1 px-3 py-2 bg-red-50 hover:bg-red-100 text-red-500 rounded-lg transition-colors text-sm font-bold"
+                                                    title="حذف التقييم نهائياً">
+                                                    <span class="material-symbols-outlined text-lg">delete</span>
+                                                    <span>حذف</span>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <p class="text-[#181113] dark:text-gray-200 leading-relaxed mb-6">
+                                            <%= review.comment %>
+                                        </p>
+
+                                        <!-- Owner Reply Section -->
+                                        <% if (review.owner_reply) { %>
+                                            <div
+                                                class="bg-[#fcf8f9] dark:bg-[#1a0c10] rounded-xl p-4 border-r-4 border-primary mt-4">
+                                                <div class="flex items-center justify-between mb-2">
+                                                    <span
+                                                        class="text-xs font-bold text-primary flex items-center gap-1">
+                                                        <span class="material-symbols-outlined text-sm">reply</span>
+                                                        رد الصالون
+                                                    </span>
+                                                    <button
+                                                        onclick="openReplyModal('<%= review.id %>', '<%= review.owner_reply %>')"
+                                                        class="text-[10px] text-[#896170] hover:text-primary underline">تعديل
+                                                        الرد</button>
+                                                </div>
+                                                <p class="text-sm text-[#896170] italic">
+                                                    <%= review.owner_reply %>
+                                                </p>
+                                            </div>
+                                            <% } else { %>
+                                                <button onclick="openReplyModal('<%= review.id %>')"
+                                                    class="flex items-center gap-2 text-primary text-sm font-bold hover:underline">
+                                                    <span class="material-symbols-outlined text-sm">add_comment</span>
+                                                    أضيفي رداً على العميل
+                                                </button>
+                                                <% } %>
+                                    </div>
+                                </div>
+                                <% }); %>
+                                    <% } else { %>
+                                        <div
+                                            class="py-20 text-center bg-white dark:bg-[#2d1a22] rounded-2xl border-2 border-dashed border-[#e6dbdf] dark:border-[#3d252e]">
+                                            <span
+                                                class="material-symbols-outlined text-6xl text-gray-300 mb-4">rate_review</span>
+                                            <h3 class="text-xl font-bold text-[#896170]">لا توجد تقييمات مطابقة للبحث
+                                            </h3>
+                                        </div>
+                                        <% } %>
+                    </div>
+                </div>
+            </main>
+    </div>
+
+    <!-- Reply Modal -->
+    <div id="replyModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-white dark:bg-[#2d1a22] rounded-2xl max-w-md w-full p-8 relative animate-scale-in">
+            <button onclick="closeReplyModal()"
+                class="absolute top-4 left-4 p-2 hover:bg-gray-100 dark:hover:bg-[#3d252e] rounded-lg">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            <h2 class="text-2xl font-bold mb-6">الرد على التقييم</h2>
+            <form id="replyForm" method="POST" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-bold mb-2">رسالة الرد</label>
+                    <textarea name="reply" id="replyTextarea" required
+                        class="w-full p-4 border border-[#e6dbdf] dark:border-[#3d252e] rounded-xl bg-gray-50 dark:bg-[#1a0c10] outline-none focus:ring-2 focus:ring-primary/20"
+                        rows="4" placeholder="اكتبي ردك هنا..."></textarea>
+                </div>
+                <button type="submit"
+                    class="w-full gradient-bg text-white py-4 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">
+                    حفظ الرد
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openReplyModal(id, existingReply = '') {
+            const modal = document.getElementById('replyModal');
+            const form = document.getElementById('replyForm');
+            const textarea = document.getElementById('replyTextarea');
+
+            form.action = `/dashboard/owner/reviews/reply/${id}`;
+            textarea.value = existingReply;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            textarea.focus();
+        }
+
+        function closeReplyModal() {
+            const modal = document.getElementById('replyModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function deleteReview(id) {
+            if (confirm('هل أنتِ متأكدة من حذف هذا التقييم نهائياً؟')) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/dashboard/owner/reviews/delete/${id}`;
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
+</body>
+
+</html>

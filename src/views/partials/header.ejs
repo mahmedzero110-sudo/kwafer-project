@@ -1,0 +1,427 @@
+<header
+    class="sticky top-0 z-50 w-full bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-[#e6dbdf] dark:border-[#3d252e]">
+    <div class="max-w-[1440px] mx-auto px-4 lg:px-10 py-3 flex items-center justify-between gap-4">
+        <!-- Right Side: Logo & Nav -->
+        <div class="flex items-center gap-12">
+            <div class="flex items-center gap-2 text-primary">
+                <div class="size-9">
+                    <svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                        <path clip-rule="evenodd"
+                            d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z"
+                            fill="currentColor" fill-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-black tracking-tight hidden sm:block">كوافير</h1>
+            </div>
+
+            <nav class="hidden md:flex items-center gap-8">
+                <a class="text-primary font-bold text-base hover:opacity-80 transition-opacity" href="/">
+                    <%= __('nav_home') %>
+                </a>
+                <a class="text-[#181113] dark:text-gray-300 hover:text-primary transition-colors text-base font-bold"
+                    href="/salons">
+                    <%= __('nav_salons') %>
+                </a>
+                <a class="text-[#181113] dark:text-gray-300 hover:text-primary transition-colors text-base font-bold"
+                    href="/offers">
+                    <%= __('nav_offers') %>
+                </a>
+                <a class="text-[#181113] dark:text-gray-300 hover:text-primary transition-colors text-base font-bold"
+                    href="/bookings">
+                    <%= __('nav_bookings') %>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Left Side: Actions -->
+        <div class="flex items-center gap-4">
+            <!-- Theme Toggle -->
+            <div class="hidden sm:block">
+                <%- include('./theme-toggle') %>
+            </div>
+
+            <!-- Auth Buttons -->
+            <% if (user) { %>
+                <div class="flex items-center gap-3 relative">
+                    <!-- Notifications System -->
+                    <div class="relative z-50" id="notificationWrapper">
+                        <button onclick="toggleNotifications(event)"
+                            class="group relative size-10 flex items-center justify-center rounded-xl hover:bg-gray-100 dark:hover:bg-white/5 transition-all outline-none">
+                            <span
+                                class="material-symbols-outlined text-[#896170] dark:text-gray-300 group-hover:text-primary transition-colors text-[26px]">notifications</span>
+                            <% if (typeof unreadNotificationsCount !=='undefined' && unreadNotificationsCount> 0) { %>
+                                <span id="notifBadge"
+                                    class="absolute top-1 right-1 flex size-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white ring-2 ring-white dark:ring-[#12080a] animate-pulse">
+                                    <%= unreadNotificationsCount> 9 ? '9+' : unreadNotificationsCount %>
+                                </span>
+                                <% } %>
+                        </button>
+
+                        <!-- Notification Dropdown -->
+                        <div id="notifDropdown"
+                            class="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-[360px] max-w-[90vw] bg-white dark:bg-[#1a0c10] border border-[#e6dbdf] dark:border-[#3d252e] rounded-3xl shadow-premium opacity-0 invisible transform -translate-y-2 transition-all duration-300 origin-top overflow-hidden">
+                            <!-- Header -->
+                            <div
+                                class="flex items-center justify-between p-4 border-b border-[#e6dbdf] dark:border-[#3d252e]">
+                                <h3 class="font-black text-sm">الإشعارات</h3>
+                                <% if (typeof notifications !=='undefined' && notifications.length> 0) { %>
+                                    <button onclick="markAllRead()"
+                                        class="text-xs font-bold text-primary hover:text-primary-dark hover:underline transition-all">
+                                        تحديد الكل كمقروء
+                                    </button>
+                                    <% } %>
+                            </div>
+
+                            <!-- List -->
+                            <div class="max-h-[400px] overflow-y-auto custom-scrollbar">
+                                <% if (typeof notifications !=='undefined' && notifications.length> 0) { %>
+                                    <div class="flex flex-col">
+                                        <% notifications.forEach(function(notif) { %>
+                                            <div id="notif-<%= notif.id %>"
+                                                class="relative group p-4 border-b border-[#e6dbdf] dark:border-[#3d252e] last:border-0 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors <%= !notif.is_read ? 'bg-primary/5' : '' %>">
+                                                <div class="flex gap-4">
+                                                    <div class="shrink-0 mt-1">
+                                                        <div
+                                                            class="size-10 rounded-xl <%= !notif.is_read ? 'bg-primary/20 text-primary' : 'bg-gray-100 text-gray-500' %> flex items-center justify-center">
+                                                            <span class="material-symbols-outlined text-xl">
+                                                                <%= notif.type==='success' ? 'check_circle' :
+                                                                    notif.type==='error' ? 'error' :
+                                                                    notif.type==='warning' ? 'warning' : 'notifications'
+                                                                    %>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex-1 min-w-0">
+                                                        <div class="flex items-start justify-between gap-2 mb-1">
+                                                            <h4
+                                                                class="font-bold text-sm truncate <%= !notif.is_read ? 'text-[#181113] dark:text-white' : 'text-gray-500' %>">
+                                                                <%= notif.title %>
+                                                            </h4>
+                                                            <span class="text-[10px] text-gray-400 shrink-0">
+                                                                <%= timeAgo(notif.created_at) %>
+                                                            </span>
+                                                        </div>
+                                                        <p
+                                                            class="text-xs text-[#896170] dark:text-gray-400 line-clamp-2 leading-relaxed">
+                                                            <%= notif.message %>
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Actions (Hover) -->
+                                                <div
+                                                    class="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2 bg-white/80 dark:bg-[#1a0c10]/80 backdrop-blur-sm p-1 rounded-lg">
+                                                    <% if (!notif.is_read) { %>
+                                                        <button onclick="markRead('<%= notif.id %>')"
+                                                            class="p-1 hover:text-primary transition-colors"
+                                                            title="تحديد كمقروء">
+                                                            <span
+                                                                class="material-symbols-outlined text-lg">done_all</span>
+                                                        </button>
+                                                        <% } %>
+                                                            <button onclick="deleteNotif('<%= notif.id %>')"
+                                                                class="p-1 hover:text-red-500 transition-colors"
+                                                                title="حذف">
+                                                                <span
+                                                                    class="material-symbols-outlined text-lg">delete</span>
+                                                            </button>
+                                                </div>
+                                            </div>
+                                            <% }); %>
+                                    </div>
+                                    <% } else { %>
+                                        <div
+                                            class="flex flex-col items-center justify-center py-12 text-center text-gray-400">
+                                            <span
+                                                class="material-symbols-outlined text-4xl mb-2 opacity-50">notifications_off</span>
+                                            <p class="text-xs font-bold">لا توجد إشعارات جديدة</p>
+                                        </div>
+                                        <% } %>
+                            </div>
+
+                            <!-- Footer -->
+                            <a href="/notifications"
+                                class="block text-center p-3 text-xs font-bold text-[#896170] hover:text-primary hover:bg-gray-50 dark:hover:bg-white/5 transition-colors border-t border-[#e6dbdf] dark:border-[#3d252e]">
+                                عرض سجل الإشعارات
+                            </a>
+                        </div>
+                    </div>
+
+                    <% if (user.role==='admin' || user.role==='owner' ) { %>
+                        <a href="/dashboard"
+                            class="hidden md:flex items-center gap-2 bg-primary/10 text-primary px-5 py-2.5 rounded-xl font-bold transition-all text-sm hover:bg-primary hover:text-white btn-bounce">
+                            <span class="material-symbols-outlined text-lg">dashboard</span>
+                            <span>لوحة التحكم</span>
+                        </a>
+                        <% } %>
+                            <a href="/logout"
+                                class="hidden md:flex items-center justify-center size-10 text-[#896170] hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all"
+                                title="تسجيل الخروج">
+                                <span class="material-symbols-outlined text-xl font-bold">logout</span>
+                            </a>
+                            <button onclick="toggleMobileMenu()" class="lg:hidden p-2 text-primary">
+                                <span class="material-symbols-outlined text-3xl" id="menuIcon">menu</span>
+                            </button>
+                            <div
+                                class="h-10 w-10 rounded-full border-2 border-primary overflow-hidden shadow-sm hidden md:block">
+                                <img alt="User Profile" class="w-full h-full object-cover object-center"
+                                    src="<%= user.avatar || `https://ui-avatars.com/api/?name=${user.name}&background=ff4d8d&color=fff` %>" />
+                            </div>
+                </div>
+                <% } else { %>
+                    <div class="flex items-center gap-3">
+                        <a href="/login"
+                            class="hidden md:flex items-center gap-2 text-[#181113] dark:text-white font-bold hover:text-primary transition-colors text-sm">
+                            <span>
+                                <%= __('login') %>
+                            </span>
+                        </a>
+                        <a href="/register"
+                            class="hidden md:flex items-center gap-2 gradient-bg text-white px-6 py-2.5 rounded-xl font-bold transition-all text-sm shadow-lg shadow-primary/20 hover:shadow-xl hover:-translate-y-0.5 shimmer btn-bounce">
+                            <span>إنشاء حساب</span>
+                        </a>
+                        <button onclick="toggleMobileMenu()" class="lg:hidden p-2 text-primary">
+                            <span class="material-symbols-outlined text-3xl" id="menuIcon">menu</span>
+                        </button>
+                    </div>
+                    <% } %>
+        </div>
+    </div>
+</header>
+
+<!-- Premium Mobile Sidebar Overlay -->
+<div id="mobileOverlay"
+    class="fixed inset-0 bg-black/60 backdrop-blur-md z-[100] hidden opacity-0 transition-opacity duration-500"
+    style="display: none;" onclick="toggleMobileMenu()"></div>
+
+<!-- Premium Mobile Sidebar Drawer -->
+<div id="mobileDrawer"
+    class="fixed inset-y-0 <%= locale === 'ar' ? 'right-0' : 'left-0' %> w-[85%] max-w-sm bg-background-light dark:bg-background-dark z-[110] shadow-[0_0_50px_rgba(0,0,0,0.3)] <%= locale === 'ar' ? 'translate-x-full' : '-translate-x-full' %> transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col overflow-hidden">
+
+    <!-- Sidebar Header (Redesigned to include Settings) -->
+    <div class="p-6 flex items-center justify-between border-b border-[#e6dbdf]/50 dark:border-[#3d252e]/50">
+        <div class="flex items-center gap-3 text-primary">
+            <span class="material-symbols-outlined text-3xl filled">diamond</span>
+            <span class="text-2xl font-black tracking-tight">كوافير</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <!-- Compact Quality Settings -->
+            <div class="flex items-center gap-2 mr-2">
+                <%- include('./theme-toggle') %>
+                    <!-- Mobile Language Switcher Removed -->
+            </div>
+            <button onclick="toggleMobileMenu()"
+                class="size-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center hover:bg-primary hover:text-white transition-all btn-bounce">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <nav class="flex-1 overflow-y-auto p-6 space-y-2">
+        <p class="text-[10px] font-black text-[#896170]/60 uppercase tracking-[0.2em] mb-4 mr-2">التنقل السريع</p>
+
+        <a href="/"
+            class="flex items-center gap-4 p-4 rounded-2xl bg-primary/5 text-primary font-black text-base group transition-all">
+            <span class="material-symbols-outlined">home</span>
+            <span>
+                <%= __('nav_home') %>
+            </span>
+        </a>
+        <a href="/salons"
+            class="flex items-center gap-4 p-4 rounded-2xl text-[#181113] dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#3d252e] font-bold text-base group transition-all">
+            <span
+                class="material-symbols-outlined opacity-40 group-hover:opacity-100 transition-opacity">storefront</span>
+            <span>
+                <%= __('nav_salons') %>
+            </span>
+        </a>
+        <a href="/offers"
+            class="flex items-center gap-4 p-4 rounded-2xl text-[#181113] dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#3d252e] font-bold text-base group transition-all">
+            <span
+                class="material-symbols-outlined opacity-40 group-hover:opacity-100 transition-opacity">local_offer</span>
+            <span>
+                <%= __('nav_offers') %>
+            </span>
+        </a>
+        <a href="/bookings"
+            class="flex items-center gap-4 p-4 rounded-2xl text-[#181113] dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#3d252e] font-bold text-base group transition-all">
+            <span
+                class="material-symbols-outlined opacity-40 group-hover:opacity-100 transition-opacity">calendar_month</span>
+            <span>
+                <%= __('nav_bookings') %>
+            </span>
+        </a>
+    </nav>
+
+    <!-- Sidebar Footer (Compact Auth) -->
+    <div class="p-6 bg-gray-50/50 dark:bg-[#1a0c10]/50 space-y-4 border-t border-[#e6dbdf]/50 dark:border-[#3d252e]/50">
+        <% if (user) { %>
+            <div class="flex flex-col gap-3">
+                <% if (user.role==='admin' || user.role==='owner' ) { %>
+                    <a href="/dashboard"
+                        class="flex items-center gap-4 p-4 bg-primary text-white rounded-2xl font-black shadow-lg shadow-primary/20 transition-all btn-bounce text-sm">
+                        <span class="material-symbols-outlined">dashboard</span>
+                        <span>لوحة التحكم</span>
+                    </a>
+                    <% } %>
+                        <a href="/logout"
+                            class="flex items-center gap-4 p-4 bg-red-50 dark:bg-red-500/10 text-red-500 rounded-2xl font-black transition-all text-sm">
+                            <span class="material-symbols-outlined">logout</span>
+                            <span>تسجيل الخروج</span>
+                        </a>
+            </div>
+            <% } else { %>
+                <div class="flex flex-col gap-3">
+                    <a href="/register"
+                        class="flex items-center justify-center h-14 gradient-bg text-white rounded-2xl font-black shadow-lg shadow-primary/20 shimmer">
+                        سجل الآن مجاناً
+                    </a>
+                    <a href="/login"
+                        class="flex items-center justify-center h-14 border-2 border-primary text-primary rounded-2xl font-black hover:bg-primary hover:text-white transition-all">
+                        <%= __('login') %>
+                    </a>
+                </div>
+                <% } %>
+    </div>
+</div>
+
+<script>
+    // Notification System Logic
+    function toggleNotifications(event) {
+        event.stopPropagation();
+        const dropdown = document.getElementById('notifDropdown');
+        const isOpen = !dropdown.classList.contains('invisible');
+
+        if (isOpen) {
+            closeNotifications();
+        } else {
+            dropdown.classList.remove('invisible', 'opacity-0', '-translate-y-2');
+            document.addEventListener('click', closeNotificationsOnOutsideClick);
+        }
+    }
+
+    function closeNotifications() {
+        const dropdown = document.getElementById('notifDropdown');
+        dropdown.classList.add('invisible', 'opacity-0', '-translate-y-2');
+        document.removeEventListener('click', closeNotificationsOnOutsideClick);
+    }
+
+    function closeNotificationsOnOutsideClick(event) {
+        const wrapper = document.getElementById('notificationWrapper');
+        if (!wrapper.contains(event.target)) {
+            closeNotifications();
+        }
+    }
+
+    async function markRead(id) {
+        try {
+            const res = await fetch(`/notifications/mark-read/${id}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            if (res.ok) {
+                const item = document.getElementById(`notif-${id}`);
+                item.classList.remove('bg-primary/5');
+                const iconContainer = item.querySelector('.size-10');
+                iconContainer.classList.remove('bg-primary/20', 'text-primary');
+                iconContainer.classList.add('bg-gray-100', 'text-gray-500');
+
+                const title = item.querySelector('h4');
+                title.classList.remove('text-[#181113]', 'dark:text-white');
+                title.classList.add('text-gray-500');
+
+                // Remove mark read button
+                const btn = item.querySelector('button[title="تحديد كمقروء"]');
+                if (btn) btn.remove();
+
+                updateBadgeCount(-1);
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    async function markAllRead() {
+        try {
+            const res = await fetch('/notifications/mark-all-read', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            if (res.ok) {
+                // simple reload for batch update or UI loop update
+                window.location.reload();
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    async function deleteNotif(id) {
+        try {
+            const res = await fetch(`/notifications/delete/${id}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            if (res.ok) {
+                const item = document.getElementById(`notif-${id}`);
+                item.remove();
+
+                // If it was unread, decrease count
+                // We rely on backend state mostly, but simple check:
+                // If it had the bg-primary/5 class, it was unread
+                // But simpler to just let it hold.
+                // Or check class:
+                /* if(item.classList.contains('bg-primary/5')) {
+                    updateBadgeCount(-1); 
+                } */
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    function updateBadgeCount(change) {
+        const badge = document.getElementById('notifBadge');
+        if (!badge) return;
+
+        // This is a simplification. For accurate sync, reload or fetch count.
+        // Assuming we only decrement 1 by 1
+        let count = parseInt(badge.textContent || '0');
+        if (isNaN(count)) count = 1; // if it was empty dot
+
+        // If badge was just a dot (empty), we might need to fetch number.
+        // But server renders exact number or dot? The loops shows empty span if > 0.
+        // Wait, the EJS rendered an empty span with animate-pulse. It didn't put a number inside.
+        // Let's fix EJS to number first to make this logic work.
+    }
+
+    function toggleMobileMenu() {
+        const drawer = document.getElementById('mobileDrawer');
+        const overlay = document.getElementById('mobileOverlay');
+        const isAr = document.documentElement.dir === 'rtl';
+        const hiddenClass = isAr ? 'translate-x-full' : '-translate-x-full';
+
+        const isOpen = !drawer.classList.contains(hiddenClass);
+
+        if (!isOpen) {
+            overlay.style.display = 'block';
+            overlay.classList.remove('hidden');
+            setTimeout(() => {
+                overlay.classList.add('opacity-100');
+                drawer.classList.remove(hiddenClass);
+                drawer.classList.add('translate-x-0');
+            }, 10);
+            document.body.style.overflow = 'hidden';
+        } else {
+            drawer.classList.remove('translate-x-0');
+            drawer.classList.add(hiddenClass);
+            overlay.classList.remove('opacity-100');
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                overlay.classList.add('hidden');
+            }, 500);
+            document.body.style.overflow = '';
+        }
+    }
+</script>

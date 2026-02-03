@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html class="light" dir="<%= locale === 'ar' ? 'rtl' : 'ltr' %>" lang="<%= locale %>">
+
+<head>
+    <%- include('../../../partials/head') %>
+</head>
+
+<body class="bg-[#f8f9fa] dark:bg-[#1a0c10] text-[#181113] dark:text-white transition-colors duration-200">
+    <div class="flex min-h-screen">
+        <%- include('../../../partials/sidebar', { role: 'admin' }) %>
+
+            <main class="flex-1 <%= locale === 'ar' ? 'md:mr-64' : 'md:ml-64' %> transition-all p-8">
+                <%- include('../../../partials/alerts') %>
+                    <header class="flex items-center justify-between mb-8 animate-fade-in">
+                        <div>
+                            <h1 class="text-3xl font-bold text-[#181113] dark:text-white">نظرة عامة 📊</h1>
+                            <p class="text-[#896170]">ملخص أداء المنصة</p>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <%- include('../../../partials/theme-toggle') %>
+                                <!-- Mobile Menu Button could go here too if needed -->
+                        </div>
+                    </header>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <div
+                            class="bg-white dark:bg-[#2d1a22] p-6 rounded-2xl border-2 border-[#e6dbdf] dark:border-[#3d252e] shadow-sm card-hover">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-[#896170] font-medium">إجمالي الصالونات</h3>
+                                <span
+                                    class="bg-purple-100 text-purple-600 p-2 rounded-lg material-symbols-outlined text-xl">storefront</span>
+                            </div>
+                            <p class="text-3xl font-bold">
+                                <%= stats.salonsCount %>
+                            </p>
+                            <div class="text-[#896170] text-sm mt-2">منشأة مسجلة</div>
+                        </div>
+                        <div
+                            class="bg-white dark:bg-[#2d1a22] p-6 rounded-2xl border-2 border-[#e6dbdf] dark:border-[#3d252e] shadow-sm card-hover">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-[#896170] font-medium">إجمالي العملاء</h3>
+                                <span
+                                    class="bg-pink-100 text-pink-600 p-2 rounded-lg material-symbols-outlined text-xl">group</span>
+                            </div>
+                            <p class="text-3xl font-bold">
+                                <%= stats.customersCount %>
+                            </p>
+                            <div class="text-[#896170] text-sm mt-2">عميلة نشطة</div>
+                        </div>
+                        <div
+                            class="bg-white dark:bg-[#2d1a22] p-6 rounded-2xl border-2 border-[#e6dbdf] dark:border-[#3d252e] shadow-sm card-hover">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-[#896170] font-medium">إجمالي الحجوزات</h3>
+                                <span
+                                    class="bg-blue-100 text-blue-600 p-2 rounded-lg material-symbols-outlined text-xl">calendar_month</span>
+                            </div>
+                            <p class="text-3xl font-bold">
+                                <%= stats.totalBookings %>
+                            </p>
+                            <div class="text-[#896170] text-sm mt-2">حجز عبر المنصة</div>
+                        </div>
+                        <div
+                            class="bg-white dark:bg-[#2d1a22] p-6 rounded-2xl border-2 border-[#e6dbdf] dark:border-[#3d252e] shadow-sm card-hover">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-[#896170] font-medium">حالة المنصة</h3>
+                                <div class="flex items-center gap-2">
+                                    <div class="h-3 w-3 bg-green-500 rounded-full animate-pulse"></div>
+                                    <span class="text-xs font-bold text-green-500 uppercase">Live</span>
+                                </div>
+                            </div>
+                            <p class="text-2xl font-bold mt-1 text-green-500">مستقرة</p>
+                            <div class="text-[#896170] text-sm mt-2">جميع الأنظمة تعمل</div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-slide-up">
+                        <!-- Recent Salons -->
+                        <div
+                            class="bg-white dark:bg-[#2d1a22] rounded-2xl border-2 border-[#e6dbdf] dark:border-[#3d252e] overflow-hidden">
+                            <div
+                                class="p-6 border-b border-[#e6dbdf] dark:border-[#3d252e] flex items-center justify-between">
+                                <h2 class="text-xl font-bold">الصالونات المنضمة حديثاً</h2>
+                                <a href="/dashboard/admin/salons"
+                                    class="text-primary text-sm font-bold hover:underline">عرض
+                                    الكل</a>
+                            </div>
+                            <div class="p-0">
+                                <% if (recentSalons && recentSalons.length> 0) { %>
+                                    <div class="divide-y divide-[#e6dbdf] dark:divide-[#3d252e]">
+                                        <% recentSalons.forEach(function(salon) { %>
+                                            <div
+                                                class="flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-[#1a0c10] transition-colors">
+                                                <div class="flex items-center gap-3">
+                                                    <div
+                                                        class="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center">
+                                                        <span
+                                                            class="material-symbols-outlined text-primary">storefront</span>
+                                                    </div>
+                                                    <div>
+                                                        <p class="font-bold text-sm">
+                                                            <%= salon.name %>
+                                                        </p>
+                                                        <p class="text-xs text-[#896170]">
+                                                            <%= salon.location %>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <span class="text-xs text-[#896170]">
+                                                    <%= new Date(salon.created_at).toLocaleDateString('ar-EG') %>
+                                                </span>
+                                            </div>
+                                            <% }); %>
+                                    </div>
+                                    <% } else { %>
+                                        <div class="p-8 text-center text-[#896170] italic">لا توجد صالونات جديدة</div>
+                                        <% } %>
+                            </div>
+                        </div>
+
+                        <!-- Recent Activities -->
+                        <div
+                            class="bg-white dark:bg-[#2d1a22] rounded-2xl border-2 border-[#e6dbdf] dark:border-[#3d252e] overflow-hidden">
+                            <div
+                                class="p-6 border-b border-[#e6dbdf] dark:border-[#3d252e] flex items-center justify-between">
+                                <h2 class="text-xl font-bold">آخر الحجوزات على المنصة</h2>
+                            </div>
+                            <div class="p-0">
+                                <% if (recentActivities && recentActivities.length> 0) { %>
+                                    <div class="divide-y divide-[#e6dbdf] dark:divide-[#3d252e]">
+                                        <% recentActivities.forEach(function(activity) { %>
+                                            <div
+                                                class="flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-[#1a0c10] transition-colors">
+                                                <div class="flex items-center gap-3">
+                                                    <div
+                                                        class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center">
+                                                        <span
+                                                            class="material-symbols-outlined text-blue-500 text-sm">event</span>
+                                                    </div>
+                                                    <div>
+                                                        <p class="font-bold text-sm">
+                                                            <%= activity.customer_name %>
+                                                        </p>
+                                                        <p class="text-xs text-[#896170]">حجزت في <%=
+                                                                activity.salon_name %>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="text-left">
+                                                    <p class="text-primary font-bold text-sm">
+                                                        <%= activity.amount %> ج.م
+                                                    </p>
+                                                    <p class="text-[10px] text-[#896170]">
+                                                        <%= new Date(activity.created_at).toLocaleTimeString('ar-EG', {
+                                                            hour: '2-digit' , minute: '2-digit' }) %>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <% }); %>
+                                    </div>
+                                    <% } else { %>
+                                        <div class="p-8 text-center text-[#896170] italic">لا توجد نشاطات حديثة</div>
+                                        <% } %>
+                            </div>
+                        </div>
+                    </div>
+            </main>
+    </div>
+</body>
+
+</html>

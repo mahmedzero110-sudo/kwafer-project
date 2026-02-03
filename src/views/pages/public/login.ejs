@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html class="light" dir="<%= locale === 'ar' ? 'rtl' : 'ltr' %>" lang="<%= locale %>">
+
+<head>
+    <%- include('../../partials/head') %>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-[#181113] dark:text-white transition-colors duration-200 noise-bg min-h-screen flex items-center justify-center p-4">
+    <div
+        class="w-full max-w-6xl h-[90vh] min-h-[700px] grid lg:grid-cols-10 rounded-[3rem] overflow-hidden shadow-premium glass border border-white/20 dark:border-white/5 animate-scale-in">
+
+        <!-- Left Side: Brand & Visuals -->
+        <div class="hidden lg:flex lg:col-span-4 gradient-bg p-16 flex-col justify-between relative text-white">
+            <div
+                class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/clean-gray-paper.png')]">
+            </div>
+            <div class="absolute -top-32 -right-32 size-64 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
+            <div class="absolute -bottom-32 -left-32 size-64 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
+
+            <div class="relative z-10">
+                <a href="/"
+                    class="inline-flex items-center gap-4 bg-white/20 p-5 rounded-[2rem] backdrop-blur-2xl border border-white/20 mb-16 hover:bg-white/30 transition-all btn-bounce">
+                    <span class="material-symbols-outlined filled text-4xl">diamond</span>
+                    <span class="font-black text-3xl tracking-tight">كوافير</span>
+                </a>
+                <h2 class="text-6xl font-black leading-tight mb-8">أهلاً بكِ <br> <span class="opacity-80">مجدداً</span>
+                </h2>
+                <p class="text-white/80 text-xl font-bold max-w-xs leading-relaxed">كل صالونات التجميل في الأقصر بين
+                    يديكِ، احجزي موعدكِ القادم بضغطة زر.</p>
+            </div>
+
+            <div class="relative z-10 space-y-6">
+                <div
+                    class="flex items-center gap-6 bg-white/10 p-6 rounded-[2rem] backdrop-blur-md border border-white/10">
+                    <div class="size-14 bg-white rounded-2xl flex items-center justify-center text-primary shadow-xl">
+                        <span class="material-symbols-outlined text-3xl">bolt</span>
+                    </div>
+                    <div>
+                        <p class="font-black text-xl">حجز ذكي</p>
+                        <p class="text-xs text-white/60 uppercase tracking-widest mt-1">تأكيد فوري ودفع آمن</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side: Interaction Form -->
+        <div class="col-span-10 lg:col-span-6 bg-white dark:bg-[#12080a] flex flex-col h-full overflow-hidden relative">
+            <div class="absolute top-8 left-8 z-20">
+                <%- include('../../partials/theme-toggle') %>
+            </div>
+
+            <!-- Header Content -->
+            <div class="p-12 pb-6 space-y-2 animate-slide-up">
+                <h1 class="text-4xl md:text-5xl font-black">تسجيل الدخول</h1>
+                <p class="text-[#896170] dark:text-gray-400 font-bold">يسعدنا انضمامك إلينا مرة أخرى!</p>
+            </div>
+
+            <!-- Responsive Forms -->
+            <div class="flex-1 overflow-y-auto no-scrollbar p-12 pt-6">
+                <%- include('../../partials/flash') %>
+
+                    <form action="/login" method="POST" class="space-y-8 animate-slide-up"
+                        style="animation-delay: 100ms">
+                        <input type="hidden" name="returnTo"
+                            value="<%= typeof returnTo !== 'undefined' ? returnTo : '' %>">
+                        <div class="space-y-3">
+                            <label class="text-xs font-black uppercase text-[#896170] mr-2">البريد الإلكتروني</label>
+                            <div class="relative group">
+                                <span
+                                    class="material-symbols-outlined absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors text-2xl">mail</span>
+                                <input type="email" name="email" required
+                                    class="w-full h-16 pr-16 pl-6 rounded-2xl border-2 border-gray-50 dark:border-[#2d1a22] bg-gray-50/50 dark:bg-[#1a0c10] focus:border-primary/50 focus:bg-white dark:focus:bg-[#2d1a22] transition-all outline-none font-bold text-lg text-left"
+                                    placeholder="email@example.com">
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center mr-2">
+                                <label class="text-xs font-black uppercase text-[#896170]">كلمة المرور</label>
+                                <a href="/forgot-password"
+                                    class="text-xs font-black text-primary hover:underline underline-offset-4 decoration-2">نسيتِ
+                                    كلمة السر؟</a>
+                            </div>
+                            <div class="relative group">
+                                <span
+                                    class="material-symbols-outlined absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors text-2xl">lock</span>
+                                <input type="password" id="password" name="password" required
+                                    class="w-full h-16 pr-16 pl-16 rounded-2xl border-2 border-gray-50 dark:border-[#2d1a22] bg-gray-50/50 dark:bg-[#1a0c10] focus:border-primary/50 focus:bg-white dark:focus:bg-[#2d1a22] transition-all outline-none font-bold text-lg"
+                                    placeholder="••••••••">
+                                <button type="button" onclick="togglePassword()"
+                                    class="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary p-2 transition-colors">
+                                    <span class="material-symbols-outlined text-2xl" id="eyeIcon">visibility</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="pt-4">
+                            <button type="submit"
+                                class="w-full h-18 gradient-bg text-white py-6 rounded-[2rem] font-black text-2xl shadow-2xl shadow-primary/30 btn-bounce shimmer">
+                                <span>دخول آمن للمنصة</span>
+                            </button>
+                        </div>
+
+                        <div class="relative py-4">
+                            <div class="absolute inset-0 flex items-center">
+                                <div class="w-full border-t border-[#e6dbdf] dark:border-[#3d252e]"></div>
+                            </div>
+                            <div class="relative flex justify-center text-[10px] font-black uppercase tracking-widest">
+                                <span class="bg-white dark:bg-[#12080a] px-6 text-[#896170]">أو عبر منصات التواصل</span>
+                            </div>
+                        </div>
+
+                        <a href="/auth/google"
+                            class="w-full h-16 flex items-center justify-center gap-4 border-2 border-gray-50 dark:border-[#2d1a22] rounded-2xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all group btn-bounce">
+                            <img src="https://www.svgrepo.com/show/355037/google.svg"
+                                class="size-6 group-hover:rotate-[360deg] transition-transform duration-700"
+                                alt="Google">
+                            <span class="font-black text-lg">المتابعة باستخدام جوجل</span>
+                        </a>
+                    </form>
+
+                    <div class="mt-16 text-center animate-slide-up" style="animation-delay: 200ms">
+                        <p class="text-[#896170] font-bold text-lg">ليس لديكِ حساب؟ <a href="/register"
+                                class="text-primary font-black hover:underline underline-offset-8 mr-2 transition-all">ابدئي
+                                رحلة الجمالِ معنا</a></p>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const input = document.getElementById('password');
+            const icon = document.getElementById('eyeIcon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.textContent = 'visibility_off';
+            } else {
+                input.type = 'password';
+                icon.textContent = 'visibility';
+            }
+        }
+    </script>
+</body>
+
+</html>

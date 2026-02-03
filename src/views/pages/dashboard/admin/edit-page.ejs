@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html class="light" dir="<%= locale === 'ar' ? 'rtl' : 'ltr' %>" lang="<%= locale %>">
+
+<head>
+    <%- include('../../../partials/head') %>
+        <!-- TinyMCE or similar could be added here for rich text -->
+</head>
+
+<body class="bg-[#f8f9fa] dark:bg-[#1a0c10] text-[#181113] dark:text-white transition-colors duration-200">
+    <div class="flex min-h-screen">
+        <%- include('../../../partials/sidebar', { role: 'admin' }) %>
+
+            <main class="flex-1 <%= locale === 'ar' ? 'md:mr-64' : 'md:ml-64' %> transition-all p-8">
+                <header class="flex items-center justify-between mb-8">
+                    <div class="flex items-center gap-4">
+                        <a href="/dashboard/admin/settings"
+                            class="p-2 bg-white dark:bg-[#2d1a22] rounded-xl border-2 border-[#e6dbdf] dark:border-[#3d252e] hover:bg-gray-50">
+                            <span class="material-symbols-outlined font-black">arrow_forward</span>
+                        </a>
+                        <div>
+                            <h1 class="text-3xl font-bold">تعديل الصفحة 📝</h1>
+                            <p class="text-[#896170]">
+                                <%= page.title_ar %>
+                            </p>
+                        </div>
+                    </div>
+                    <%- include('../../../partials/theme-toggle') %>
+                </header>
+
+                <form action="/dashboard/admin/pages/edit/<%= page.slug %>" method="POST"
+                    class="space-y-8 animate-fade-in">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Arabic Content -->
+                        <div
+                            class="bg-white dark:bg-[#2d1a22] p-8 rounded-3xl border-2 border-[#e6dbdf] dark:border-[#3d252e] shadow-xl">
+                            <div class="flex items-center gap-3 mb-6">
+                                <span class="text-2xl">🇸🇦</span>
+                                <h2 class="text-xl font-bold">المحتوى العربي</h2>
+                            </div>
+                            <div class="space-y-6">
+                                <div>
+                                    <label class="block text-sm font-bold mb-2 opacity-60">عنوان الصفحة</label>
+                                    <input type="text" name="title_ar" value="<%= page.title_ar %>"
+                                        class="w-full p-4 border-2 border-[#e6dbdf] dark:border-[#3d252e] rounded-2xl bg-gray-50 focus:border-primary transition-all outline-none font-bold"
+                                        required>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-bold mb-2 opacity-60">المحتوى</label>
+                                    <textarea name="content_ar" rows="15"
+                                        class="w-full p-4 border-2 border-[#e6dbdf] dark:border-[#3d252e] rounded-2xl bg-gray-50 focus:border-primary transition-all outline-none leading-relaxed"><%= page.content_ar %></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- English Content -->
+                        <div
+                            class="bg-white dark:bg-[#2d1a22] p-8 rounded-3xl border-2 border-[#e6dbdf] dark:border-[#3d252e] shadow-xl">
+                            <div class="flex items-center gap-3 mb-6">
+                                <span class="text-2xl">🇺🇸</span>
+                                <h2 class="text-xl font-bold">English Content</h2>
+                            </div>
+                            <div class="space-y-6">
+                                <div>
+                                    <label class="block text-sm font-bold mb-2 opacity-60">Page Title (EN)</label>
+                                    <input type="text" name="title_en" value="<%= page.title_en %>"
+                                        class="w-full p-4 border-2 border-[#e6dbdf] dark:border-[#3d252e] rounded-2xl bg-gray-50 focus:border-primary transition-all outline-none font-bold">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-bold mb-2 opacity-60">Content (EN)</label>
+                                    <textarea name="content_en" rows="15"
+                                        class="w-full p-4 border-2 border-[#e6dbdf] dark:border-[#3d252e] rounded-2xl bg-gray-50 focus:border-primary transition-all outline-none leading-relaxed"><%= page.content_en %></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end gap-4">
+                        <button type="submit"
+                            class="gradient-bg text-white px-12 py-4 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all">
+                            حفظ التغييرات
+                        </button>
+                    </div>
+                </form>
+            </main>
+    </div>
+</body>
+
+</html>

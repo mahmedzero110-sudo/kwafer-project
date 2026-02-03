@@ -1,0 +1,273 @@
+<!-- Mobile Header for Dashboards -->
+<div
+    class="md:hidden fixed top-6 <%= locale === 'ar' ? 'left-6' : 'right-6' %> z-[60] flex items-center gap-2 animate-fade-in">
+    <button onclick="openNotifications()"
+        class="relative p-2 rounded-lg bg-white dark:bg-[#2d1a22] shadow-md border border-[#e6dbdf] dark:border-[#3d252e]">
+        <span class="material-symbols-outlined text-[#896170]">notifications</span>
+        <% if (locals.unreadNotificationsCount> 0) { %>
+            <span
+                class="absolute top-1 right-1 h-2.5 w-2.5 bg-red-500 rounded-full border-2 border-white dark:border-[#2d1a22]"></span>
+            <% } %>
+    </button>
+    <%- include('./theme-toggle') %>
+</div>
+
+<aside
+    class="hidden md:flex flex-col w-64 h-screen fixed top-0 <%= locale === 'ar' ? 'right-0 border-l' : 'left-0 border-r' %> bg-white dark:bg-[#221017] border-[#e6dbdf] dark:border-[#3d252e] pt-5 pb-10 z-30">
+    <div class="px-6 mb-8 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-2 text-primary font-bold text-xl">
+            <span class="material-symbols-outlined filled">diamond</span>
+            <span>كوافير</span>
+        </a>
+        <div class="flex items-center gap-1">
+            <button onclick="openNotifications()"
+                class="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-[#3d252e] transition-colors"
+                title="الإشعارات">
+                <span class="material-symbols-outlined text-[#896170]">notifications</span>
+                <% if (locals.unreadNotificationsCount> 0) { %>
+                    <span
+                        class="absolute top-1 right-1 h-2.5 w-2.5 bg-red-500 rounded-full border-2 border-white dark:border-[#221017]"></span>
+                    <% } %>
+            </button>
+            <%- include('./theme-toggle') %>
+        </div>
+    </div>
+
+    <nav class="flex-1 overflow-y-auto px-4 space-y-2">
+        <% if (role==='admin' ) { %>
+            <!-- Admin Links -->
+            <div class="px-4 py-2 text-[10px] font-bold text-[#896170] uppercase tracking-wider opacity-50">إدارة النظام
+            </div>
+            <a href="/dashboard/admin"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg font-bold transition-all <%= currentPath === '/dashboard/admin' ? 'text-primary bg-primary/10' : 'text-[#896170] hover:bg-gray-50 dark:hover:bg-[#3d252e]' %>">
+                <span class="material-symbols-outlined">dashboard</span>
+                <span>لوحة المدير العام</span>
+            </a>
+            <a href="/dashboard/admin/salons"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors <%= currentPath.includes('/dashboard/admin/salons') ? 'text-primary bg-primary/10' : 'text-[#896170] hover:bg-gray-50 dark:hover:bg-[#3d252e]' %>">
+                <span class="material-symbols-outlined">storefront</span>
+                <span>إدارة الصالونات</span>
+            </a>
+            <a href="/dashboard/admin/users"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors <%= currentPath.includes('/dashboard/admin/users') ? 'text-primary bg-primary/10' : 'text-[#896170] hover:bg-gray-50 dark:hover:bg-[#3d252e]' %>">
+                <span class="material-symbols-outlined">group</span>
+                <span>إدارة المستخدمين</span>
+            </a>
+            <a href="/dashboard/admin/subscriptions"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors <%= currentPath.includes('/dashboard/admin/subscriptions') ? 'text-primary bg-primary/10' : 'text-[#896170] hover:bg-gray-50 dark:hover:bg-[#3d252e]' %>">
+                <span class="material-symbols-outlined">payments</span>
+                <span>إدارة الاشتراكات</span>
+            </a>
+            <a href="/dashboard/admin/history"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors <%= currentPath.includes('/dashboard/admin/history') ? 'text-primary bg-primary/10' : 'text-[#896170] hover:bg-gray-50 dark:hover:bg-[#3d252e]' %>">
+                <span class="material-symbols-outlined">history</span>
+                <span>سجل العمليات</span>
+            </a>
+            <a href="/dashboard/admin/settings"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors <%= currentPath.includes('/dashboard/admin/settings') ? 'text-primary bg-primary/10' : 'text-[#896170] hover:bg-gray-50 dark:hover:bg-[#3d252e]' %>">
+                <span class="material-symbols-outlined">settings</span>
+                <span>الإعدادات والصفحات</span>
+            </a>
+
+            <div class="px-4 py-2 mt-4 text-[10px] font-bold text-[#896170] uppercase tracking-wider opacity-50">وصول
+                سريع
+                (صاحب صالون)</div>
+            <a href="/dashboard/owner"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-[#896170] hover:bg-gray-50 dark:hover:bg-[#3d252e] font-medium transition-colors">
+                <span class="material-symbols-outlined">analytics</span>
+                <span>نظرة صاحب الصالون</span>
+            </a>
+
+            <% } else { %>
+                <!-- Owner Links -->
+                <a href="/dashboard/owner"
+                    class="flex items-center gap-3 px-4 py-3 rounded-lg font-bold transition-all <%= currentPath === '/dashboard/owner' ? 'text-primary bg-primary/10' : 'text-[#896170] hover:bg-gray-50 dark:hover:bg-[#3d252e]' %>">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    <span>ملخص الصالون</span>
+                </a>
+                <a href="/dashboard/owner/services"
+                    class="flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors <%= currentPath.includes('/dashboard/owner/services') ? 'text-primary bg-primary/10' : 'text-[#896170] hover:bg-gray-50 dark:hover:bg-[#3d252e]' %>">
+                    <span class="material-symbols-outlined">spa</span>
+                    <span>الخدمات</span>
+                </a>
+                <a href="/dashboard/owner/offers"
+                    class="flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors <%= currentPath.includes('/dashboard/owner/offers') ? 'text-primary bg-primary/10' : 'text-[#896170] hover:bg-gray-50 dark:hover:bg-[#3d252e]' %>">
+                    <span class="material-symbols-outlined">local_offer</span>
+                    <span>العروض</span>
+                </a>
+                <a href="/dashboard/owner/bookings"
+                    class="flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors <%= currentPath.includes('/dashboard/owner/bookings') ? 'text-primary bg-primary/10' : 'text-[#896170] hover:bg-gray-50 dark:hover:bg-[#3d252e]' %>">
+                    <span class="material-symbols-outlined">calendar_month</span>
+                    <span>الحجوزات</span>
+                </a>
+                <a href="/dashboard/owner/reviews"
+                    class="flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors <%= currentPath.includes('/dashboard/owner/reviews') ? 'text-primary bg-primary/10' : 'text-[#896170] hover:bg-gray-50 dark:hover:bg-[#3d252e]' %>">
+                    <span class="material-symbols-outlined">star</span>
+                    <span>التقييمات</span>
+                </a>
+                <a href="/dashboard/owner/gallery"
+                    class="flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors <%= currentPath.includes('/dashboard/owner/gallery') ? 'text-primary bg-primary/10' : 'text-[#896170] hover:bg-gray-50 dark:hover:bg-[#3d252e]' %>">
+                    <span class="material-symbols-outlined">photo_library</span>
+                    <span>معرض الصور</span>
+                </a>
+                <a href="/dashboard/owner/subscription"
+                    class="flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors <%= currentPath.includes('/dashboard/owner/subscription') ? 'text-primary bg-primary/10' : 'text-[#896170] hover:bg-gray-50 dark:hover:bg-[#3d252e]' %>">
+                    <span class="material-symbols-outlined">workspace_premium</span>
+                    <span>الاشتراك</span>
+                </a>
+                <% } %>
+    </nav>
+
+    <div class="px-4 mt-auto">
+        <a href="/logout"
+            class="flex items-center gap-3 px-4 py-3 rounded-lg text-red-500 hover:bg-red-50 font-medium transition-colors">
+            <span class="material-symbols-outlined">logout</span>
+            <span>تسجيل خروج</span>
+        </a>
+    </div>
+</aside>
+
+<!-- Notifications Modal -->
+<div id="notificationsModal"
+    class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[70] hidden items-center justify-center p-4">
+    <div
+        class="bg-white dark:bg-[#2d1a22] rounded-2xl max-w-md w-full p-0 overflow-hidden shadow-2xl animate-scale-in relative">
+        <div class="p-6 border-b border-[#e6dbdf] dark:border-[#3d252e] flex items-center justify-between bg-primary/5">
+            <div class="flex items-center gap-2">
+                <h2 class="text-xl font-bold">الإشعارات</h2>
+                <% if (typeof unreadNotificationsCount !=='undefined' && unreadNotificationsCount> 0) { %>
+                    <span class="bg-primary text-white text-[10px] px-2 py-0.5 rounded-full">
+                        <%= unreadNotificationsCount %>
+                    </span>
+                    <% } %>
+            </div>
+            <div class="flex items-center gap-2">
+                <% if (typeof unreadNotificationsCount !=='undefined' && unreadNotificationsCount> 0) { %>
+                    <button onclick="markAllNotificationsAsRead()"
+                        class="text-[10px] text-primary hover:underline font-bold">تحديد الكل كمقروء</button>
+                    <% } %>
+                        <button onclick="closeNotifications()"
+                            class="p-2 hover:bg-white/50 rounded-lg transition-colors">
+                            <span class="material-symbols-outlined text-sm">close</span>
+                        </button>
+            </div>
+        </div>
+
+        <div class="max-h-[60vh] overflow-y-auto p-4 space-y-3">
+            <% if (locals.notifications && locals.notifications.length> 0) { %>
+                <% locals.notifications.forEach(notification=> { %>
+                    <div
+                        class="p-4 rounded-xl border dark:border-[#3d252e] <%= notification.is_read ? 'bg-white dark:bg-[#1a0c10] border-[#e6dbdf]' : 'bg-blue-50 dark:bg-blue-900/5 border-blue-300 shadow-sm' %> transition-all">
+                        <div class="flex items-start gap-3">
+                            <div
+                                class="p-2 rounded-lg <%= notification.type === 'error' ? 'bg-red-50 text-red-500' : 'bg-primary/10 text-primary' %>">
+                                <span class="material-symbols-outlined text-lg">
+                                    <%= notification.type==='error' ? 'block' : 'notifications' %>
+                                </span>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between mb-1">
+                                    <h4 class="font-bold text-sm">
+                                        <%= notification.title %>
+                                    </h4>
+                                    <div class="flex items-center gap-2">
+                                        <% if (!notification.is_read) { %>
+                                            <div class="h-2 w-2 bg-primary rounded-full"></div>
+                                            <% } %>
+                                                <button onclick="deleteNotification('<%= notification.id %>')"
+                                                    class="p-1 hover:bg-gray-100 dark:hover:bg-[#3d252e] rounded text-[#896170] hover:text-red-500 transition-colors">
+                                                    <span class="material-symbols-outlined text-xs">close</span>
+                                                </button>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-[#896170] leading-relaxed">
+                                    <%= notification.message %>
+                                </p>
+                                <% if (!notification.is_read) { %>
+                                    <div class="flex items-center justify-between mt-2">
+                                        <span class="text-[10px] text-gray-400">
+                                            <%= timeAgo(notification.created_at) %>
+                                        </span>
+                                        <button onclick="markAsRead('<%= notification.id %>')"
+                                            class="text-[10px] text-primary hover:underline font-bold">تحديد
+                                            كمقروء</button>
+                                    </div>
+                                    <% } else { %>
+                                        <span class="text-[10px] text-gray-400 mt-2 block">
+                                            <%= timeAgo(notification.created_at) %>
+                                        </span>
+                                        <% } %>
+                            </div>
+                        </div>
+                    </div>
+                    <% }); %>
+                        <% } else { %>
+                            <div class="text-center py-10 text-[#896170]">
+                                <div
+                                    class="bg-gray-50 dark:bg-[#1a0c10] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <span class="material-symbols-outlined text-3xl opacity-30">notifications_off</span>
+                                </div>
+                                <p class="text-sm font-medium">لا توجد إشعارات جديدة حالياً</p>
+                            </div>
+                            <% } %>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openNotifications() {
+        const modal = document.getElementById('notificationsModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeNotifications() {
+        const modal = document.getElementById('notificationsModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = '';
+    }
+
+    async function markAllNotificationsAsRead() {
+        try {
+            const response = await fetch('/notifications/mark-all-read', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            if (response.ok) {
+                location.reload();
+            }
+        } catch (error) {
+            console.error('Error marking notifications as read:', error);
+        }
+    }
+
+    async function markAsRead(id) {
+        try {
+            const response = await fetch(`/notifications/mark-read/${id}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            if (response.ok) {
+                location.reload();
+            }
+        } catch (error) {
+            console.error('Error marking notification as read:', error);
+        }
+    }
+
+    async function deleteNotification(id) {
+        try {
+            const response = await fetch(`/notifications/delete/${id}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            if (response.ok) {
+                location.reload();
+            }
+        } catch (error) {
+            console.error('Error deleting notification:', error);
+        }
+    }
+</script>

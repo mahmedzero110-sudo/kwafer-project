@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html class="light" dir="<%= locale === 'ar' ? 'rtl' : 'ltr' %>" lang="<%= locale %>">
+
+<head>
+    <%- include('../../../partials/head') %>
+</head>
+
+<body class="bg-[#f8f9fa] dark:bg-[#1a0c10] text-[#181113] dark:text-white transition-colors duration-200">
+    <div class="flex min-h-screen">
+        <%- include('../../../partials/sidebar', { role: 'admin' }) %>
+
+            <main class="flex-1 <%= locale === 'ar' ? 'md:mr-64' : 'md:ml-64' %> transition-all p-8">
+                <%- include('../../../partials/alerts') %>
+                    <header class="flex items-center justify-between mb-8 animate-fade-in">
+                        <div>
+                            <h1 class="text-3xl font-bold">المستخدمين 👥</h1>
+                            <p class="text-[#896170]">إدارة العملاء المسجلين في المنصة</p>
+                        </div>
+                    </header>
+
+                    <div
+                        class="bg-white dark:bg-[#2d1a22] rounded-2xl border-2 border-[#e6dbdf] dark:border-[#3d252e] overflow-hidden shadow-sm animate-slide-up">
+                        <div class="p-6 border-b border-[#e6dbdf] dark:border-[#3d252e]">
+                            <h2 class="text-xl font-bold">قائمة العملاء</h2>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-right">
+                                <thead class="bg-gray-50 dark:bg-[#3d252e] text-[#896170]">
+                                    <tr>
+                                        <th class="px-6 py-4">الاسم</th>
+                                        <th class="px-6 py-4">البريد الإلكتروني</th>
+                                        <th class="px-6 py-4">الهاتف</th>
+                                        <th class="px-6 py-4">تاريخ التسجيل</th>
+                                        <th class="px-6 py-4">الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-[#e6dbdf] dark:divide-[#3d252e]">
+                                    <% users.forEach(function(user) { %>
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-[#1a0c10] transition-colors">
+                                            <td class="px-6 py-4 font-bold">
+                                                <%= user.name %>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <%= user.email %>
+                                            </td>
+                                            <td class="px-6 py-4 text-sm dir-ltr text-left">
+                                                <%= user.phone %>
+                                            </td>
+                                            <td class="px-6 py-4 text-sm text-[#896170]">
+                                                <%= new Date(user.created_at).toLocaleDateString('ar-EG') %>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <form action="/dashboard/admin/users/delete/<%= user.id %>"
+                                                    method="POST"
+                                                    onsubmit="return confirm('هل أنت متأكد من حذف هذا المستخدم نهائياً؟')">
+                                                    <button type="submit"
+                                                        class="text-red-500 hover:underline font-bold">حذف</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+            </main>
+    </div>
+</body>
+
+</html>

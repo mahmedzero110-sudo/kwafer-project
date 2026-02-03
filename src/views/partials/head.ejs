@@ -1,0 +1,27 @@
+<meta charset="utf-8" />
+<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+<meta name="description"
+    content="كوافير - اكتشفي أفضل صالونات التجميل في الأقصر، احجزي موعدك الآن لأفضل خدمات العناية بالشعر والبشرة والمكياج.">
+<meta name="keywords" content="صالونات تجميل، الأقصر، كوافير، مكياج، عناية بالشعر، عناية بالبشرة، حجز صالونات">
+<title>
+    <%= typeof title !=='undefined' ? (title + ' | كوافير الأقصر' ) : 'كوافير | اكتشفي جمالك بالأقصر' %>
+</title>
+<!-- Tailwind CSS (Local Build) -->
+<link rel="stylesheet" href="/css/output.css">
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+<link
+    href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap"
+    rel="stylesheet" />
+
+<script>
+    // Immediate theme check to prevent flickering
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+    } else {
+        document.documentElement.classList.add('light');
+        document.documentElement.classList.remove('dark');
+    }
+</script>

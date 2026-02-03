@@ -1,0 +1,109 @@
+<!-- Subscription Counter Widget -->
+<div
+    class="bg-gradient-to-br from-white to-gray-50 dark:from-[#2d1a22] dark:to-[#1a0c10] rounded-3xl p-6 border-2 border-[#e6dbdf] dark:border-[#3d252e] shadow-xl relative overflow-hidden group">
+
+    <!-- Ambient Decoration -->
+    <div
+        class="absolute -top-12 -right-12 size-32 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-all duration-700">
+    </div>
+
+    <% const nowDate=new Date(); const sData=(typeof salon !=='undefined' ) ? salon : {}; let
+        dStart=sData.subscription_start ? new Date(sData.subscription_start) : null; if (!dStart ||
+        isNaN(dStart.getTime())) { dStart=sData.created_at ? new Date(sData.created_at) : nowDate; } let
+        dEnd=sData.subscription_end ? new Date(sData.subscription_end) : null; if (!dEnd || isNaN(dEnd.getTime())) {
+        dEnd=new Date(nowDate.getTime() + (7 * 24 * 60 * 60 * 1000)); } const daysRemaining=Math.max(0, Math.ceil((dEnd
+        - nowDate) / (1000 * 60 * 60 * 24))); const totalTime=Math.max(1, Math.ceil((dEnd - dStart) / (1000 * 60 * 60 *
+        24))); const barWidth=Math.max(0, Math.min(100, (daysRemaining / totalTime) * 100)); const soon=(daysRemaining
+        <=7 && daysRemaining> 0);
+        const expired = (daysRemaining <= 0); const subStatus=(sData.subscription_status || 'trial' ).toLowerCase(); %>
+
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="size-12 bg-gradient-to-br from-primary to-[#ff4d8d] rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20 transform group-hover:rotate-6 transition-transform">
+                        <span class="material-symbols-outlined text-white text-2xl filled">workspace_premium</span>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-black text-[#181113] dark:text-white">حالة الاشتراك</h3>
+                        <p class="text-[10px] font-black uppercase tracking-widest text-[#896170] dark:text-gray-400">
+                            <% if (subStatus==='trial' ) { %>
+                                فترة تجريبية مجانية
+                                <% } else if (subStatus==='active' ) { %>
+                                    اشتراك مميز نشط
+                                    <% } else { %>
+                                        اشتراك منتهي
+                                        <% } %>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col items-end">
+                    <% if (expired) { %>
+                        <span
+                            class="px-3 py-1 bg-red-500/10 text-red-500 rounded-full text-[10px] font-black border border-red-500/20">منتهي</span>
+                        <% } else if (soon) { %>
+                            <span
+                                class="px-3 py-1 bg-orange-500/10 text-orange-500 rounded-full text-[10px] font-black border border-orange-500/20 animate-pulse">ينتهي
+                                قريباً</span>
+                            <% } else { %>
+                                <span
+                                    class="px-3 py-1 bg-green-500/10 text-green-500 rounded-full text-[10px] font-black border border-green-500/20">نشط</span>
+                                <% } %>
+                </div>
+            </div>
+
+            <!-- Main Counter -->
+            <div
+                class="relative py-8 text-center bg-gray-50/50 dark:bg-black/20 rounded-[2rem] border border-[#e6dbdf] dark:border-[#3d252e] mb-6">
+                <div class="relative z-10">
+                    <div class="text-6xl font-black mb-1 flex items-center justify-center gap-1">
+                        <span class="<%= expired ? 'text-red-500' : soon ? 'text-orange-500' : 'gradient-text' %>">
+                            <%= daysRemaining %>
+                        </span>
+                    </div>
+                    <p class="text-xs font-black text-[#896170] dark:text-gray-400 uppercase tracking-[0.2em]">يوم متبقي
+                    </p>
+                </div>
+
+                <% if (typeof sData.bonus_days !=='undefined' && sData.bonus_days> 0) { %>
+                    <div
+                        class="absolute -top-3 left-1/2 -translate-x-1/2 bg-gold text-white px-4 py-1.5 rounded-full text-[10px] font-black shadow-lg flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-xs">card_giftcard</span>
+                        <%= sData.bonus_days %> يوم هدية
+                    </div>
+                    <% } %>
+            </div>
+
+            <!-- Progress Stats -->
+            <div class="space-y-4">
+                <div
+                    class="flex items-center justify-between text-[10px] font-black text-[#896170] dark:text-gray-400 uppercase tracking-widest px-1">
+                    <span>البداية: <%= dStart.toLocaleDateString('ar-EG', { day: 'numeric' , month: 'short' }) %></span>
+                    <span>النهاية: <%= dEnd.toLocaleDateString('ar-EG', { day: 'numeric' , month: 'short' }) %></span>
+                </div>
+
+                <div
+                    class="h-4 bg-gray-100 dark:bg-white/5 rounded-full p-1 border border-[#e6dbdf] dark:border-[#3d252e]">
+                    <div class="h-full rounded-full transition-all duration-1000 ease-out <%= expired ? 'bg-red-500' : soon ? 'bg-orange-500' : 'gradient-bg' %> shadow-lg"
+                        style="width: <%= barWidth %>%"></div>
+                </div>
+
+                <div class="pt-4">
+                    <% if (expired || soon) { %>
+                        <a href="/dashboard/owner/subscription"
+                            class="group w-full h-14 gradient-bg text-white flex items-center justify-center gap-3 rounded-2xl font-black shadow-xl hover:shadow-2xl hover:-translate-y-0.5 transition-all shimmer">
+                            <span
+                                class="material-symbols-outlined group-hover:rotate-180 transition-transform duration-500">autorenew</span>
+                            <span>تجديد الاشتراك</span>
+                        </a>
+                        <% } else { %>
+                            <div
+                                class="flex items-center gap-3 p-4 bg-green-500/5 dark:bg-green-500/10 rounded-2xl border border-green-500/10 text-green-600 dark:text-green-400">
+                                <span class="material-symbols-outlined filled">check_circle</span>
+                                <p class="text-xs font-bold leading-relaxed">اشتراكك نشط ويعمل بشكل ممتاز! 🎉</p>
+                            </div>
+                            <% } %>
+                </div>
+            </div>
+</div>

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html class="light" dir="rtl" lang="ar">
+
+<head>
+    <%- include('../../../partials/head') %>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark">
+    <div class="flex min-h-screen">
+        <%- include('../../../partials/sidebar', { role: 'owner' }) %>
+
+            <main class="flex-1 p-4 md:p-8 md:mr-64 animate-fade-in">
+                <div class="max-w-7xl mx-auto space-y-6">
+                    <!-- Header -->
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                            <h1 class="text-3xl md:text-4xl font-black text-[#181113] dark:text-white mb-2">إدارة
+                                الحجوزات</h1>
+                            <p class="text-[#896170] font-medium">تتبع وإدارة جميع طلبات الحجز</p>
+                        </div>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+                        <div
+                            class="bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 p-4 md:p-6 rounded-2xl border-2 border-yellow-200 dark:border-yellow-700/30">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div
+                                    class="size-10 md:size-12 rounded-xl bg-yellow-500 text-white flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-xl md:text-2xl">hourglass_top</span>
+                                </div>
+                                <div>
+                                    <p class="text-2xl md:text-3xl font-black text-yellow-700 dark:text-yellow-300">
+                                        <%= stats.pending %>
+                                    </p>
+                                    <p class="text-[10px] md:text-xs font-bold text-yellow-600 dark:text-yellow-400">قيد
+                                        الانتظار</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 p-4 md:p-6 rounded-2xl border-2 border-blue-200 dark:border-blue-700/30">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div
+                                    class="size-10 md:size-12 rounded-xl bg-blue-500 text-white flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-xl md:text-2xl">verified</span>
+                                </div>
+                                <div>
+                                    <p class="text-2xl md:text-3xl font-black text-blue-700 dark:text-blue-300">
+                                        <%= (stats.total - stats.pending - stats.completed - stats.cancelled) %>
+                                    </p>
+                                    <p class="text-[10px] md:text-xs font-bold text-blue-600 dark:text-blue-400">مؤكدة
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 p-4 md:p-6 rounded-2xl border-2 border-green-200 dark:border-green-700/30">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div
+                                    class="size-10 md:size-12 rounded-xl bg-green-500 text-white flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-xl md:text-2xl">check_circle</span>
+                                </div>
+                                <div>
+                                    <p class="text-2xl md:text-3xl font-black text-green-700 dark:text-green-300">
+                                        <%= stats.completed %>
+                                    </p>
+                                    <p class="text-[10px] md:text-xs font-bold text-green-600 dark:text-green-400">
+                                        مكتملة</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 p-4 md:p-6 rounded-2xl border-2 border-red-200 dark:border-red-700/30">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div
+                                    class="size-10 md:size-12 rounded-xl bg-red-500 text-white flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-xl md:text-2xl">cancel</span>
+                                </div>
+                                <div>
+                                    <p class="text-2xl md:text-3xl font-black text-red-700 dark:text-red-300">
+                                        <%= stats.cancelled %>
+                                    </p>
+                                    <p class="text-[10px] md:text-xs font-bold text-red-600 dark:text-red-400">ملغية</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabs -->
+                    <div
+                        class="flex p-1.5 bg-white dark:bg-[#2d1a22] rounded-2xl w-full md:w-fit border-2 border-[#e6dbdf] dark:border-[#3d252e] shadow-sm">
+                        <button onclick="switchTab('active')" id="tab-active"
+                            class="flex-1 md:flex-none px-6 py-3 rounded-xl font-black text-sm transition-all bg-primary text-white shadow-lg">
+                            <span class="material-symbols-outlined text-sm align-middle mr-1">event_available</span>
+                            الحجوزات النشطة
+                        </button>
+                        <button onclick="switchTab('history')" id="tab-history"
+                            class="flex-1 md:flex-none px-6 py-3 rounded-xl font-black text-sm transition-all text-[#896170] hover:text-primary">
+                            <span class="material-symbols-outlined text-sm align-middle mr-1">history</span>
+                            سجل التاريخ
+                        </button>
+                    </div>
+
+                    <!-- Active Bookings View -->
+                    <div id="view-active" class="space-y-4">
+                        <% const activeBookings=bookings.filter(b=> b.status === 'pending' || b.status === 'confirmed');
+                            %>
+                            <% if (activeBookings.length> 0) { %>
+                                <% activeBookings.forEach(booking=> { %>
+                                    <div
+                                        class="bg-white dark:bg-[#2d1a22] rounded-2xl md:rounded-3xl p-4 md:p-6 border-2 <%= booking.status === 'confirmed' ? 'border-blue-100 dark:border-blue-900/30' : 'border-yellow-100 dark:border-yellow-900/30' %> shadow-lg hover:shadow-xl transition-all">
+
+                                        <!-- Status Badge -->
+                                        <div class="flex items-center justify-between mb-4">
+                                            <% if (booking.status==='confirmed' ) { %>
+                                                <div
+                                                    class="flex items-center gap-2 px-4 py-2 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-xl font-black text-sm border border-blue-200 dark:border-blue-700">
+                                                    <span class="material-symbols-outlined text-lg">verified</span>
+                                                    <span>مؤكد - جاهز للتنفيذ</span>
+                                                </div>
+                                                <% } else { %>
+                                                    <div
+                                                        class="flex items-center gap-2 px-4 py-2 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 rounded-xl font-black text-sm border border-yellow-200 dark:border-yellow-700">
+                                                        <span
+                                                            class="material-symbols-outlined text-lg animate-pulse">hourglass_top</span>
+                                                        <span>بانتظار التأكيد</span>
+                                                    </div>
+                                                    <% } %>
+
+                                                        <div class="text-left">
+                                                            <p class="text-xs text-gray-400 font-bold">المبلغ</p>
+                                                            <p class="text-2xl font-black text-primary">
+                                                                <%= booking.amount %> <span class="text-sm">ج.م</span>
+                                                            </p>
+                                                        </div>
+                                        </div>
+
+                                        <div class="grid md:grid-cols-[1fr_auto] gap-4 md:gap-6">
+                                            <!-- Customer & Service Info -->
+                                            <div class="space-y-4">
+                                                <!-- Customer -->
+                                                <div class="flex items-center gap-3">
+                                                    <div
+                                                        class="size-12 md:size-14 rounded-full bg-gradient-to-br from-primary to-pink-400 flex items-center justify-center text-white font-black text-xl shadow-lg">
+                                                        <%= booking.customer_name.charAt(0) %>
+                                                    </div>
+                                                    <div class="flex-1">
+                                                        <h3
+                                                            class="font-black text-lg md:text-xl text-[#181113] dark:text-white">
+                                                            <%= booking.customer_name %>
+                                                        </h3>
+                                                        <div
+                                                            class="flex items-center gap-2 text-xs text-[#896170] mt-1">
+                                                            <span class="material-symbols-outlined text-sm">phone</span>
+                                                            <span class="font-mono" dir="ltr"
+                                                                style="text-align: left; direction: ltr;">
+                                                                <%= booking.customer_phone || 'غير متوفر' %>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Service & Date -->
+                                                <div class="grid md:grid-cols-2 gap-3">
+                                                    <div
+                                                        class="flex items-center gap-2 p-3 bg-gray-50 dark:bg-white/5 rounded-xl">
+                                                        <span class="material-symbols-outlined text-primary">spa</span>
+                                                        <div>
+                                                            <p class="text-[10px] text-gray-400 font-bold">الخدمة</p>
+                                                            <p class="font-bold text-sm">
+                                                                <%= booking.service_name || 'باقة العروس' %>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        class="flex items-center gap-2 p-3 bg-gray-50 dark:bg-white/5 rounded-xl">
+                                                        <span
+                                                            class="material-symbols-outlined text-primary">event</span>
+                                                        <div>
+                                                            <p class="text-[10px] text-gray-400 font-bold">الموعد</p>
+                                                            <p class="font-bold text-sm dir-ltr text-right">
+                                                                <%= new
+                                                                    Date(booking.booking_date).toLocaleDateString('ar-EG')
+                                                                    %>
+                                                                    • <%= (booking.booking_time && booking.booking_time
+                                                                        !=='00:00:00' ) ? booking.booking_time.slice(0,
+                                                                        5) : 'يحدد لاحقاً' %>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Request Time -->
+                                                <div
+                                                    class="flex items-center gap-2 text-xs text-gray-400 bg-gray-50 dark:bg-white/5 px-3 py-2 rounded-lg">
+                                                    <span class="material-symbols-outlined text-sm">history</span>
+                                                    <span>تاريخ الطلب:</span>
+                                                    <span class="font-mono dir-ltr font-bold text-gray-500">
+                                                        <%= booking.created_at ? new
+                                                            Date(booking.created_at).toLocaleDateString('en-GB') + ' | '
+                                                            + new Date(booking.created_at).toLocaleTimeString('en-US', {
+                                                            hour: '2-digit' , minute: '2-digit' , hour12: true })
+                                                            : 'غير متوفر' %>
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Actions -->
+                                            <div
+                                                class="flex md:flex-col gap-2 justify-end items-end border-t md:border-t-0 md:border-r border-dashed border-gray-200 dark:border-white/10 pt-4 md:pt-0 md:pr-4">
+                                                <% if (booking.customer_phone) { %>
+                                                    <a href="https://wa.me/2<%= booking.customer_phone %>"
+                                                        target="_blank"
+                                                        class="flex items-center gap-2 px-4 py-2.5 bg-green-500 text-white rounded-xl font-bold text-sm hover:bg-green-600 transition-all shadow-lg">
+                                                        <span class="material-symbols-outlined text-lg">chat</span>
+                                                        <span class="hidden md:inline">واتساب</span>
+                                                    </a>
+                                                    <% } %>
+
+                                                        <% if (booking.status==='pending' ) { %>
+                                                            <form
+                                                                action="/dashboard/owner/bookings/status/<%= booking.id %>"
+                                                                method="POST" class="w-full md:w-auto">
+                                                                <input type="hidden" name="status" value="confirmed">
+                                                                <button
+                                                                    class="w-full flex items-center gap-2 px-4 py-2.5 bg-blue-500 text-white rounded-xl font-bold text-sm hover:bg-blue-600 transition-all shadow-lg">
+                                                                    <span
+                                                                        class="material-symbols-outlined text-lg">verified</span>
+                                                                    <span>تأكيد</span>
+                                                                </button>
+                                                            </form>
+                                                            <% } else { %>
+                                                                <form
+                                                                    action="/dashboard/owner/bookings/status/<%= booking.id %>"
+                                                                    method="POST" class="w-full md:w-auto">
+                                                                    <input type="hidden" name="status"
+                                                                        value="completed">
+                                                                    <button
+                                                                        class="w-full flex items-center gap-2 px-4 py-2.5 bg-green-500 text-white rounded-xl font-bold text-sm hover:bg-green-600 transition-all shadow-lg">
+                                                                        <span
+                                                                            class="material-symbols-outlined text-lg">check_circle</span>
+                                                                        <span>إتمام</span>
+                                                                    </button>
+                                                                </form>
+                                                                <% } %>
+
+                                                                    <button onclick="cancelBooking('<%= booking.id %>')"
+                                                                        class="w-full md:w-auto flex items-center gap-2 px-4 py-2.5 border-2 border-red-200 text-red-500 rounded-xl font-bold text-sm hover:bg-red-500 hover:text-white transition-all">
+                                                                        <span
+                                                                            class="material-symbols-outlined text-lg">cancel</span>
+                                                                        <span>إلغاء</span>
+                                                                    </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <% }); %>
+                                        <% } else { %>
+                                            <div
+                                                class="text-center py-20 bg-white dark:bg-[#2d1a22] rounded-3xl border-2 border-dashed border-gray-200 dark:border-white/10">
+                                                <div
+                                                    class="size-20 bg-gray-100 dark:bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                    <span
+                                                        class="material-symbols-outlined text-4xl text-gray-300">event_busy</span>
+                                                </div>
+                                                <p class="text-[#896170] font-bold">لا توجد حجوزات نشطة حالياً</p>
+                                            </div>
+                                            <% } %>
+                    </div>
+
+                    <!-- History View -->
+                    <div id="view-history" class="hidden space-y-4">
+                        <% const historyBookings=bookings.filter(b=> b.status === 'completed' || b.status ===
+                            'cancelled'); %>
+                            <% if (historyBookings.length> 0) { %>
+                                <div class="flex justify-between items-center mb-4">
+                                    <h3 class="text-xl font-bold">سجل الحجوزات السابقة</h3>
+                                    <button onclick="clearSalonHistory()"
+                                        class="bg-red-500/10 text-red-600 px-4 py-2 rounded-xl text-xs font-bold hover:bg-red-500 hover:text-white transition-all flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-sm">delete_sweep</span>
+                                        مسح السجل بالكامل
+                                    </button>
+                                </div>
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <% historyBookings.forEach(booking=> { %>
+                                        <div
+                                            class="bg-white dark:bg-[#2d1a22] rounded-2xl p-5 border border-[#e6dbdf] dark:border-[#3d252e] hover:border-primary/30 transition-all">
+                                            <div class="flex items-start gap-4">
+                                                <!-- Status Icon -->
+                                                <div class="shrink-0">
+                                                    <% if (booking.status==='completed' ) { %>
+                                                        <div
+                                                            class="size-12 rounded-xl bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 flex items-center justify-center border border-green-200 dark:border-green-700">
+                                                            <span
+                                                                class="material-symbols-outlined text-2xl">check_circle</span>
+                                                        </div>
+                                                        <% } else { %>
+                                                            <div
+                                                                class="size-12 rounded-xl bg-red-100 dark:bg-red-900/30 text-red-500 dark:text-red-400 flex items-center justify-center border border-red-200 dark:border-red-700">
+                                                                <span
+                                                                    class="material-symbols-outlined text-2xl">cancel</span>
+                                                            </div>
+                                                            <% } %>
+                                                </div>
+
+                                                <!-- Info -->
+                                                <div class="flex-1 min-w-0">
+                                                    <div class="flex items-start justify-between gap-2 mb-2">
+                                                        <h4 class="font-black text-[#181113] dark:text-white">
+                                                            <%= booking.customer_name %>
+                                                        </h4>
+                                                        <span class="text-sm font-black text-primary whitespace-nowrap">
+                                                            <%= booking.amount %> ج.م
+                                                        </span>
+                                                    </div>
+                                                    <p class="text-sm text-[#896170] mb-2">
+                                                        <%= booking.service_name || 'باقة العروس' %>
+                                                    </p>
+                                                    <div class="flex items-center gap-2 text-xs text-gray-400">
+                                                        <span class="material-symbols-outlined text-sm">event</span>
+                                                        <span class="dir-ltr">
+                                                            <%= new
+                                                                Date(booking.booking_date).toLocaleDateString('ar-EG')
+                                                                %>
+                                                        </span>
+                                                        <span>•</span>
+                                                        <span class="dir-ltr">
+                                                            <%= (booking.booking_time && booking.booking_time
+                                                                !=='00:00:00' ) ? booking.booking_time.slice(0, 5)
+                                                                : 'غير محدد' %>
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Delete Btn -->
+                                                <div class="shrink-0 flex flex-col justify-between h-full">
+                                                    <button onclick="deleteHistoryBooking('<%= booking.id %>')"
+                                                        class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors"
+                                                        title="حذف من السجل">
+                                                        <span class="material-symbols-outlined text-xl">delete</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <% }); %>
+                                </div>
+                                <% } else { %>
+                                    <div
+                                        class="text-center py-20 bg-white dark:bg-[#2d1a22] rounded-3xl border-2 border-dashed border-gray-200 dark:border-white/10">
+                                        <div
+                                            class="size-20 bg-gray-100 dark:bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">
+                                            <span
+                                                class="material-symbols-outlined text-4xl text-gray-300">history</span>
+                                        </div>
+                                        <p class="text-[#896170] font-bold">لا يوجد سجل حجوزات سابقة</p>
+                                    </div>
+                                    <% } %>
+                    </div>
+                </div>
+            </main>
+    </div>
+
+    <script>
+        function switchTab(tab) {
+            const activeBtn = document.getElementById('tab-active');
+            const historyBtn = document.getElementById('tab-history');
+            const activeView = document.getElementById('view-active');
+            const historyView = document.getElementById('view-history');
+
+            if (tab === 'active') {
+                activeBtn.classList.add('bg-primary', 'text-white', 'shadow-lg');
+                activeBtn.classList.remove('text-[#896170]');
+                historyBtn.classList.remove('bg-primary', 'text-white', 'shadow-lg');
+                historyBtn.classList.add('text-[#896170]');
+                activeView.classList.remove('hidden');
+                historyView.classList.add('hidden');
+            } else {
+                historyBtn.classList.add('bg-primary', 'text-white', 'shadow-lg');
+                historyBtn.classList.remove('text-[#896170]');
+                activeBtn.classList.remove('bg-primary', 'text-white', 'shadow-lg');
+                activeBtn.classList.add('text-[#896170]');
+                historyView.classList.remove('hidden');
+                activeView.classList.add('hidden');
+            }
+        }
+
+        function cancelBooking(id) {
+            if (confirm('هل أنت متأكد من إلغاء هذا حجز هذا العميل؟')) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/dashboard/owner/bookings/status/${id}`;
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'status';
+                input.value = 'cancelled';
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        function deleteHistoryBooking(id) {
+            if (confirm('هل أنت متأكد من حذف هذا السجل نهائياً؟')) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/dashboard/owner/bookings/delete/${id}`;
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        function clearSalonHistory() {
+            if (confirm('⚠️ تحذير: هل أنت متأكد من مسح سجل الحجوزات بالكامل؟')) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/dashboard/owner/bookings/clear';
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
+</body>
+
+</html>
