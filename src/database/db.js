@@ -3,25 +3,29 @@ require('dotenv').config();
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-const poolConfig = process.env.DATABASE_URL ? {
-    connectionString: process.env.DATABASE_URL,
-    ssl: isProduction ? { rejectUnauthorized: false } : false
-} : {
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST || 'localhost',
-    database: process.env.DB_NAME,
-    password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT || 5432,
-    ssl: isProduction ? { rejectUnauthorized: false } : false
-};
+let poolConfig;
 
-// Log a safe message for debugging without leaking credentials
 if (isProduction) {
-    if (process.env.DATABASE_URL) {
-        console.log('Database connecting via DATABASE_URL');
-    } else {
-        console.log(`Database connecting via individual fields. Host: ${process.env.DB_HOST}`);
+    // In production, we STRICTLY use the connection string to avoid any conflicting env vars
+    if (!process.env.DATABASE_URL) {
+        console.error('CRITICAL: DATABASE_URL is missing in production!');
     }
+    poolConfig = {
+        connectionString: process.env.DATABASE_URL,
+        ssl: { rejectUnauthorized: false }
+    };
+    console.log('Database: Running in Production mode using Connection String');
+} else {
+    // Local development
+    poolConfig = {
+        user: process.env.DB_USER || 'postgres',
+        host: process.env.DB_HOST || 'localhost',
+        database: process.env.DB_NAME || 'kwafer',
+        password: process.env.DB_PASSWORD || 'password',
+        port: process.env.DB_PORT || 5432,
+        ssl: false
+    };
+    console.log('Database: Running in Development mode');
 }
 
 const pool = new Pool(poolConfig);
