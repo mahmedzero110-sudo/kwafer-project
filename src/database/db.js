@@ -6,17 +6,19 @@ const isProduction = process.env.NODE_ENV === 'production';
 let poolConfig;
 
 if (isProduction) {
-    // In production, we STRICTLY use the connection string to avoid any conflicting env vars
     if (!process.env.DATABASE_URL) {
-        console.error('CRITICAL: DATABASE_URL is missing in production!');
+        console.error('CRITICAL: DATABASE_URL is missing!');
+    } else {
+        // Log a masked version of the URL to see what Vercel is actually receiving
+        const maskedUrl = process.env.DATABASE_URL.replace(/:[^:@]+@/, ':****@');
+        console.log('Database URL detected:', maskedUrl);
     }
+
     poolConfig = {
         connectionString: process.env.DATABASE_URL,
         ssl: { rejectUnauthorized: false }
     };
-    console.log('Database: Running in Production mode using Connection String');
 } else {
-    // Local development
     poolConfig = {
         user: process.env.DB_USER || 'postgres',
         host: process.env.DB_HOST || 'localhost',
@@ -25,7 +27,6 @@ if (isProduction) {
         port: process.env.DB_PORT || 5432,
         ssl: false
     };
-    console.log('Database: Running in Development mode');
 }
 
 const pool = new Pool(poolConfig);
